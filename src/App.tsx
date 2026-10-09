@@ -1,49 +1,59 @@
 import { useState } from "react";
 
-interface CounterMessageProps {
-  counter: number;
-  target: number;
+interface NameProps {
+  name: string;
 }
 
-function CounterMessage({ counter, target }: CounterMessageProps) {
-  return (
-    <div>
-      {counter >= target ? "목표에 도달했습니다!" : "아직 도전 중입니다!"}
-    </div>
-  );
+function NamePractice({ name }: NameProps) {
+  const trimmedName = name.trim();
+  if (trimmedName !== "") {
+    return <div>안녕하세요, {trimmedName}님!</div>;
+  }
+  return <div>이름을 입력해 주세요.</div>;
+}
+
+function RegisteredName({ name }: NameProps) {
+  if (name !== "") {
+    return <div>등록된 이름: {name}</div>;
+  }
+
+  return <div>등록된 이름이 없습니다.</div>;
 }
 
 function App() {
-  const [counter, setCounter] = useState(0);
-  const handleOnClick = () => {
-    setCounter(counter + 1);
+  const [name, setName] = useState<string>("");
+  const [registeredName, setRegisteredName] = useState("");
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
   };
-
-  const resetOnClickClear = () => {
-    setCounter(0);
+  const onClick = () => {
+    setName("");
   };
-
-  const handleOn3Click = () => {
-    setCounter((prev) => prev + 1);
-    setCounter((prev) => prev + 1);
-    setCounter((prev) => prev + 1);
+  const handleRegister = () => {
+    setRegisteredName(name.trim());
+    setName("");
   };
-
-  const handleOnClickDec = () => {
-    if (counter === 0) return;
-    setCounter((prev) => prev - 1);
+  const onClickCancel = () => {
+    setRegisteredName("");
   };
-
   return (
     <>
-      <p>{counter}</p>
-      <CounterMessage counter={counter} target={10} />
-      <button onClick={handleOnClick}>+1</button>
-      <button onClick={handleOn3Click}>+3</button>
-      <button onClick={handleOnClickDec} disabled={counter === 0}>
-        -1
+      <RegisteredName name={registeredName} />
+      <input
+        value={name}
+        onChange={onChange}
+        placeholder="이름을 입력해 주세요."
+      />
+      <NamePractice name={name} />
+      <button onClick={onClick} disabled={name === ""}>
+        Clear
       </button>
-      <button onClick={resetOnClickClear}>초기화</button>
+      <button onClick={handleRegister} disabled={name.trim() === ""}>
+        등록
+      </button>
+      <button onClick={onClickCancel} disabled={registeredName.trim() === ""}>
+        등록 취소
+      </button>
     </>
   );
 }
