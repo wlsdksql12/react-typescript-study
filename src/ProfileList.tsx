@@ -36,14 +36,27 @@ function ProfileList() {
     );
   };
   const handleAllAge = () => {
-    // setProfiles((prev) =>
-    //   prev.map((profile) => ({ ...profile, age: profile.age + 1 })),
-    // );
     setProfiles((prev) =>
-      prev.map((profile) => {
-        return { ...profile, age: profile.age + 1 };
-      }),
+      prev.map((profile) => ({ ...profile, age: profile.age + 1 })),
     );
+    // setProfiles((prev) =>
+    //   prev.map((profile) => {
+    //     return { ...profile, age: profile.age + 1 };
+    //   }),
+    // );
+  };
+
+  const handleDecreaseAge = (id: number, age: number) => {
+    if (age === 1) return;
+    setProfiles((prev) =>
+      prev.map((profile) =>
+        profile.id === id ? { ...profile, age: profile.age - 1 } : profile,
+      ),
+    );
+  };
+
+  const handelAllDelete = () => {
+    setProfiles([]);
   };
   return (
     <>
@@ -62,6 +75,13 @@ function ProfileList() {
       >
         모두 나이 +1
       </button>
+      <button
+        type="button"
+        onClick={handelAllDelete}
+        disabled={profiles.length === 0}
+      >
+        전체 삭제
+      </button>
       <ul>
         {profiles.map((profile) => (
           <li key={profile.id}>
@@ -71,6 +91,13 @@ function ProfileList() {
             </button>
             <button type="button" onClick={() => handleIncreaseAge(profile.id)}>
               나이 +1
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDecreaseAge(profile.id, profile.age)}
+              disabled={profile.age === 1}
+            >
+              나이 -1
             </button>
           </li>
         ))}
