@@ -1,59 +1,170 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import ProfileList from "./ProfileList";
 
 interface NameProps {
   name: string;
 }
 
+interface RegisteredNameProps {
+  name: string;
+  onCancel: () => void;
+  onEdit: (name: string) => void;
+  onOtherName: () => void;
+}
+
+interface profile {
+  name: string;
+  age: number;
+}
+
+interface ProfilePracticeProps extends profile {
+  onClickAge: () => void;
+  onClickName: () => void;
+  onClickAllChange: () => void;
+}
+
 function NamePractice({ name }: NameProps) {
-  const trimmedName = name.trim();
-  if (trimmedName !== "") {
-    return <div>안녕하세요, {trimmedName}님!</div>;
+  if (name.length === 1) {
+    return <div>이름은 2글자 이상 입력해 주세요.</div>;
+  } else if (name.length >= 2) {
+    return <div>안녕하세요, {name}님!</div>;
   }
   return <div>이름을 입력해 주세요.</div>;
 }
 
-function RegisteredName({ name }: NameProps) {
-  if (name !== "") {
-    return <div>등록된 이름: {name}</div>;
-  }
+function RegisteredName({
+  name,
+  onCancel,
+  onEdit,
+  onOtherName,
+}: RegisteredNameProps) {
+  return (
+    <div>
+      <span>
+        {name !== "" ? `등록된 이름: ${name}  ` : "등록된 이름이 없습니다.  "}
+      </span>
+      <button type="button" onClick={onCancel} disabled={name === ""}>
+        등록 취소
+      </button>
+      <button type="button" onClick={() => onEdit(name)} disabled={name === ""}>
+        {" "}
+        수정
+      </button>
+      <button type="button" onClick={onOtherName}>
+        다른 이름 입력
+      </button>
+    </div>
+  );
+}
 
-  return <div>등록된 이름이 없습니다.</div>;
+function ProfilePractice({
+  name,
+  age,
+  onClickAge,
+  onClickName,
+  onClickAllChange,
+}: ProfilePracticeProps) {
+  return (
+    <>
+      <div>
+        이름: {name}, 나이: {age}
+      </div>
+      <button onClick={onClickAge}>나이 +1</button>
+      <button onClick={onClickName}>이름 변경</button>
+      <button onClick={onClickAllChange}>한 번에 변경</button>
+    </>
+  );
 }
 
 function App() {
   const [name, setName] = useState<string>("");
   const [registeredName, setRegisteredName] = useState("");
+  const [profile, setProfile] = useState<profile>({
+    name: "성진",
+    age: 29,
+  });
+  const inputRef = useRef<HTMLInputElement>(null);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
   const onClick = () => {
     setName("");
   };
-  const handleRegister = () => {
-    setRegisteredName(name.trim());
-    setName("");
-  };
   const onClickCancel = () => {
     setRegisteredName("");
   };
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const trimmedName = name.trim();
+
+    if (trimmedName.length < 2) return;
+
+    setRegisteredName(trimmedName);
+    setName("");
+  };
+
+  const onEdit = (name: string) => {
+    setName(name);
+    inputRef.current?.focus();
+  };
+
+  const onOtherName = () => {
+    setName("");
+    inputRef.current?.focus();
+  };
+
+  const onClickAge = () => {
+    setProfile((prev) => ({
+      ...prev,
+      age: prev.age + 1,
+    }));
+  };
+
+  const onClickName = () => {
+    setProfile((prev) => ({
+      ...prev,
+      name: "민수",
+    }));
+  };
+
+  const onClickAllChange = () => {
+    setProfile((prev) => ({
+      name: "지수",
+      age: prev.age + 2,
+    }));
+  };
   return (
     <>
-      <RegisteredName name={registeredName} />
-      <input
-        value={name}
-        onChange={onChange}
-        placeholder="이름을 입력해 주세요."
+      <ProfilePractice
+        name={profile.name}
+        age={profile.age}
+        onClickAge={onClickAge}
+        onClickName={onClickName}
+        onClickAllChange={onClickAllChange}
       />
-      <NamePractice name={name} />
-      <button onClick={onClick} disabled={name === ""}>
-        Clear
-      </button>
-      <button onClick={handleRegister} disabled={name.trim() === ""}>
-        등록
-      </button>
-      <button onClick={onClickCancel} disabled={registeredName.trim() === ""}>
-        등록 취소
-      </button>
+      <RegisteredName
+        name={registeredName}
+        onCancel={onClickCancel}
+        onEdit={onEdit}
+        onOtherName={onOtherName}
+      />
+      <form onSubmit={handleSubmit}>
+        <input
+          ref={inputRef}
+          value={name}
+          onChange={onChange}
+          placeholder="이름을 입력해 주세요."
+        />
+        <NamePractice name={name.trim()} />
+        <button type="button" onClick={onClick} disabled={name === ""}>
+          Clear
+        </button>
+        <button type="submit" disabled={name.trim().length <= 1}>
+          등록
+        </button>
+      </form>
+      <ProfileList />
     </>
   );
 }
