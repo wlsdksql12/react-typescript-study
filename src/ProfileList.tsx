@@ -6,54 +6,94 @@ interface Profile {
   age: number;
 }
 
-// interface SearchProfile {
-//   profiles: Profile[];
-//   searchName: string;
-//   handleDelete: (id: number) => void;
-//   handleIncreaseAge: (id: number) => void;
-//   handleDecreaseAge: (id: number) => void;
-// }
+interface EditProfileFormProps {
+  editingName: string;
+  changeName: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleEdit: (event: React.SubmitEvent<HTMLFormElement>) => void;
+  handleEditCancel: () => void;
+}
 
-// function FilteredProfiles({
-//   profiles,
-//   searchName,
-//   handleDelete,
-//   handleIncreaseAge,
-//   handleDecreaseAge,
-// }: SearchProfile) {
-//   const filteredProfiles = profiles.filter((profile) =>
-//     profile.name.includes(searchName.trim()),
-//   );
+interface ProfileItemProps {
+  profile: Profile;
+  isEditing: boolean;
+  editingId: number | null;
+  handleDelete: (id: number) => void;
+  handleIncreaseAge: (id: number) => void;
+  handleDecreaseAge: (id: number) => void;
+  handleEditingName: (id: number, name: string) => void;
+}
 
-//   return (
-//     <>
-//       {filteredProfiles.map((profile) => (
-//         <li key={profile.id}>
-//           이름: {profile.name}, 나이: {profile.age}
-//           <button type="button" onClick={() => handleDelete(profile.id)}>
-//             삭제
-//           </button>
-//           <button type="button" onClick={() => handleIncreaseAge(profile.id)}>
-//             나이 +1
-//           </button>
-//           <button
-//             type="button"
-//             onClick={() => handleDecreaseAge(profile.id)}
-//             disabled={profile.age === 0}
-//           >
-//             나이 -1
-//           </button>
-//         </li>
-//       ))}
-//     </>
-//   );
-// }
+function ProfileItem({
+  profile,
+  isEditing,
+  editingId,
+  handleDelete,
+  handleIncreaseAge,
+  handleDecreaseAge,
+  handleEditingName,
+}: ProfileItemProps) {
+  return (
+    <li>
+      {isEditing === true && editingId === profile.id
+        ? `이름: ${profile.name}(수정 중), 나이: ${profile.age}`
+        : `이름: ${profile.name}, 나이: ${profile.age}`}
+      <button type="button" onClick={() => handleDelete(profile.id)}>
+        삭제
+      </button>
+      <button type="button" onClick={() => handleIncreaseAge(profile.id)}>
+        나이 +1
+      </button>
+      <button
+        type="button"
+        onClick={() => handleDecreaseAge(profile.id)}
+        disabled={profile.age === 0}
+      >
+        나이 -1
+      </button>
+      <button
+        type="button"
+        onClick={() => handleEditingName(profile.id, profile.name)}
+        disabled={isEditing === true && editingId === profile.id}
+      >
+        이름 수정
+      </button>
+    </li>
+  );
+}
+
+function EditProfileForm({
+  handleEdit,
+  editingName,
+  changeName,
+  handleEditCancel,
+}: EditProfileFormProps) {
+  return (
+    <form onSubmit={handleEdit}>
+      <hr />
+      <div>이름 수정중</div>
+      <input
+        value={editingName}
+        onChange={changeName}
+        placeholder="수정할 이름을 입력해 주세요."
+      />
+      <button type="submit" disabled={editingName.trim().length < 2}>
+        수정
+      </button>
+      <button type="button" onClick={handleEditCancel}>
+        취소
+      </button>
+    </form>
+  );
+}
 
 function ProfileList() {
   const nextId = useRef(4);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [userName, setUserName] = useState("");
   const [search, setSearch] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingName, setEditingName] = useState("");
   const [profiles, setProfiles] = useState<Profile[]>([
     { id: 1, name: "성진", age: 29 },
     { id: 2, name: "민수", age: 30 },
@@ -81,6 +121,7 @@ function ProfileList() {
   // 각각 삭제
   const handleDelete = (id: number) => {
     setProfiles((prev) => prev.filter((profile) => profile.id !== id));
+    if (id === editingId) return handleEditCancel();
   };
 
   // 각각 나이 +1
@@ -118,6 +159,7 @@ function ProfileList() {
   // 전체 삭제
   const handleAllDelete = () => {
     setProfiles([]);
+    handleEditCancel();
   };
 
   // 사람 추가 창 값 입력
@@ -139,6 +181,44 @@ function ProfileList() {
   const handleSearchClear = () => {
     searchInputRef.current?.focus();
     setSearch("");
+  };
+
+  // 각각의 이름 수정
+  const handleEditingName = (id: number, name: string) => {
+    setIsEditing(true);
+    setEditingId(id);
+    setEditingName(name);
+  };
+
+  // 이름 수정창 입력
+  const changeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditingName(event.target.value);
+  };
+
+  // 이름 수정 저장
+  const handleEdit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const newName = editingName.trim();
+
+    if (editingId === null || newName.length < 2) return;
+
+    setProfiles((prev) =>
+      prev.map((profile) =>
+        profile.id === editingId ? { ...profile, name: newName } : profile,
+      ),
+    );
+
+    // 저장 이후 초기화
+    setEditingId(null);
+    setEditingName("");
+    setIsEditing(false);
+  };
+
+  // 이름 수정 취소
+  const handleEditCancel = () => {
+    setEditingId(null);
+    setEditingName("");
+    setIsEditing(false);
   };
 
   return (
@@ -206,35 +286,27 @@ function ProfileList() {
         </button>
         <ul>
           {filteredProfiles.map((profile) => (
-            <li key={profile.id}>
-              이름: {profile.name}, 나이: {profile.age}
-              <button type="button" onClick={() => handleDelete(profile.id)}>
-                삭제
-              </button>
-              <button
-                type="button"
-                onClick={() => handleIncreaseAge(profile.id)}
-              >
-                나이 +1
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDecreaseAge(profile.id)}
-                disabled={profile.age === 0}
-              >
-                나이 -1
-              </button>
-            </li>
+            <ProfileItem
+              key={profile.id}
+              profile={profile}
+              isEditing={isEditing}
+              editingId={editingId}
+              handleDelete={handleDelete}
+              handleIncreaseAge={handleIncreaseAge}
+              handleDecreaseAge={handleDecreaseAge}
+              handleEditingName={handleEditingName}
+            />
           ))}
-          {/* <FilteredProfiles
-            profiles={profiles}
-            searchName={search}
-            handleDelete={handleDelete}
-            handleIncreaseAge={handleIncreaseAge}
-            handleDecreaseAge={handleDecreaseAge}
-          /> */}
         </ul>
       </form>
+      {editingId !== null ? (
+        <EditProfileForm
+          editingName={editingName}
+          changeName={changeName}
+          handleEdit={handleEdit}
+          handleEditCancel={handleEditCancel}
+        />
+      ) : null}
     </>
   );
 }
