@@ -16,7 +16,6 @@ interface EditProfileFormProps {
 interface ProfileItemProps {
   profile: Profile;
   isEditing: boolean;
-  editingId: number | null;
   handleDelete: (id: number) => void;
   handleIncreaseAge: (id: number) => void;
   handleDecreaseAge: (id: number) => void;
@@ -26,7 +25,6 @@ interface ProfileItemProps {
 function ProfileItem({
   profile,
   isEditing,
-  editingId,
   handleDelete,
   handleIncreaseAge,
   handleDecreaseAge,
@@ -34,7 +32,7 @@ function ProfileItem({
 }: ProfileItemProps) {
   return (
     <li>
-      {isEditing === true && editingId === profile.id
+      {isEditing === true
         ? `이름: ${profile.name}(수정 중), 나이: ${profile.age}`
         : `이름: ${profile.name}, 나이: ${profile.age}`}
       <button type="button" onClick={() => handleDelete(profile.id)}>
@@ -53,7 +51,7 @@ function ProfileItem({
       <button
         type="button"
         onClick={() => handleEditingName(profile.id, profile.name)}
-        disabled={isEditing === true && editingId === profile.id}
+        disabled={isEditing === true}
       >
         이름 수정
       </button>
@@ -89,7 +87,8 @@ function EditProfileForm({
 function ProfileList() {
   const nextId = useRef(4);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [check, setCheck] = useState(false);
+  const [editingCheck, setEditingCheck] = useState(false);
   const [userName, setUserName] = useState("");
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -173,19 +172,27 @@ function ProfileList() {
   };
 
   // 검색 계산식
-  const filteredProfiles = profiles.filter((profile) =>
-    profile.name.includes(search.trim()),
-  );
+  const filteredProfiles = profiles.filter((profile) => {
+    // 이름에 검색어가 포함되는가?
+    const matchesName = profile.name.includes(search.trim());
+    // 나이 필터를 통과하는가?
+    const matchesAge = check ? profile.age >= 30 : true;
+    // 수정 중 필터를 통과하는가?
+    const matchesEditing = editingCheck ? profile.id === editingId : true;
+
+    return matchesName && matchesAge && matchesEditing;
+  });
 
   // 검색 초기화
   const handleSearchClear = () => {
     searchInputRef.current?.focus();
     setSearch("");
+    setCheck(false);
+    setEditingCheck(false);
   };
 
   // 각각의 이름 수정
   const handleEditingName = (id: number, name: string) => {
-    setIsEditing(true);
     setEditingId(id);
     setEditingName(name);
   };
@@ -211,16 +218,76 @@ function ProfileList() {
     // 저장 이후 초기화
     setEditingId(null);
     setEditingName("");
-    setIsEditing(false);
   };
 
   // 이름 수정 취소
   const handleEditCancel = () => {
     setEditingId(null);
     setEditingName("");
-    setIsEditing(false);
   };
 
+  // 30대 이상 보기 체크
+  const onCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheck(event.target.checked);
+  };
+
+  // 수정중인 사람만 보기 체크
+  const handleEditingCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditingCheck(event.target.checked);
+  };
+  // 검색 결과 사람만 나이 +1
+  const handleFilteredAge = () => {
+    setProfiles((prev) =>
+      prev.map((profile) => {
+        const istarget = filteredProfiles.some(
+          (filteredProfile) => filteredProfile.id === profile.id,
+        );
+
+        return istarget ? { ...profile, age: profile.age + 1 } : profile;
+      }),
+    );
+  };
+
+  // 검색 결과 삭제
+  const handleFilterDelete = () => {
+    const isEditingTarget = filteredProfiles.some(
+      (profile) => profile.id === editingId,
+    );
+
+    if (isEditingTarget) {
+      handleEditCancel();
+    }
+
+    setProfiles((prev) =>
+      prev.filter((profile) => {
+        const isTarget = filteredProfiles.some(
+          (filteredProfile) => filteredProfile.id === profile.id,
+        );
+
+        return !isTarget;
+      }),
+    );
+  };
+
+  // 검색 결과 나이 -1
+  const handleFilteredDecAge = () => {
+    setProfiles((prev) =>
+      prev.map((profile) => {
+        const isTarget = filteredProfiles.some(
+          (filteredProfile) => filteredProfile.id === profile.id,
+        );
+
+        if (profile.age > 0)
+          return isTarget ? { ...profile, age: profile.age - 1 } : profile;
+
+        return profile;
+      }),
+    );
+  };
+
+  const handleFilteredDecAgeBtn = filteredProfiles.some(
+    (profile) => profile.age > 0,
+  );
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -259,10 +326,24 @@ function ProfileList() {
               marginRight: "3px",
             }}
           />
+          <label style={{ marginRight: "5px" }}>
+            <input checked={check} type="checkbox" onChange={onCheckChange} />
+            30세 이상만 보기
+          </label>
+          <label style={{ marginRight: "5px" }}>
+            <input
+              checked={editingCheck}
+              type="checkbox"
+              onChange={handleEditingCheck}
+            />
+            수정 중인 사람만 보기
+          </label>
           <button
             type="button"
             onClick={handleSearchClear}
-            disabled={search.length === 0}
+            disabled={
+              search.length === 0 && check === false && editingCheck === false
+            }
           >
             검색 초기화
           </button>
@@ -279,18 +360,38 @@ function ProfileList() {
         </button>
         <button
           type="button"
+          onClick={handleFilteredAge}
+          disabled={filteredProfiles.length === 0}
+        >
+          검색 결과 나이 +1
+        </button>
+        <button
+          type="button"
+          onClick={handleFilteredDecAge}
+          disabled={filteredProfiles.length === 0 || !handleFilteredDecAgeBtn}
+        >
+          검색 결과 나이 -1
+        </button>
+        <button
+          type="button"
           onClick={handleAllDelete}
           disabled={profiles.length === 0}
         >
           전체 삭제
+        </button>
+        <button
+          type="button"
+          onClick={handleFilterDelete}
+          disabled={filteredProfiles.length === 0}
+        >
+          검색 결과 삭제
         </button>
         <ul>
           {filteredProfiles.map((profile) => (
             <ProfileItem
               key={profile.id}
               profile={profile}
-              isEditing={isEditing}
-              editingId={editingId}
+              isEditing={editingId === profile.id}
               handleDelete={handleDelete}
               handleIncreaseAge={handleIncreaseAge}
               handleDecreaseAge={handleDecreaseAge}
