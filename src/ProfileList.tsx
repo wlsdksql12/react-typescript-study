@@ -4,6 +4,7 @@ interface Profile {
   id: number;
   name: string;
   age: number;
+  initialAge: number;
 }
 
 interface EditProfileFormProps {
@@ -94,9 +95,9 @@ function ProfileList() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState("");
   const [profiles, setProfiles] = useState<Profile[]>([
-    { id: 1, name: "성진", age: 29 },
-    { id: 2, name: "민수", age: 30 },
-    { id: 3, name: "지수", age: 27 },
+    { id: 1, name: "성진", age: 29, initialAge: 29 },
+    { id: 2, name: "민수", age: 30, initialAge: 30 },
+    { id: 3, name: "지수", age: 27, initialAge: 27 },
   ]);
 
   // 사람 추가
@@ -109,6 +110,7 @@ function ProfileList() {
       id: nextId.current,
       name: name,
       age: 25,
+      initialAge: 25,
     };
 
     nextId.current += 1;
@@ -288,6 +290,27 @@ function ProfileList() {
   const handleFilteredDecAgeBtn = filteredProfiles.some(
     (profile) => profile.age > 0,
   );
+  // 검색 결과 나이 복원
+  const handleFilteredRestoreAge = () => {
+    setProfiles((prev) =>
+      prev.map((profile) => {
+        const isTarget = filteredProfiles.some(
+          (filteredProfile) => filteredProfile.id === profile.id,
+        );
+
+        if (isTarget) {
+          return { ...profile, age: profile.initialAge };
+        }
+
+        return profile;
+      }),
+    );
+  };
+  // 검색 결과 나이 복원 버튼 로직
+  const handleFilteredRestoreAgeBtn = filteredProfiles.filter(
+    (profiles) => profiles.age !== profiles.initialAge,
+  );
+
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -385,6 +408,13 @@ function ProfileList() {
           disabled={filteredProfiles.length === 0}
         >
           검색 결과 삭제
+        </button>
+        <button
+          type="button"
+          onClick={handleFilteredRestoreAge}
+          disabled={handleFilteredRestoreAgeBtn.length === 0}
+        >
+          검색 결과 나이 복원
         </button>
         <ul>
           {filteredProfiles.map((profile) => (
