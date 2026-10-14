@@ -30,6 +30,36 @@ interface ProfileFilters {
   onlyChangedAge: boolean;
 }
 
+interface FilterSavePanelProps {
+  hasSavedFilters: boolean;
+  isSameFilters: boolean;
+  isDefaultFilters: boolean;
+  filterSavedSearch: string;
+  onSave: () => void;
+  onLoad: () => void;
+  onDelete: () => void;
+  onClear: () => void;
+}
+
+const DEFAULT_FILTERS: ProfileFilters = {
+  search: "",
+  onlyAge30Plus: false,
+  onlyEditing: false,
+  onlyChangedAge: false,
+};
+
+function areFiltersEqual(
+  first: ProfileFilters,
+  second: ProfileFilters,
+): boolean {
+  return (
+    first.search === second.search &&
+    first.onlyAge30Plus === second.onlyAge30Plus &&
+    first.onlyEditing === second.onlyEditing &&
+    first.onlyChangedAge === second.onlyChangedAge
+  );
+}
+
 function ProfileItem({
   profile,
   isEditing,
@@ -92,6 +122,57 @@ function EditProfileForm({
   );
 }
 
+function FilterSavePanel({
+  hasSavedFilters,
+  isSameFilters,
+  isDefaultFilters,
+  filterSavedSearch,
+  onSave,
+  onLoad,
+  onDelete,
+  onClear,
+}: FilterSavePanelProps) {
+  return (
+    <div>
+      {/* 저장값이 있는지 확인하는 안내 문구 */}
+      <div>
+        {!hasSavedFilters
+          ? "저장된 검색 조건이 없습니다."
+          : isSameFilters
+            ? "현재 조건이 저장된 조건과 같습니다."
+            : "현재 조건이 저장된 조건과 다릅니다."}
+      </div>
+      {hasSavedFilters && (
+        <div>
+          {filterSavedSearch.trim().length > 0
+            ? `저장된 검색어: ${filterSavedSearch}`
+            : "저장된 검색어: 없음"}
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={onSave}
+        disabled={hasSavedFilters && isSameFilters}
+      >
+        검색 조건 저장
+      </button>
+      <button
+        type="button"
+        onClick={onLoad}
+        disabled={!hasSavedFilters || isSameFilters}
+      >
+        검색 조건 불러오기
+      </button>
+      <button type="button" onClick={onDelete} disabled={!hasSavedFilters}>
+        검색 조건 삭제
+      </button>
+      <button type="button" onClick={onClear} disabled={isDefaultFilters}>
+        검색 초기화
+      </button>
+    </div>
+  );
+}
+
 function ProfileList() {
   const nextId = useRef(4);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -105,11 +186,9 @@ function ProfileList() {
     { id: 3, name: "지수", age: 27, initialAge: 27 },
   ]);
   const [filter, setFilters] = useState<ProfileFilters>({
-    search: "",
-    onlyAge30Plus: false,
-    onlyEditing: false,
-    onlyChangedAge: false,
+    ...DEFAULT_FILTERS,
   });
+  const isDefaultFilters = areFiltersEqual(filter, DEFAULT_FILTERS);
 
   // 사람 추가
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -209,13 +288,7 @@ function ProfileList() {
   const handleSearchClear = () => {
     searchInputRef.current?.focus();
 
-    setFilters((prev) => ({
-      ...prev,
-      search: "",
-      onlyAge30Plus: false,
-      onlyEditing: false,
-      onlyChangedAge: false,
-    }));
+    setFilters({ ...DEFAULT_FILTERS });
   };
 
   // 각각의 이름 수정
@@ -351,6 +424,7 @@ function ProfileList() {
     setFilters((prev) => ({ ...prev, onlyChangedAge: value }));
   };
 
+  // 검색 조건 저장
   const handleSavefilters = (filter: ProfileFilters) => {
     // setSaveFilters((prev) => ({
     //   search: filter.search,
@@ -363,6 +437,7 @@ function ProfileList() {
     setSaveFilters({ ...filter });
   };
 
+  /// 검색 조건 불러오기
   const handleLoadfilters = () => {
     // setFilters((prev) => ({
     //   search: saveFilters?.search ? saveFilters?.search : "",
@@ -380,10 +455,14 @@ function ProfileList() {
 
     setFilters({ ...saveFilters });
   };
-
+  // 검색 조건 삭제
   const handleDeletefilters = () => {
     setSaveFilters(null);
   };
+
+  // 저장된 검색 조건이 같은지 체크
+  const isSameFilters =
+    saveFilters !== null && areFiltersEqual(filter, saveFilters);
 
   return (
     <>
@@ -447,42 +526,16 @@ function ProfileList() {
             />
             나이가 변경된 사람만 보기
           </label>
-          <div>
-            <div>
-              {saveFilters !== null
-                ? "저장된 검색 조건이 있습니다."
-                : "저장된 검색 조건이 없습니다."}
-            </div>
-            <button type="button" onClick={() => handleSavefilters(filter)}>
-              검색 조건 저장
-            </button>
-            <button
-              type="button"
-              onClick={handleLoadfilters}
-              disabled={saveFilters === null}
-            >
-              검색 조건 불러오기
-            </button>
-            <button
-              type="button"
-              onClick={handleDeletefilters}
-              disabled={saveFilters === null}
-            >
-              검색 조건 삭제
-            </button>
-            <button
-              type="button"
-              onClick={handleSearchClear}
-              disabled={
-                filter.search.length === 0 &&
-                filter.onlyAge30Plus === false &&
-                filter.onlyEditing === false &&
-                filter.onlyChangedAge === false
-              }
-            >
-              검색 초기화
-            </button>
-          </div>
+          <FilterSavePanel
+            hasSavedFilters={saveFilters !== null}
+            filterSavedSearch={saveFilters?.search ? saveFilters.search : ""}
+            isSameFilters={isSameFilters}
+            isDefaultFilters={isDefaultFilters}
+            onSave={() => handleSavefilters(filter)}
+            onLoad={handleLoadfilters}
+            onDelete={handleDeletefilters}
+            onClear={handleSearchClear}
+          />
         </div>
         <button type="submit" disabled={userName.trim().length < 2}>
           사람 추가
