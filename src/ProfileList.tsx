@@ -23,6 +23,13 @@ interface ProfileItemProps {
   handleEditingName: (id: number, name: string) => void;
 }
 
+interface ProfileFilters {
+  search: string;
+  onlyAge30Plus: boolean;
+  onlyEditing: boolean;
+  onlyChangedAge: boolean;
+}
+
 function ProfileItem({
   profile,
   isEditing,
@@ -88,10 +95,8 @@ function EditProfileForm({
 function ProfileList() {
   const nextId = useRef(4);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [check, setCheck] = useState(false);
-  const [editingCheck, setEditingCheck] = useState(false);
+  const [saveFilters, setSaveFilters] = useState<ProfileFilters | null>(null);
   const [userName, setUserName] = useState("");
-  const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState("");
   const [profiles, setProfiles] = useState<Profile[]>([
@@ -99,6 +104,12 @@ function ProfileList() {
     { id: 2, name: "민수", age: 30, initialAge: 30 },
     { id: 3, name: "지수", age: 27, initialAge: 27 },
   ]);
+  const [filter, setFilters] = useState<ProfileFilters>({
+    search: "",
+    onlyAge30Plus: false,
+    onlyEditing: false,
+    onlyChangedAge: false,
+  });
 
   // 사람 추가
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -170,27 +181,41 @@ function ProfileList() {
 
   // 검색창 값 입력
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
+    const value = event.target.value;
+    console.log(value);
+    setFilters((prev) => ({
+      ...prev,
+      search: value,
+    }));
   };
 
   // 검색 계산식
   const filteredProfiles = profiles.filter((profile) => {
     // 이름에 검색어가 포함되는가?
-    const matchesName = profile.name.includes(search.trim());
+    const matchesName = profile.name.includes(filter.search.trim());
     // 나이 필터를 통과하는가?
-    const matchesAge = check ? profile.age >= 30 : true;
+    const matchesAge = filter.onlyAge30Plus ? profile.age >= 30 : true;
     // 수정 중 필터를 통과하는가?
-    const matchesEditing = editingCheck ? profile.id === editingId : true;
+    const matchesEditing = filter.onlyEditing ? profile.id === editingId : true;
+    // 나이가 변경이 되었는가?
+    const matchesChangeAge = filter.onlyChangedAge
+      ? profile.age !== profile.initialAge
+      : true;
 
-    return matchesName && matchesAge && matchesEditing;
+    return matchesName && matchesAge && matchesEditing && matchesChangeAge;
   });
 
   // 검색 초기화
   const handleSearchClear = () => {
     searchInputRef.current?.focus();
-    setSearch("");
-    setCheck(false);
-    setEditingCheck(false);
+
+    setFilters((prev) => ({
+      ...prev,
+      search: "",
+      onlyAge30Plus: false,
+      onlyEditing: false,
+      onlyChangedAge: false,
+    }));
   };
 
   // 각각의 이름 수정
@@ -230,12 +255,19 @@ function ProfileList() {
 
   // 30대 이상 보기 체크
   const onCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheck(event.target.checked);
+    const value = event.target.checked;
+
+    setFilters((prev) => ({
+      ...prev,
+      onlyAge30Plus: value,
+    }));
   };
 
   // 수정중인 사람만 보기 체크
   const handleEditingCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditingCheck(event.target.checked);
+    const value = event.target.checked;
+
+    setFilters((prev) => ({ ...prev, onlyEditing: value }));
   };
   // 검색 결과 사람만 나이 +1
   const handleFilteredAge = () => {
@@ -306,10 +338,52 @@ function ProfileList() {
       }),
     );
   };
+
   // 검색 결과 나이 복원 버튼 로직
   const handleFilteredRestoreAgeBtn = filteredProfiles.filter(
     (profiles) => profiles.age !== profiles.initialAge,
   );
+
+  // 나이가 변경된 사람만 보기
+  const handleChangeAge = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.checked;
+
+    setFilters((prev) => ({ ...prev, onlyChangedAge: value }));
+  };
+
+  const handleSavefilters = (filter: ProfileFilters) => {
+    // setSaveFilters((prev) => ({
+    //   search: filter.search,
+    //   onlyAge30Plus: filter.onlyAge30Plus,
+    //   onlyEditing: filter.onlyEditing,
+    //   onlyChangedAge: filter.onlyChangedAge,
+    // }));
+
+    // 위에 코딩을 아래 코딩으로 대체 가능
+    setSaveFilters({ ...filter });
+  };
+
+  const handleLoadfilters = () => {
+    // setFilters((prev) => ({
+    //   search: saveFilters?.search ? saveFilters?.search : "",
+    //   onlyAge30Plus: saveFilters?.onlyAge30Plus
+    //     ? saveFilters?.onlyAge30Plus
+    //     : false,
+    //   onlyEditing: saveFilters?.onlyEditing ? saveFilters?.onlyEditing : false,
+    //   onlyChangedAge: saveFilters?.onlyChangedAge
+    //     ? saveFilters?.onlyChangedAge
+    //     : false,
+    // }));
+
+    // 위에 코딩을 아래 코딩으로 대체 가능
+    if (saveFilters === null) return;
+
+    setFilters({ ...saveFilters });
+  };
+
+  const handleDeletefilters = () => {
+    setSaveFilters(null);
+  };
 
   return (
     <>
@@ -339,7 +413,7 @@ function ProfileList() {
         <div>
           <input
             ref={searchInputRef}
-            value={search}
+            value={filter.search}
             onChange={handleSearch}
             placeholder="검색할 사람의 이름을 적어주세요."
             style={{
@@ -350,26 +424,65 @@ function ProfileList() {
             }}
           />
           <label style={{ marginRight: "5px" }}>
-            <input checked={check} type="checkbox" onChange={onCheckChange} />
+            <input
+              checked={filter.onlyAge30Plus}
+              type="checkbox"
+              onChange={onCheckChange}
+            />
             30세 이상만 보기
           </label>
           <label style={{ marginRight: "5px" }}>
             <input
-              checked={editingCheck}
+              checked={filter.onlyEditing}
               type="checkbox"
               onChange={handleEditingCheck}
             />
             수정 중인 사람만 보기
           </label>
-          <button
-            type="button"
-            onClick={handleSearchClear}
-            disabled={
-              search.length === 0 && check === false && editingCheck === false
-            }
-          >
-            검색 초기화
-          </button>
+          <label style={{ marginRight: "5px" }}>
+            <input
+              checked={filter.onlyChangedAge}
+              type="checkbox"
+              onChange={handleChangeAge}
+            />
+            나이가 변경된 사람만 보기
+          </label>
+          <div>
+            <div>
+              {saveFilters !== null
+                ? "저장된 검색 조건이 있습니다."
+                : "저장된 검색 조건이 없습니다."}
+            </div>
+            <button type="button" onClick={() => handleSavefilters(filter)}>
+              검색 조건 저장
+            </button>
+            <button
+              type="button"
+              onClick={handleLoadfilters}
+              disabled={saveFilters === null}
+            >
+              검색 조건 불러오기
+            </button>
+            <button
+              type="button"
+              onClick={handleDeletefilters}
+              disabled={saveFilters === null}
+            >
+              검색 조건 삭제
+            </button>
+            <button
+              type="button"
+              onClick={handleSearchClear}
+              disabled={
+                filter.search.length === 0 &&
+                filter.onlyAge30Plus === false &&
+                filter.onlyEditing === false &&
+                filter.onlyChangedAge === false
+              }
+            >
+              검색 초기화
+            </button>
+          </div>
         </div>
         <button type="submit" disabled={userName.trim().length < 2}>
           사람 추가
