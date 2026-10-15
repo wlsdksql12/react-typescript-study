@@ -10,9 +10,13 @@ interface Profile {
 interface EditProfileFormProps {
   editingName: string;
   editingId: number;
+  allSelect: boolean;
+  delayMs: number;
   changeName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleEdit: (event: React.SubmitEvent<HTMLFormElement>) => void;
   handleEditCancel: () => void;
+  handleAllSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDelayCheck: (delay: number) => void;
 }
 
 interface ProfileItemProps {
@@ -100,12 +104,17 @@ function ProfileItem({
 function EditProfileForm({
   editingName,
   editingId,
+  allSelect,
+  delayMs,
   handleEdit,
   changeName,
   handleEditCancel,
+  handleAllSelect,
+  handleDelayCheck,
 }: EditProfileFormProps) {
   const editInputRef = useRef<HTMLInputElement>(null);
-  const [allSelect, setAllSelect] = useState(false);
+  const [checkEnabled, setCheckEnabled] = useState(true);
+  // const [delayMs, setDelayMs] = useState(1000);
 
   useEffect(() => {
     editInputRef.current?.focus();
@@ -115,21 +124,39 @@ function EditProfileForm({
     }
   }, [editingId, allSelect]);
 
+  useEffect(() => {
+    if (editingName.trim().length < 2 || checkEnabled === false) return;
+
+    console.log("안내 예약", editingName);
+
+    const timerName = window.setTimeout(() => {
+      console.log("입력 확인", editingName.trim());
+    }, delayMs);
+
+    return () => {
+      window.clearTimeout(timerName);
+      console.log("안내 예약 취소", editingName);
+    };
+  }, [editingName, editingId, checkEnabled, delayMs]);
+
   // 수정중인 이름 전체 선택
   const handleSelectName = () => {
     editInputRef.current?.focus();
     editInputRef.current?.select();
   };
 
-  // 자동 전체 선택
-  const handleAllSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAllSelect(event.target.checked);
+  const handleCheckEnabled = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckEnabled(event.target.checked);
   };
+
+  // const handleDelayCheck = (delay: number) => {
+  //   setDelayMs(delay);
+  // };
 
   return (
     <form onSubmit={handleEdit}>
       <hr />
-      <div>이름 수정중</div>
+      <div>이름 수정중 (확인 대기 시간: {delayMs}ms)</div>
       <input
         ref={editInputRef}
         value={editingName}
@@ -149,6 +176,20 @@ function EditProfileForm({
         <input type="checkbox" checked={allSelect} onChange={handleAllSelect} />
         자동 전체 선택
       </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={checkEnabled}
+          onChange={handleCheckEnabled}
+        />
+        입력 확인 켜기
+      </label>
+      <button type="button" onClick={() => handleDelayCheck(500)}>
+        입력 빠르게 확인
+      </button>
+      <button type="button" onClick={() => handleDelayCheck(1500)}>
+        입력 천천히 확인
+      </button>
     </form>
   );
 }
@@ -223,6 +264,8 @@ function FilterSavePanel({
 function ProfileList() {
   const nextId = useRef(4);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [delayMs, setDelayMs] = useState(1000);
+  const [allSelect, setAllSelect] = useState(false);
   const [saveFilters, setSaveFilters] = useState<ProfileFilters | null>(null);
   const [userName, setUserName] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -236,6 +279,15 @@ function ProfileList() {
     ...DEFAULT_FILTERS,
   });
   const isDefaultFilters = areFiltersEqual(filter, DEFAULT_FILTERS);
+
+  const handleDelayCheck = (delay: number) => {
+    setDelayMs(delay);
+  };
+
+  // 자동 전체 선택
+  const handleAllSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAllSelect(event.target.checked);
+  };
 
   // 사람 추가
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -308,7 +360,7 @@ function ProfileList() {
   // 검색창 값 입력
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log(value);
+
     setFilters((prev) => ({
       ...prev,
       search: value,
@@ -646,9 +698,13 @@ function ProfileList() {
         <EditProfileForm
           editingName={editingName}
           editingId={editingId}
+          allSelect={allSelect}
+          delayMs={delayMs}
           changeName={changeName}
           handleEdit={handleEdit}
           handleEditCancel={handleEditCancel}
+          handleAllSelect={handleAllSelect}
+          handleDelayCheck={handleDelayCheck}
         />
       ) : null}
     </>
