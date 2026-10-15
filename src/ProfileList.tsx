@@ -12,11 +12,13 @@ interface EditProfileFormProps {
   editingId: number;
   allSelect: boolean;
   delayMs: number;
+  checkEnabled: boolean;
   changeName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleEdit: (event: React.SubmitEvent<HTMLFormElement>) => void;
   handleEditCancel: () => void;
   handleAllSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDelayCheck: (delay: number) => void;
+  handleCheckEnabled: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface ProfileItemProps {
@@ -106,15 +108,15 @@ function EditProfileForm({
   editingId,
   allSelect,
   delayMs,
+  checkEnabled,
   handleEdit,
   changeName,
   handleEditCancel,
   handleAllSelect,
   handleDelayCheck,
+  handleCheckEnabled,
 }: EditProfileFormProps) {
   const editInputRef = useRef<HTMLInputElement>(null);
-  const [checkEnabled, setCheckEnabled] = useState(true);
-  // const [delayMs, setDelayMs] = useState(1000);
 
   useEffect(() => {
     editInputRef.current?.focus();
@@ -144,14 +146,6 @@ function EditProfileForm({
     editInputRef.current?.focus();
     editInputRef.current?.select();
   };
-
-  const handleCheckEnabled = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckEnabled(event.target.checked);
-  };
-
-  // const handleDelayCheck = (delay: number) => {
-  //   setDelayMs(delay);
-  // };
 
   return (
     <form onSubmit={handleEdit}>
@@ -264,6 +258,7 @@ function FilterSavePanel({
 function ProfileList() {
   const nextId = useRef(4);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [checkEnabled, setCheckEnabled] = useState(true);
   const [delayMs, setDelayMs] = useState(1000);
   const [allSelect, setAllSelect] = useState(false);
   const [saveFilters, setSaveFilters] = useState<ProfileFilters | null>(null);
@@ -279,6 +274,10 @@ function ProfileList() {
     ...DEFAULT_FILTERS,
   });
   const isDefaultFilters = areFiltersEqual(filter, DEFAULT_FILTERS);
+
+  const handleCheckEnabled = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckEnabled(event.target.checked);
+  };
 
   const handleDelayCheck = (delay: number) => {
     setDelayMs(delay);
@@ -700,11 +699,13 @@ function ProfileList() {
           editingId={editingId}
           allSelect={allSelect}
           delayMs={delayMs}
+          checkEnabled={checkEnabled}
           changeName={changeName}
           handleEdit={handleEdit}
           handleEditCancel={handleEditCancel}
           handleAllSelect={handleAllSelect}
           handleDelayCheck={handleDelayCheck}
+          handleCheckEnabled={handleCheckEnabled}
         />
       ) : null}
     </>
