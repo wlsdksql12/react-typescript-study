@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Profile {
   id: number;
@@ -9,6 +9,7 @@ interface Profile {
 
 interface EditProfileFormProps {
   editingName: string;
+  editingId: number;
   changeName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleEdit: (event: React.SubmitEvent<HTMLFormElement>) => void;
   handleEditCancel: () => void;
@@ -97,16 +98,40 @@ function ProfileItem({
 }
 
 function EditProfileForm({
-  handleEdit,
   editingName,
+  editingId,
+  handleEdit,
   changeName,
   handleEditCancel,
 }: EditProfileFormProps) {
+  const editInputRef = useRef<HTMLInputElement>(null);
+  const [allSelect, setAllSelect] = useState(false);
+
+  useEffect(() => {
+    editInputRef.current?.focus();
+
+    if (allSelect) {
+      editInputRef.current?.select();
+    }
+  }, [editingId, allSelect]);
+
+  // 수정중인 이름 전체 선택
+  const handleSelectName = () => {
+    editInputRef.current?.focus();
+    editInputRef.current?.select();
+  };
+
+  // 자동 전체 선택
+  const handleAllSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAllSelect(event.target.checked);
+  };
+
   return (
     <form onSubmit={handleEdit}>
       <hr />
       <div>이름 수정중</div>
       <input
+        ref={editInputRef}
         value={editingName}
         onChange={changeName}
         placeholder="수정할 이름을 입력해 주세요."
@@ -117,6 +142,13 @@ function EditProfileForm({
       <button type="button" onClick={handleEditCancel}>
         취소
       </button>
+      <button type="button" onClick={handleSelectName}>
+        이름 전체 선택
+      </button>
+      <label>
+        <input type="checkbox" checked={allSelect} onChange={handleAllSelect} />
+        자동 전체 선택
+      </label>
     </form>
   );
 }
@@ -542,7 +574,7 @@ function ProfileList() {
             나이가 변경된 사람만 보기
           </label>
           <FilterSavePanel
-            savedFilters={saveFilters ? saveFilters : null}
+            savedFilters={saveFilters}
             isSameFilters={isSameFilters}
             isDefaultFilters={isDefaultFilters}
             onSave={() => handleSavefilters(filter)}
@@ -613,6 +645,7 @@ function ProfileList() {
       {editingId !== null ? (
         <EditProfileForm
           editingName={editingName}
+          editingId={editingId}
           changeName={changeName}
           handleEdit={handleEdit}
           handleEditCancel={handleEditCancel}
