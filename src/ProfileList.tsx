@@ -117,6 +117,8 @@ function EditProfileForm({
   handleCheckEnabled,
 }: EditProfileFormProps) {
   const editInputRef = useRef<HTMLInputElement>(null);
+  const timerRef = useRef<number | null>(null);
+  const [confirmedName, setConfirmedName] = useState("");
 
   useEffect(() => {
     editInputRef.current?.focus();
@@ -131,13 +133,18 @@ function EditProfileForm({
 
     console.log("안내 예약", editingName);
 
-    const timerName = window.setTimeout(() => {
+    timerRef.current = window.setTimeout(() => {
+      timerRef.current = null;
       console.log("입력 확인", editingName.trim());
+      setConfirmedName(editingName.trim());
     }, delayMs);
 
     return () => {
-      window.clearTimeout(timerName);
-      console.log("안내 예약 취소", editingName);
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+        console.log("안내 예약 취소", editingName);
+      }
     };
   }, [editingName, editingId, checkEnabled, delayMs]);
 
@@ -145,6 +152,26 @@ function EditProfileForm({
   const handleSelectName = () => {
     editInputRef.current?.focus();
     editInputRef.current?.select();
+  };
+
+  // 입력 확인 삭제
+  const handleConfNameDel = () => {
+    setConfirmedName("");
+  };
+
+  // 즉시 입력 확인
+  const handleCheckConfName = () => {
+    const newEditingName = editingName.trim();
+
+    if (newEditingName.length < 2) return;
+
+    if (timerRef.current !== null) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+      console.log("직접 확인으로 안내 예약 취소");
+    }
+
+    setConfirmedName(newEditingName);
   };
 
   return (
@@ -157,6 +184,36 @@ function EditProfileForm({
         onChange={changeName}
         placeholder="수정할 이름을 입력해 주세요."
       />
+      <div style={{ display: "flex", gap: "6px" }}>
+        <span>
+          {confirmedName
+            ? `마지막 확인 이름: ${confirmedName}`
+            : "아직 확인된 이름이 없습니다."}
+        </span>
+        <button
+          type="button"
+          onClick={handleCheckConfName}
+          disabled={editingName.trim().length < 2}
+        >
+          지금 확인
+        </button>
+        <button
+          type="button"
+          onClick={handleConfNameDel}
+          disabled={confirmedName === ""}
+        >
+          확인 기록 지우기
+        </button>
+      </div>
+      <div>
+        {checkEnabled === false
+          ? "입력 확인이 꺼져 있습니다."
+          : editingName.trim().length < 2
+            ? "이름을 두 글자 이상 입력해 주세요."
+            : editingName.trim() === confirmedName
+              ? "현재 입력은 확인된 이름과 같습니다."
+              : "현재 입력은 아직 확인되지 않았습니다."}
+      </div>
       <button type="submit" disabled={editingName.trim().length < 2}>
         수정
       </button>
@@ -695,6 +752,7 @@ function ProfileList() {
       </form>
       {editingId !== null ? (
         <EditProfileForm
+          key={editingId}
           editingName={editingName}
           editingId={editingId}
           allSelect={allSelect}
