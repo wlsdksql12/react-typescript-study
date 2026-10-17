@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ProfileList from "./ProfileList";
+import DelayedMemo from "./DelayedMemo";
 
 interface NameProps {
   name: string;
@@ -84,6 +85,9 @@ function App() {
     age: 29,
   });
   const inputRef = useRef<HTMLInputElement>(null);
+  const [showMemo, setShowMemo] = useState(true);
+  const [preview, setPreview] = useState("");
+  const [prefix, setPreFix] = useState("메모: ");
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -134,6 +138,14 @@ function App() {
       age: prev.age + 2,
     }));
   };
+
+  const handlePreviewChange = useCallback(
+    (value: string) => {
+      setPreview(prefix + value);
+    },
+    [prefix],
+  );
+
   return (
     <>
       <ProfilePractice
@@ -165,6 +177,29 @@ function App() {
         </button>
       </form>
       <ProfileList />
+      <hr />
+      <h2>메모 미리보기 실습</h2>
+
+      <button type="button" onClick={() => setShowMemo((prev) => !prev)}>
+        {showMemo ? "메모 닫기" : "메모 열기"}
+      </button>
+      <div>
+        선택한 문구: {prefix}
+        <button type="button" onClick={() => setPreFix("메모: ")}>
+          메모 문구
+        </button>
+        <button type="button" onClick={() => setPreFix("공지: ")}>
+          공지 문구
+        </button>
+      </div>
+      <div>
+        {showMemo ? (
+          <DelayedMemo
+            preview={preview}
+            handlePreviewChange={handlePreviewChange}
+          />
+        ) : null}
+      </div>
     </>
   );
 }

@@ -47,6 +47,11 @@ interface FilterSavePanelProps {
   onClear: () => void;
 }
 
+interface ConfirmationResult {
+  name: string;
+  source: "자동" | "직접";
+}
+
 const DEFAULT_FILTERS: ProfileFilters = {
   search: "",
   onlyAge30Plus: false,
@@ -118,7 +123,10 @@ function EditProfileForm({
 }: EditProfileFormProps) {
   const editInputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<number | null>(null);
-  const [confirmedName, setConfirmedName] = useState("");
+  const [isPending, setIsPending] = useState(false); // 자동 확인 예약 체크
+  const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(
+    null,
+  );
 
   useEffect(() => {
     editInputRef.current?.focus();
@@ -129,24 +137,36 @@ function EditProfileForm({
   }, [editingId, allSelect]);
 
   useEffect(() => {
-    if (editingName.trim().length < 2 || checkEnabled === false) return;
+    if (editingName.trim().length < 2 || checkEnabled === false) {
+      setIsPending(false);
+      return;
+    }
 
     console.log("안내 예약", editingName);
+    setIsPending(true);
 
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null;
+      setIsPending(false);
       console.log("입력 확인", editingName.trim());
-      setConfirmedName(editingName.trim());
+      setConfirmation({ name: editingName.trim(), source: "자동" });
     }, delayMs);
 
     return () => {
       if (timerRef.current !== null) {
-        window.clearTimeout(timerRef.current);
-        timerRef.current = null;
+        clearPendingTimer();
         console.log("안내 예약 취소", editingName);
       }
     };
   }, [editingName, editingId, checkEnabled, delayMs]);
+
+  // 타이머 예약 정리
+  const clearPendingTimer = () => {
+    if (timerRef.current === null) return;
+
+    window.clearTimeout(timerRef.current);
+    timerRef.current = null;
+  };
 
   // 수정중인 이름 전체 선택
   const handleSelectName = () => {
@@ -156,7 +176,7 @@ function EditProfileForm({
 
   // 입력 확인 삭제
   const handleConfNameDel = () => {
-    setConfirmedName("");
+    setConfirmation(null);
   };
 
   // 즉시 입력 확인
@@ -166,14 +186,37 @@ function EditProfileForm({
     if (newEditingName.length < 2) return;
 
     if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current);
-      timerRef.current = null;
+      clearPendingTimer();
+      setIsPending(false);
       console.log("직접 확인으로 안내 예약 취소");
     }
 
-    setConfirmedName(newEditingName);
+    setConfirmation({ name: newEditingName, source: "직접" });
   };
 
+  // 자동 확인 예약 취소
+  const handleCancelPendingCheck = () => {
+    if (timerRef.current === null) return;
+
+    clearPendingTimer();
+    setIsPending(false);
+    console.log("자동 확인 예약 취소");
+  };
+
+  // 직접 확인 기록 지우기
+  const handleClearManualConfirmation = () => {
+    if (confirmation === null || confirmation.source === "자동") return;
+
+    setConfirmation(null);
+  };
+
+  // 이전 입력 확인 기록 지우기
+  const handleClearOutdatedConfirmation = () => {
+    if (confirmation === null || confirmation.name === editingName.trim())
+      return;
+
+    setConfirmation(null);
+  };
   return (
     <form onSubmit={handleEdit}>
       <hr />
@@ -186,8 +229,8 @@ function EditProfileForm({
       />
       <div style={{ display: "flex", gap: "6px" }}>
         <span>
-          {confirmedName
-            ? `마지막 확인 이름: ${confirmedName}`
+          {confirmation
+            ? `마지막 확인 이름: ${confirmation.name} / 확인 방식: ${confirmation.source}`
             : "아직 확인된 이름이 없습니다."}
         </span>
         <button
@@ -200,9 +243,35 @@ function EditProfileForm({
         <button
           type="button"
           onClick={handleConfNameDel}
-          disabled={confirmedName === ""}
+          disabled={confirmation === null}
         >
           확인 기록 지우기
+        </button>
+        <button
+          type="button"
+          onClick={handleClearManualConfirmation}
+          disabled={
+            (confirmation !== null && confirmation.source === "자동") ||
+            confirmation === null
+          }
+        >
+          직접 확인 기록 지우기
+        </button>
+        <button
+          type="button"
+          onClick={handleCancelPendingCheck}
+          disabled={!isPending}
+        >
+          자동 확인 예약 취소
+        </button>
+        <button
+          type="button"
+          onClick={handleClearOutdatedConfirmation}
+          disabled={
+            confirmation === null || confirmation.name === editingName.trim()
+          }
+        >
+          이전 입력 확인 기록 지우기
         </button>
       </div>
       <div>
@@ -210,9 +279,14 @@ function EditProfileForm({
           ? "입력 확인이 꺼져 있습니다."
           : editingName.trim().length < 2
             ? "이름을 두 글자 이상 입력해 주세요."
-            : editingName.trim() === confirmedName
+            : confirmation !== null && editingName.trim() === confirmation.name
               ? "현재 입력은 확인된 이름과 같습니다."
               : "현재 입력은 아직 확인되지 않았습니다."}
+      </div>
+      <div>
+        {isPending
+          ? "자동 확인 대기 중입니다."
+          : "대기 중인 자동 확인이 없습니다."}
       </div>
       <button type="submit" disabled={editingName.trim().length < 2}>
         수정
@@ -238,7 +312,7 @@ function EditProfileForm({
       <button type="button" onClick={() => handleDelayCheck(500)}>
         입력 빠르게 확인
       </button>
-      <button type="button" onClick={() => handleDelayCheck(1500)}>
+      <button type="button" onClick={() => handleDelayCheck(3000)}>
         입력 천천히 확인
       </button>
     </form>
