@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import ProfileList from "./ProfileList";
 import DelayedMemo from "./DelayedMemo";
+import MemoHistory from "./MemoHistory";
 
 interface NameProps {
   name: string;
@@ -22,6 +23,11 @@ interface ProfilePracticeProps extends profile {
   onClickAge: () => void;
   onClickName: () => void;
   onClickAllChange: () => void;
+}
+
+interface MemoList {
+  prefix: string;
+  value: string;
 }
 
 function NamePractice({ name }: NameProps) {
@@ -88,6 +94,8 @@ function App() {
   const [showMemo, setShowMemo] = useState(true);
   const [preview, setPreview] = useState("");
   const [prefix, setPreFix] = useState("메모: ");
+  const [autoApply, setAutoApply] = useState(true);
+  const [memoList, setMemoList] = useState<MemoList[]>([]);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -141,10 +149,20 @@ function App() {
 
   const handlePreviewChange = useCallback(
     (value: string) => {
+      console.log("부모 함수 실행", prefix, value);
       setPreview(prefix + value);
+      setMemoList((prev) => [...prev, { prefix, value }]);
     },
     [prefix],
   );
+
+  const handleAutoApply = (checked: boolean) => {
+    setAutoApply(checked);
+  };
+
+  const handleMemoHistoryDel = () => {
+    setMemoList([]);
+  };
 
   return (
     <>
@@ -196,10 +214,16 @@ function App() {
         {showMemo ? (
           <DelayedMemo
             preview={preview}
+            autoApply={autoApply}
             handlePreviewChange={handlePreviewChange}
+            handleAutoApply={handleAutoApply}
           />
         ) : null}
       </div>
+      <MemoHistory
+        items={memoList}
+        handleMemoHistoryDel={handleMemoHistoryDel}
+      />
     </>
   );
 }

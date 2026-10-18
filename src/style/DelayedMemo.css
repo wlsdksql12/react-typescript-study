@@ -1,0 +1,122 @@
+.memo-card {
+  width: 100%; /* 부모가 제공하는 너비를 체움 */
+  max-width: 480px; /* 너비가 최대 480px을 넘지 않도록 제한 */
+  box-sizing: border-box; /* 지정한 너비 안쪽 여백과 테두리까지 포함 */
+  padding: 24px; /* 테두리 안쪽과 내용 사이에 여백을 만듦 */
+  border: 1px solid #d1d5db; /* 두께 1px의 실선 테두리 */
+  border-radius: 12px; /* 모서리를 둥글게 만듦 */
+  background-color: #f9fafb; /* 배경색 지정 */
+  margin-top: 16px;
+}
+
+.memo-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.memo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.memo-button {
+  width: 120px;
+  max-width: 100%;
+  padding: 10px 16px;
+  box-sizing: border-box;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.memo-button:disabled {
+  background-color: #d1d5db;
+  color: #3b5563;
+  cursor: not-allowed;
+}
+
+.memo-button:enabled {
+  cursor: pointer;
+}
+
+.memo-button:enabled:hover {
+  background-color: #1d4ed8;
+}
+
+.memo-status {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.memo-status-pending {
+  color: #92400e;
+}
+
+.memo-preview {
+  font-size: 16px;
+}
+
+.memo-preview-empty {
+  color: #6b7280;
+}
+
+.memo-preview-filled {
+  color: #111827;
+  font-weight: 600;
+}
+
+.memo-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.memo-button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.memo-auto-check {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.memo-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.memo-button-cancelPending:enabled {
+  background-color: #fbbf24;
+}
+
+.memo-button-cancelPending:enabled:hover {
+  background-color: #f59e0b;
+}
+
+.memo-button-clearMemo:enabled {
+  background-color: #facc15;
+}
+
+.memo-button-clearMemo:enabled:hover {
+  background-color: #eab308;
+}
+
+.memo-button-cancelPending:enabled,
+.memo-button-clearMemo:enabled {
+  color: #111827;
+}
+
+.memo-button-HistoryDel,
+.memo-not-list {
+  margin-top: 10px;
+}
