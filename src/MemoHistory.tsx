@@ -69,6 +69,11 @@ export default function MemoHistory({
       handleCancelEdit();
     }
   };
+
+  const handleClearSearch = () => {
+    setSearchKeyword("");
+  };
+
   return (
     <form onSubmit={handleEditSubmit}>
       <button
@@ -79,13 +84,20 @@ export default function MemoHistory({
       >
         {showMemoList ? "기록 접기" : "기록 펼치기"}
       </button>
-      <div>
+      <div className="memo-search">
         <input
           placeholder="메모 내용 검색"
           value={searchKeyword}
           onChange={(event) => setSearchKeyword(event.target.value)}
           disabled={editingId !== null}
         />
+        <button
+          type="button"
+          disabled={searchKeyword.trim() === "" || editingId !== null}
+          onClick={handleClearSearch}
+        >
+          검색 초기화
+        </button>
       </div>
       <div className="memo-button-contnet">
         <button

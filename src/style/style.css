@@ -167,7 +167,8 @@
   white-space: nowrap;
 }
 
-.memo-button-contnet {
+.memo-button-contnet,
+.memo-search {
   display: flex;
   flex-direction: row;
   align-items: center;
