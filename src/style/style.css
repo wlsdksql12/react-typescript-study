@@ -145,7 +145,7 @@
 }
 
 .memo-list-delete,
-.mem0-list-update,
+.memo-list-update,
 .memo-list-edit-save,
 .memo-list-edit-cancel {
   flex-shrink: 0;
@@ -172,4 +172,11 @@
   flex-direction: row;
   align-items: center;
   gap: 5px;
+}
+
+.memo-edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  box-sizing: border-box;
 }

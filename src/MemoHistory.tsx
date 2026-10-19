@@ -19,11 +19,16 @@ export default function MemoHistory({
   const [showMemoList, setShowMemoList] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [draftValue, setDraftValue] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, [editingId]);
+
+  const filteredItems = items.filter((prev) =>
+    prev.value.includes(searchKeyword.trim()),
+  );
 
   const handleStartEdit = (record: MemoRecord) => {
     setEditingId(record.id);
@@ -34,6 +39,10 @@ export default function MemoHistory({
     const newValue = draftValue.trim();
     if (newValue === "" || editingId === null) return;
 
+    const editingRecord = items.find((record) => record.id === editingId);
+
+    if (!editingRecord || newValue === editingRecord.value) return;
+
     onUpdate(editingId, newValue);
     handleCancelEdit();
   };
@@ -43,8 +52,25 @@ export default function MemoHistory({
     setDraftValue("");
   };
 
+  const handleClearHistory = () => {
+    handleMemoHistoryAllDel();
+    handleCancelEdit();
+  };
+
+  const handleEditSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    handleSaveEdit();
+  };
+
+  const handleEditKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      handleCancelEdit();
+    }
+  };
   return (
-    <>
+    <form onSubmit={handleEditSubmit}>
       <button
         type="button"
         onClick={() => setShowMemoList((prev) => !prev)}
@@ -53,10 +79,18 @@ export default function MemoHistory({
       >
         {showMemoList ? "기록 접기" : "기록 펼치기"}
       </button>
+      <div>
+        <input
+          placeholder="메모 내용 검색"
+          value={searchKeyword}
+          onChange={(event) => setSearchKeyword(event.target.value)}
+          disabled={editingId !== null}
+        />
+      </div>
       <div className="memo-button-contnet">
         <button
           type="button"
-          onClick={handleMemoHistoryAllDel}
+          onClick={handleClearHistory}
           disabled={items.length < 1}
           className="memo-button-history-delete"
         >
@@ -73,75 +107,68 @@ export default function MemoHistory({
       </div>
       {items.length > 0 ? (
         showMemoList ? (
-          <ul className="memo-history-list">
-            {items.map((item, index) => (
-              <li key={item.id} className="memo-list">
-                {editingId === item.id ? (
-                  <>
-                    <input
-                      aria-label="수정할 메모 내용"
-                      ref={inputRef}
-                      value={draftValue}
-                      onChange={(event) => setDraftValue(event.target.value)}
-                    />
-                    <button
-                      type="button"
-                      className="memo-list-edit-save"
-                      onClick={handleSaveEdit}
-                    >
-                      수정 저장
-                    </button>
-                    <button
-                      type="button"
-                      className="memo-list-edit-cancel"
-                      onClick={handleCancelEdit}
-                    >
-                      수정 취소
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span className="memo-list-number">{index + 1}.</span>
-                    <span className="memo-list-text">
-                      {item.prefix + item.value}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => onDelete(item.id)}
-                      className="memo-list-delete"
-                    >
-                      기록 삭제
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleStartEdit(item)}
-                      className="memo-list-update"
-                    >
-                      기록 수정
-                    </button>
-                  </>
-                )}
-                {/* <span className="memo-list-number">{index + 1}.</span>
-                <span className="memo-list-text">
-                  {item.prefix + item.value}
-                </span> */}
-                {/* <button
-                  type="button"
-                  onClick={() => onDelete(item.id)}
-                  className="memo-list-delete"
-                >
-                  기록 삭제
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleStartEdit(item)}
-                  className="memo-list-update"
-                >
-                  기록 수정
-                </button> */}
-              </li>
-            ))}
-          </ul>
+          filteredItems.length > 0 ? (
+            <ul className="memo-history-list">
+              {filteredItems.map((item, index) => (
+                <li key={item.id} className="memo-list">
+                  {editingId === item.id ? (
+                    <>
+                      <input
+                        aria-label="수정할 메모 내용"
+                        ref={inputRef}
+                        value={draftValue}
+                        onChange={(event) => setDraftValue(event.target.value)}
+                        onKeyDown={handleEditKeyDown}
+                        className="memo-edit-input"
+                      />
+                      <button
+                        type="submit"
+                        className="memo-list-edit-save"
+                        // onClick={handleSaveEdit}
+                        disabled={
+                          draftValue.trim() === item.value ||
+                          draftValue.trim() === ""
+                        }
+                      >
+                        수정 저장
+                      </button>
+                      <button
+                        type="button"
+                        className="memo-list-edit-cancel"
+                        onClick={handleCancelEdit}
+                      >
+                        수정 취소
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="memo-list-number">{index + 1}.</span>
+                      <span className="memo-list-text">
+                        {item.prefix + item.value}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => onDelete(item.id)}
+                        className="memo-list-delete"
+                      >
+                        기록 삭제
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleStartEdit(item)}
+                        className="memo-list-update"
+                        disabled={editingId !== null}
+                      >
+                        기록 수정
+                      </button>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="memo-not-list">검색 결과가 없습니다.</div>
+          )
         ) : (
           <div className="memo-not-list">
             기록이 {items.length}개가 접혀 있습니다.
@@ -150,6 +177,6 @@ export default function MemoHistory({
       ) : (
         <div className="memo-not-list">아직 반영 기록이 없습니다.</div>
       )}
-    </>
+    </form>
   );
 }
