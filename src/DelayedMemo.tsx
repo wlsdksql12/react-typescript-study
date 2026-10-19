@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import "../src/style/DelayedMemo.css";
 import MemoInput from "./MemoInput";
 
 interface DelayedMemoProps {
@@ -74,6 +73,12 @@ function DelayedMemo({
     setMemo("");
   };
 
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleApplyNow();
+    setMemo("");
+  };
+
   return (
     <div className="memo-card">
       <MemoInput
@@ -81,13 +86,14 @@ function DelayedMemo({
         onValueChange={onValueChange}
         autoApply={autoApply}
         handleAutoApply={handleAutoApply}
+        onSubmit={handleSubmit}
       />
       <div className="memo-content">
         <span
           className={
-            preview
-              ? "memo-preview memo-preview-filled"
-              : "memo-preview memo-preview-empty"
+            preview === ""
+              ? "memo-preview memo-preview-empty"
+              : "memo-preview memo-preview-filled"
           }
         >
           {preview === "" ? "아직 반영된 내용이 없습니다." : preview}

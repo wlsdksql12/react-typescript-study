@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from "react";
 import ProfileList from "./ProfileList";
 import DelayedMemo from "./DelayedMemo";
 import MemoHistory from "./MemoHistory";
+import type { MemoRecord } from "./memoTypes";
+import "../src/style/style.css";
 
 interface NameProps {
   name: string;
@@ -23,11 +25,6 @@ interface ProfilePracticeProps extends profile {
   onClickAge: () => void;
   onClickName: () => void;
   onClickAllChange: () => void;
-}
-
-interface MemoList {
-  prefix: string;
-  value: string;
 }
 
 function NamePractice({ name }: NameProps) {
@@ -95,7 +92,8 @@ function App() {
   const [preview, setPreview] = useState("");
   const [prefix, setPreFix] = useState("메모: ");
   const [autoApply, setAutoApply] = useState(true);
-  const [memoList, setMemoList] = useState<MemoList[]>([]);
+  const [memoList, setMemoList] = useState<MemoRecord[]>([]);
+  const nextMemoIdRef = useRef(1);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -151,7 +149,16 @@ function App() {
     (value: string) => {
       console.log("부모 함수 실행", prefix, value);
       setPreview(prefix + value);
-      setMemoList((prev) => [...prev, { prefix, value }]);
+
+      const newRecord: MemoRecord = {
+        id: nextMemoIdRef.current,
+        prefix: prefix,
+        value: value,
+      };
+
+      nextMemoIdRef.current += 1;
+
+      setMemoList((prev) => [...prev, newRecord]);
     },
     [prefix],
   );
@@ -160,8 +167,26 @@ function App() {
     setAutoApply(checked);
   };
 
-  const handleMemoHistoryDel = () => {
+  const handleMemoHistoryAllDel = () => {
     setMemoList([]);
+  };
+
+  const onDelete = (id: number) => {
+    const newMemoList = memoList.filter((prev) => prev.id !== id);
+
+    setMemoList(newMemoList);
+  };
+
+  const handleReverseHistory = () => {
+    setMemoList((prev) => [...prev].reverse());
+  };
+
+  const handleUpdateHistory = (id: number, value: string) => {
+    setMemoList((prev) =>
+      prev.map((record) =>
+        record.id === id ? { ...record, value: value } : record,
+      ),
+    );
   };
 
   return (
@@ -222,7 +247,10 @@ function App() {
       </div>
       <MemoHistory
         items={memoList}
-        handleMemoHistoryDel={handleMemoHistoryDel}
+        handleMemoHistoryAllDel={handleMemoHistoryAllDel}
+        onDelete={onDelete}
+        onReverse={handleReverseHistory}
+        onUpdate={handleUpdateHistory}
       />
     </>
   );

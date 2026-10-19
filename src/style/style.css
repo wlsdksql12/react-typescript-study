@@ -71,6 +71,7 @@
 .memo-preview-filled {
   color: #111827;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .memo-label {
@@ -116,7 +117,59 @@
   color: #111827;
 }
 
-.memo-button-HistoryDel,
+.memo-history-list {
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.memo-button-history-open-close,
+.memo-button-history-delete,
+.memo-button-history-reverse,
 .memo-not-list {
   margin-top: 10px;
+}
+
+.memo-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memo-list-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.memo-list-delete,
+.mem0-list-update,
+.memo-list-edit-save,
+.memo-list-edit-cancel {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 2px 7px;
+}
+
+.memo-list-delete:hover {
+  background-color: #fee2e2;
+}
+
+.memo-list-delete:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.memo-list-number {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.memo-button-contnet {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
 }

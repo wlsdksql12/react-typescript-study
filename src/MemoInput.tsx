@@ -3,6 +3,7 @@ interface MemoInputProps {
   autoApply: boolean;
   onValueChange: (value: string) => void;
   handleAutoApply: (checked: boolean) => void;
+  onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void;
 }
 
 export default function MemoInput({
@@ -10,9 +11,10 @@ export default function MemoInput({
   autoApply,
   onValueChange,
   handleAutoApply,
+  onSubmit,
 }: MemoInputProps) {
   return (
-    <>
+    <form onSubmit={onSubmit}>
       <label className="memo-label" htmlFor="memo-input">
         메모 내용
       </label>
@@ -30,6 +32,6 @@ export default function MemoInput({
         className="memo-input"
         id="memo-input"
       />
-    </>
+    </form>
   );
 }
