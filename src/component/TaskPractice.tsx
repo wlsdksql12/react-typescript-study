@@ -32,13 +32,9 @@ export default function TaskPractice() {
 
   const handleDone = (id: number) => {
     setTodoList((prev) =>
-      prev.map((todo) => (todo.id === id ? { ...todo, done: true } : todo)),
-    );
-  };
-
-  const handleUndone = (id: number) => {
-    setTodoList((prev) =>
-      prev.map((todo) => (todo.id === id ? { ...todo, done: false } : todo)),
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo,
+      ),
     );
   };
 
@@ -96,10 +92,7 @@ export default function TaskPractice() {
                 {item.text} {item.done ? "(완료)" : "(미완료)"}
               </span>
               <button type="button" onClick={() => handleDone(item.id)}>
-                완료
-              </button>
-              <button type="button" onClick={() => handleUndone(item.id)}>
-                취소
+                {item.done === true ? "취소" : "완료"}
               </button>
               <button type="button" onClick={() => handleDelete(item.id)}>
                 삭제
