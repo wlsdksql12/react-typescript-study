@@ -7,6 +7,7 @@ interface MemoHistoryProps {
   onDelete: (id: number) => void;
   onReverse: () => void;
   onUpdate: (id: number, value: string) => void;
+  handleSearchAllDel: (filteredItems: MemoRecord[]) => void;
 }
 
 export default function MemoHistory({
@@ -15,6 +16,7 @@ export default function MemoHistory({
   onDelete,
   onReverse,
   onUpdate,
+  handleSearchAllDel,
 }: MemoHistoryProps) {
   const [showMemoList, setShowMemoList] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -93,10 +95,27 @@ export default function MemoHistory({
         />
         <button
           type="button"
-          disabled={searchKeyword.trim() === "" || editingId !== null}
+          disabled={searchKeyword === "" || editingId !== null}
           onClick={handleClearSearch}
         >
           검색 초기화
+        </button>
+      </div>
+      <div className="memo-search-results">
+        <span className="memo-search-length">
+          검색 결과: {filteredItems.length}개
+        </span>
+        <button
+          type="button"
+          disabled={
+            searchKeyword.trim() === "" ||
+            editingId !== null ||
+            filteredItems.length === 0
+          }
+          onClick={() => handleSearchAllDel(filteredItems)}
+          className="memo-search-all-Delete-button"
+        >
+          검색 결과 삭제
         </button>
       </div>
       <div className="memo-button-contnet">

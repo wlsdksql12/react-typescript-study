@@ -1,9 +1,10 @@
 import { useCallback, useRef, useState } from "react";
-import ProfileList from "./ProfileList";
-import DelayedMemo from "./DelayedMemo";
-import MemoHistory from "./MemoHistory";
-import type { MemoRecord } from "./memoTypes";
+import ProfileList from "./component/ProfileList";
+import DelayedMemo from "./component/DelayedMemo";
+import MemoHistory from "./component/MemoHistory";
+import type { MemoRecord } from "./component/memoTypes";
 import "../src/style/style.css";
+import TaskPractice from "./component/TaskPractice";
 
 interface NameProps {
   name: string;
@@ -189,6 +190,20 @@ function App() {
     );
   };
 
+  const handleSearchAllDel = (filteredItems: MemoRecord[]) => {
+    console.log(filteredItems);
+
+    setMemoList((prev) =>
+      prev.filter((list) => {
+        const filteredMemoList = filteredItems.some(
+          (item) => item.id === list.id,
+        );
+
+        return !filteredMemoList;
+      }),
+    );
+  };
+
   return (
     <>
       <ProfilePractice
@@ -251,7 +266,10 @@ function App() {
         onDelete={onDelete}
         onReverse={handleReverseHistory}
         onUpdate={handleUpdateHistory}
+        handleSearchAllDel={handleSearchAllDel}
       />
+      <hr />
+      <TaskPractice />
     </>
   );
 }

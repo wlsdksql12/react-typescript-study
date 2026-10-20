@@ -147,7 +147,8 @@
 .memo-list-delete,
 .memo-list-update,
 .memo-list-edit-save,
-.memo-list-edit-cancel {
+.memo-list-edit-cancel,
+.memo-search-all-Delete-button {
   flex-shrink: 0;
   white-space: nowrap;
   padding: 2px 7px;
@@ -173,6 +174,8 @@
   flex-direction: row;
   align-items: center;
   gap: 5px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .memo-edit-input {
@@ -180,4 +183,17 @@
   min-width: 0;
   padding: 6px 8px;
   box-sizing: border-box;
+}
+
+.memo-search-results {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+.memo-search-length {
+  flex: 1;
+  min-width: 0;
 }
