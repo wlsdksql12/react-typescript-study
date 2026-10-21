@@ -391,6 +391,8 @@ showTodoList는 useState로 관리하고 filteredTodoList는 일반 변수로 �
 
 답변 :1. 일단 원본이 todoList가 있어서 filteredTodoList까지 useState로 저장할 필요까지 없고, 무언가가 변경되거나 추가 될때마다 todoList와 filteredTodoList까지 저장이 될텐데 원본인todoList가 있으니 일반 변수로 계산을 해서 결과 값만 보여주는게 효율적이고 속도나 다른면 에서도 활용도가 높기 때문.
 
+보완 답안: 성능 때문이 아니라 데이터의 일관성을 유지하기 위해.
+
 **과제 2 — 완료/취소 버튼 개선**
 코딩
 
@@ -421,3 +423,11 @@ showTodoList는 useState로 관리하고 filteredTodoList는 일반 변수로 �
    네 가지를 먼저 예상해서 적고, 실제 실행 결과와 비교해 봐.
 
 답변: 3. 공부를 완료 처리시 1. 전체 항목 개수 : 3개. 2. 완료 항목 개수: 2개. 3. "세탁". 4. "세탁", "운동", "공부"
+
+### 2026-10-21
+
+## 오전 수업
+
+**CSS 관련**
+
+1. overflow-wrap: anywhere / 공백이 거의 없는 긴 문자열도 필요한 위치에서 줄바꿈하도록 한다.

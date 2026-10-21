@@ -1,10 +1,6 @@
 import { useRef, useState } from "react";
-
-interface ItemListProps {
-  id: number;
-  text: string;
-  done: boolean;
-}
+import TaskItem from "./TaskItem";
+import "../component/memoTypes";
 
 export default function TaskPractice() {
   const todoIdRef = useRef(1);
@@ -54,27 +50,31 @@ export default function TaskPractice() {
   console.log(todoList);
   return (
     <form onSubmit={onSubmit}>
-      <input
-        value={todo}
-        onChange={(event) => setTodo(event.target.value)}
-        ref={inputRef}
-      />
-      <button type="submit" disabled={todo.trim() === ""}>
-        추가
-      </button>
+      <div className="todo-input">
+        <input
+          value={todo}
+          onChange={(event) => setTodo(event.target.value)}
+          ref={inputRef}
+        />
+        <button type="submit" disabled={todo.trim() === ""}>
+          추가
+        </button>
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <span>오늘 할일: {todoList.length}개</span>
         <span>오늘 할일 완료: {todoDone.length}개</span>
       </div>
-      <button type="button" onClick={() => setShowTodoList("All")}>
-        전체 보기
-      </button>
-      <button type="button" onClick={() => setShowTodoList("Done")}>
-        완료만 보기
-      </button>
-      <button type="button" onClick={() => setShowTodoList("Undone")}>
-        미완료만 보기
-      </button>
+      <div className="todo-show-list">
+        <button type="button" onClick={() => setShowTodoList("All")}>
+          전체 보기
+        </button>
+        <button type="button" onClick={() => setShowTodoList("Done")}>
+          완료만 보기
+        </button>
+        <button type="button" onClick={() => setShowTodoList("Undone")}>
+          미완료만 보기
+        </button>
+      </div>
 
       {todoList.length === 0 ? (
         <div>등록된 할 일이 없습니다.</div>
@@ -85,18 +85,14 @@ export default function TaskPractice() {
             : "미완료 할 일이 없습니다."}
         </div>
       ) : (
-        <ul>
+        <ul className="todo-list">
           {filteredTodoList.map((item) => (
-            <li key={item.id}>
-              <span>
-                {item.text} {item.done ? "(완료)" : "(미완료)"}
-              </span>
-              <button type="button" onClick={() => handleDone(item.id)}>
-                {item.done === true ? "취소" : "완료"}
-              </button>
-              <button type="button" onClick={() => handleDelete(item.id)}>
-                삭제
-              </button>
+            <li key={item.id} className="todo-list-content">
+              <TaskItem
+                item={item}
+                handleDone={handleDone}
+                handleDelete={handleDelete}
+              />
             </li>
           ))}
         </ul>
