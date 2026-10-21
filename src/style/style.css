@@ -279,3 +279,77 @@
 .todo-list-delete:focus-visible {
   border: 2px solid black;
 }
+
+.cart-item-count {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cart-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.cart-items {
+  display: flex;
+  width: 100%;
+  max-width: 480px;
+  flex-direction: column;
+  padding: 24px;
+  box-sizing: border-box;
+  padding-top: 0px;
+  margin-top: 12px;
+}
+
+.cart-items-subtitle {
+  font-size: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+
+.cart-items-content {
+  padding-left: 0;
+  box-sizing: border-box;
+}
+
+.cart-item {
+  display: flex;
+  flex-direction: column;
+  background-color: #d1d5db;
+  margin-bottom: 20px;
+}
+
+.cart-item-detail {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 10px;
+  padding-bottom: 20px;
+}
+
+.cart-item-bottons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  gap: 10px;
+}
+
+.cart-item-inc-button,
+.cart-item-dec-button,
+.cart-item-del-button {
+  border: none;
+  background-color: transparent;
+  border-radius: 7px;
+  font-size: 18px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cart-item-not-qty,
+.cart-not-item {
+  list-style: none;
+  padding-left: 15px;
+}

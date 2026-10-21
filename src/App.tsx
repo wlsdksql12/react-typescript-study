@@ -5,6 +5,7 @@ import MemoHistory from "./component/MemoHistory";
 import type { MemoRecord } from "./component/memoTypes";
 import "../src/style/style.css";
 import TaskPractice from "./component/TaskPractice";
+import CartPractice from "./component/CartPractice";
 
 interface NameProps {
   name: string;
@@ -270,6 +271,8 @@ function App() {
       />
       <hr />
       <TaskPractice />
+      <hr />
+      <CartPractice />
     </>
   );
 }
