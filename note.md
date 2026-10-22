@@ -558,3 +558,32 @@ CartType.d.ts와 CartType.ts의 차이를 설명하고, export interface와 impo
 
 3. Error 객체를 사용하는 경우에는 instanceof Error로 검사해 message를 읽을 수 있다.
    ┗━ ex. catch (error) {if(error instanceof Error) {...}}
+
+## 과제 3가지
+
+1. Promise와 async/await 비교: .then()/.catch()/.finally()와 try/await/catch/finally가 어떻게 대응되는지 말로 설명하기.
+
+   답변: 1. Promise의 .then()은 성공을 했을때 결과를 받아 진행하는 곳이고, .catch()는 실패를 했을때 결과를 받아 진행하는 곳이며, .finally()는 결과가 성공이든 실패든 마지막에 실행하는 곳 이다.
+   async / await의 try는 성공을 했을때 결과를 받아 진행하는 곳이고, catch()는 실패를 했을때 결과를 받아 진행하는 곳이며, finally는 결과가 성공이든 실패든 마지막에 실행하는 곳이다.
+
+2. TypeScript 오류 처리: 현재 reject("사용자를 찾을 수 없습니다.")는 유지하고, catch (error: any)를 unknown과 typeof를 사용하는 방식으로 개선해 보기.
+
+3. 실행 순서 예측: 아래 코드가 출력하는 순서와 이유를 설명하기.
+   async function test() {
+   console.log("1");
+
+try {
+await Promise.reject("실패");
+console.log("2");
+} catch {
+console.log("3");
+} finally {
+console.log("4");
+}
+}
+
+test();
+console.log("5");
+
+답변: 3. 먼저 순서는 1, 5, 3, 4이다.
+이유는 async라고 실행이 안되는것이 아니기 때문에 1이 먼저 나오고 그 다음 awiat을 만나 동기 코드가 실행이 끝난 다음 실행 하므로 test() 밖으로 나와 5가 출력되고 실패로 왔으니 아래에 있는 2가 실행되는것이 아니라 바로 catch로 넘어가서 3이 출력되고 마지막인 finally로 이동하여 4가 출력된다. 고로 정답은 1, 5, 3, 4이다.
