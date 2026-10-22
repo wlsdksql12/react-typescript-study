@@ -8,7 +8,7 @@ export default function CartPractice() {
     { id: 2, name: "바나나", quantity: 0 },
     { id: 3, name: "포도", quantity: 3 },
   ]);
-  const [showCartItems, setShowCartItems] = useState("");
+  const [showCartItems, setShowCartItems] = useState("All");
 
   const handleItemIncrease = (id: number) => {
     setCartItems((prev) =>
@@ -62,6 +62,7 @@ export default function CartPractice() {
             filteredCartItems.length > 0 ? (
               filteredCartItems.map((prev) => (
                 <CartItemList
+                  key={prev.id}
                   item={prev}
                   handleItemIncrease={handleItemIncrease}
                   handleItemDecrease={handleItemDecrease}

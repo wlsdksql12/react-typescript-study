@@ -451,6 +451,7 @@ showTodoList는 useState로 관리하고 filteredTodoList는 일반 변수로 �
 CartType.d.ts와 CartType.ts의 차이를 설명하고, export interface와 import type을 사용하는 방식으로 변경해 보기.
 
 답변: 1. .d.ts는 전역 변수 타입을 정의 하는것이고 .ts는 모듈 타입을 정의 한것.
+┖─ 답변 보안: .ts는 typeScript 코드와 타입 선언 작성 / .d.ts는 타입 선언을 제공하는 파일. 일반적인 실행 코드 구현용이 아님.
 
 과제 2 — 컴포넌트 역할
 
@@ -464,3 +465,96 @@ CartType.d.ts와 CartType.ts의 차이를 설명하고, export interface와 impo
 수량이 0일 때 감소 버튼을 disabled로 막는 것과 감소 함수 안에서도 수량이 음수가 되지 않도록 검사하는 것의 차이를 설명하기.
 
 답번: 3. 버튼을 disabled로 막는것은 외부에서 사용자가 실행을 못하도록 막는것이거, 감소 함수 안에서도 검사를 하는것은 함수 로직에서 문제가 생기지 않도록 검사하는것.
+
+### 2026-10-21
+
+## 오전 수업
+
+**동기 / 비동기**
+
+1. 동기는 앞의 작업이 끝난 다음, 다음 작업을 실행하는 흐름.(순차적 진행)
+
+2. 비동기는 앞의 작업이 끝나기전에 기달리지 않고 다음 작업을 수행.(독립적 진행)
+
+**Promise**
+
+1. Promise는 비동기 작업의 최종 성공 결과 또는 실패 이유를 다룰 수 있도록 하는 javaScript 객체.
+
+2. Promise가 비동기 작업을 자동으로 만들어 주는 것이 아니라는점.
+
+3. 서버 요청처럼 시간이 걸리는 작업의 결과를 나중에 전달받고 처리할 수 있도록 연결해 주는 역할.
+
+4. Promise 체이닝(chaining): chaining은 여러 메서드를 사슬처럼 연결하는 것을 뜻함.
+
+5. Promise의 상태는 세 가지다.
+
+   4-1. Pending: 결과가 아직 결정되지 않음.
+
+   4-2. Fulfilled: 성공으로 확정됨.
+
+   4-3. Rejected: 실패로 확정됨.
+
+6. 관련 문법
+
+   5-1. new Promise(): Promise 객체 생성
+
+   5-2. resolve(value): 성공 결과 전달
+
+   5-3. reject(reason): 실패 이유 전달
+
+   5-4. .then(): 성공 결과 처리
+
+   5-5. .catch(): 실패 처리
+
+   5-6. .finally(): 성공·실패와 관계없이 실행할 후속 처리 등록
+
+   5-7. Promise<string[]>는 성공 결과가 문자열 배열인 Promise 타입을 의미한다.
+
+**CSS 관련**
+
+1. Grid는 행과 열을 기준으로 요소를 배치할 때 유용.
+
+2. display: grid / 자식 요소를 행과 열 기준으로 배치한다.
+
+3. grid-template-columns / Grid의 열 개수와 크기를 지정한다.
+
+4. fr / Grid의 사용 가능한 공간을 비율로 나누는 단위다.
+
+5. repeat() / 반복되는 열 크기 정의를 간결하게 작성한다.
+
+6. minmax() / Grid 열의 최소·최대 크기를 지정한다.
+   ┃ ┖─ repeat(3, minmax(100px, 1fr))는 최소 100px 너비를 가진 열 세 개를 생성한다.
+   ┗━
+7. 미디어 쿼리(@media)는 화면 너비에 따라 CSS 규칙을 다르게 적용한다.
+   ┃ ┖─ @media (max-width: 600px)은 뷰포트 너비가 600px 이하일 때 적용된다.
+   ┗━ @media (min-width: 600px)은 뷰포트 너비가 600px 이상일 때 적용된다.
+
+## 오후 수업
+
+**async / await**
+
+1. async는 비동기 함수를 선언할 때 사용하는 키워드이다. async 함수는 항상 Promise를 반환한다.
+
+2. await는 Promise의 처리 결과를 기다려서 성공값을 가져오는 문법이다.
+
+3. await가 실행이 되면 현재 async 함수의 이후 실행은 일시 중단될 수 있지만, javaScript 전체 실행이 멈추는 것은 아니다.
+
+4. 이미 성공한 Promise에 await를 사용하더라도 이후 코드는 비동기적으로 재개된다.
+
+**try/catch/finally**
+
+1. try: await로 성공 결과를 받고 사용자 정보 저장.
+
+2. catch: 비동기 요청 실패 처리
+
+3. finally: 성공·실패와 관계없이 실행 된다.
+
+**오류 처리와 TypeScript**
+
+1. catch (error: any)는 현재 동작할 수 있지만 타입 검사를 우회한다.
+
+2. 선택적인 개선으로 unknown을 사용하고 typeof로 문자열인지 확인할 수 있다.
+   ┗━ ex. catch (error: unknown) {if(typeof error === "string"){...}}
+
+3. Error 객체를 사용하는 경우에는 instanceof Error로 검사해 message를 읽을 수 있다.
+   ┗━ ex. catch (error) {if(error instanceof Error) {...}}

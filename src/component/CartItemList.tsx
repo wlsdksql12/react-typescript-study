@@ -14,7 +14,7 @@ export default function CartItemList({
   handleItemDelete,
 }: CarItemListProps) {
   return (
-    <li key={item.id} className="cart-item">
+    <li className="cart-item">
       <div className="cart-item-detail">
         <span>상품명: {item.name}</span>
         <span>수량: {item.quantity}개</span>

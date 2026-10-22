@@ -6,6 +6,8 @@ import type { MemoRecord } from "./component/memoTypes";
 import "../src/style/style.css";
 import TaskPractice from "./component/TaskPractice";
 import CartPractice from "./component/CartPractice";
+import PromisePractice from "./component/PromisePractice";
+import UserLookupPractice from "./component/UserLookupPractice";
 
 interface NameProps {
   name: string;
@@ -269,10 +271,14 @@ function App() {
         onUpdate={handleUpdateHistory}
         handleSearchAllDel={handleSearchAllDel}
       />
-      <hr />
+      <hr style={{ margin: "40px 0px" }} />
       <TaskPractice />
-      <hr />
+      <hr style={{ margin: "40px 0px" }} />
       <CartPractice />
+      <hr style={{ margin: "40px 0px" }} />
+      <PromisePractice />
+      <hr style={{ margin: "40px 0px" }} />
+      <UserLookupPractice />
     </>
   );
 }
