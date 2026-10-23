@@ -625,3 +625,25 @@ console.log("5");
 **HTML·CSS 관련**
 
 1. article: 독립적인 게시글 콘텐츠
+
+## 오후 수업
+
+**AbortController**
+
+1. AbortController는 진행 중인 작업에 취소 신호를 보낼 수 있는 JavaScript API이다.
+
+2. controller.signal: 작업에 취소 신호를 연결할 때 사용하는 객체
+
+3. controller.abort(): 취소 신호를 발생시키는 메서드
+
+4. controller.signal.aborted: 취소 신호가 발생했는지 나타내는 boolean 속성
+
+## 과제 3가지
+
+오늘 배운 범위를 복습하는 과제야. 새로운 기능을 구현할 필요는 없어.
+
+1. 코드 정리: CommentsPractice에서 사용하지 않는 주석을 제거하고, finally를 if (!controller.signal.aborted) 형태로 정리한다.
+
+2. 동작 확인: 버튼의 disabled를 임시로 제거하고 3G 환경에서 게시글을 빠르게 변경한다. 최신 게시글의 댓글이 남는지 확인한다.
+
+3. 개념 설명: AbortController를 사용했는데도 signal.aborted를 검사하는 이유를 자신의 말로 정리한다.

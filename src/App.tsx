@@ -10,6 +10,7 @@ import PromisePractice from "./component/PromisePractice";
 import UserLookupPractice from "./component/UserLookupPractice";
 import ApiPractice from "./component/ApiPractice";
 import PostListPractice from "./component/PostListPractice";
+import CommentsPractice from "./component/CommentsPractice";
 
 interface NameProps {
   name: string;
@@ -285,6 +286,8 @@ function App() {
       <ApiPractice />
       <hr style={{ margin: "40px 0px" }} />
       <PostListPractice />
+      <hr style={{ margin: "40px 0px" }} />
+      <CommentsPractice />
     </>
   );
 }
