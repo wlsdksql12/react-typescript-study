@@ -8,6 +8,8 @@ import TaskPractice from "./component/TaskPractice";
 import CartPractice from "./component/CartPractice";
 import PromisePractice from "./component/PromisePractice";
 import UserLookupPractice from "./component/UserLookupPractice";
+import ApiPractice from "./component/ApiPractice";
+import PostListPractice from "./component/PostListPractice";
 
 interface NameProps {
   name: string;
@@ -279,6 +281,10 @@ function App() {
       <PromisePractice />
       <hr style={{ margin: "40px 0px" }} />
       <UserLookupPractice />
+      <hr style={{ margin: "40px 0px" }} />
+      <ApiPractice />
+      <hr style={{ margin: "40px 0px" }} />
+      <PostListPractice />
     </>
   );
 }

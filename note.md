@@ -587,3 +587,41 @@ console.log("5");
 
 답변: 3. 먼저 순서는 1, 5, 3, 4이다.
 이유는 async라고 실행이 안되는것이 아니기 때문에 1이 먼저 나오고 그 다음 awiat을 만나 동기 코드가 실행이 끝난 다음 실행 하므로 test() 밖으로 나와 5가 출력되고 실패로 왔으니 아래에 있는 2가 실행되는것이 아니라 바로 catch로 넘어가서 3이 출력되고 마지막인 finally로 이동하여 4가 출력된다. 고로 정답은 1, 5, 3, 4이다.
+
+### 2026-10-22
+
+## 오전 수업
+
+**fetch**
+
+1. fetch()는 네트워크를 통해 리소스를 요청할 수 있는 javaScript API입니다.
+
+2. fetch()는 Promise를 반환한다.
+
+3. await fetch(url)은 서버의 응답을 나타내는 Response 객체를 받는 과정이다.
+
+4. response.json()은 응답 본문을 읽어 JSON 데이터를 JavaScript 값으로 변환하며, 이 메서드 역시 Promise를 반환한다.
+
+5. 따라서 일반적으로 두 작업 모두 await가 필요하다.
+
+   ex. const response = await fetch(url); const post = await response.json();
+
+**throw**
+
+1. throw는 오류를 발생시키는 JavaScript 문법이다.
+
+**HTTP 상태 코드**
+
+1. HTTP 404가 발생했다고 fetch의 Promise가 자동으로 실패하는 것은 아니다.
+
+2. 따라서 response.ok를 검사하고 필요한 경우 throw로 오류를 발생시킨다.
+
+**TypeScript 오류 처리**
+
+1. catch의 error는 기본적으로 unknown 타입이다.
+
+2. unknown 값은 타입을 확인하지 않은 채 문자열 state에 전달할 수 없다.
+
+**HTML·CSS 관련**
+
+1. article: 독립적인 게시글 콘텐츠

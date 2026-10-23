@@ -379,3 +379,24 @@
   list-style: none;
   padding-left: 15px;
 }
+
+.post-card {
+  background-color: oklch(86.9% 0.022 252.894);
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #b3c0d1;
+  width: 100%;
+  max-width: 580px;
+  box-sizing: border-box;
+}
+
+.post-card-id {
+  font-size: 14px;
+}
+
+/* .post-card-title {
+} */
+
+.post-card-body {
+  line-height: 30px;
+}
