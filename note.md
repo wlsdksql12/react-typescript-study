@@ -683,4 +683,53 @@ console.log("5");
 
 2. 타입 가드 응용: isPostListItem()과 isPostListArray()를 이용해 숫자형 id, 필수 문자열 속성, null, 빈 배열을 검사한 테스트를 각각 만들어 본다. 예상 결과와 실제 결과를 기록한다.
 
+답변:
+
+2-1. 숫자형 id / 테스트 데이터
+
+            const testData = [
+              {
+                id: 12351,
+                postId: 1,
+                name: "SJ",
+                email: "ASDKLFA@ASKDA.COM ",
+                body: "sdjfhajslkdfhasdfkjskdf.",
+              },
+            ];
+
+예상 결과: true / 이유: 배열 검사인 isPostListArray() 조건에 맞고 데이터 타입 검사인 isPostListItem()에도 조건이 맞아서. / 실제 결과: true
+
+2-2. 필수 문자열 속성 / 테스트 데이터
+
+            const testData = [
+              {
+                id: 12351,
+                postId: 1,
+                name: "SJ",
+                email: "ASDKLFA@ASKDA.COM ",
+                body: "sdjfhajslkdfhasdfkjskdf.",
+              },
+            ];
+
+예상 결과: true / 이유: 1번과 같은 이유이고 필수 문자열 속성이 필수 문자열 속성만 남기는 건지 지우는건지 구분이 가질 않아 그대로 진행 / 실제 결과: true
+
+2-3. null / 테스트 데이터
+
+            const testData = [null];
+
+예상 결과: false / 이유: 배열을 검사하는 isPostListArray() true로 통과를 하지만 테스트데이터를 검사하는 isPostListItem()에는 조건이 맞지 않아서 false 따라서 최종 결과는 false / 실제 결과: false
+
+2-4. 빈 배열 / 테스트 데이터
+
+const testData = [];
+
+예상 결과: true / 이유: 빈 배열이지만 배열이므로 배열을 검사하는 isPostListArray() true로 통과, 빈 배열이라 테스트데이터를 검사하는 isPostListItem()에는 조건에 걸리는것이 없기 때문에 전부 통과로 true 따라서 최종 결과는 true / 실제 결과:
+
 3. 개념 설명: unknown과 any의 차이, value is PostList의 역할, HTTP 200과 데이터 검증 성공이 서로 다른 이유를 자기 말로 정리한다.
+
+3-1. unknown과 any의 차이: 둘의 차이점은 unknown은 데이터의 타입을 알 수 없다는 뜻이고, any는 아무거나 들어오거나 될 수 있다는 뜻으로 해석.
+
+3-2. value is PostList의 역할은 value가 true라면 타입을 PostList로 지정하겠다 라는 의미.
+
+3-3. HTTP 200과 데이터 검증 성공이 다른 이유는 HTTP 200은 API를 통해 받은 데이터가 정상적으로 잘 왔다란 의미로 지정한 데이터 타입과 일치한다는 의미는 아니다.
+따라서 HTTP 200과 데이터 검증 성공이 다른 이유이며 두 가지를 동시에 사용하는 이유이기도 하다.
