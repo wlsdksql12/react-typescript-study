@@ -8,9 +8,30 @@ interface PostList {
   body: string;
 }
 
+function isPostListItem(value: unknown): value is PostList {
+  if (typeof value !== "object" || value === null) return false;
+
+  return (
+    "postId" in value &&
+    "id" in value &&
+    "name" in value &&
+    "email" in value &&
+    "body" in value &&
+    typeof value.postId === "number" &&
+    typeof value.id === "number" &&
+    typeof value.name === "string" &&
+    typeof value.email === "string" &&
+    typeof value.body &&
+    typeof value.body === "string"
+  );
+}
+
+function isPostListArray(value: unknown): value is PostList[] {
+  return Array.isArray(value) && value.every(isPostListItem);
+}
+
 export default function CommentsPractice() {
   const [postId, setPostId] = useState(1);
-  //   const [postList, setPostList] = useState<PostList[] | null>(null);
   const [postList, setPostList] = useState<PostList[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,7 +56,14 @@ export default function CommentsPractice() {
           throw new Error("불러오기에 실패했습니다.");
         }
 
-        const postList = await response.json();
+        const postList: unknown = await response.json();
+
+        const checkPostList = isPostListArray(postList);
+
+        if (!checkPostList) {
+          throw new Error("올바르지 않은 댓글 데이터입니다.");
+        }
+
         if (!controller.signal.aborted) {
           setPostList(postList);
         }
@@ -43,12 +71,12 @@ export default function CommentsPractice() {
         if (controller.signal.aborted) {
           return;
         }
+        console.error(error);
         setErrorMessage("댓글을 불러오지 못했습니다.");
       } finally {
-        if (controller.signal.aborted) {
-          return;
+        if (!controller.signal.aborted) {
+          setLoading(false);
         }
-        setLoading(false);
       }
     }
 

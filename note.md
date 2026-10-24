@@ -647,3 +647,40 @@ console.log("5");
 2. 동작 확인: 버튼의 disabled를 임시로 제거하고 3G 환경에서 게시글을 빠르게 변경한다. 최신 게시글의 댓글이 남는지 확인한다.
 
 3. 개념 설명: AbortController를 사용했는데도 signal.aborted를 검사하는 이유를 자신의 말로 정리한다.
+
+### 2026-10-23
+
+## 오전 수업
+
+**unknown과 타입 가드**
+
+1. value is PostList는 검사 성공 시 TypeScript가 값을 PostList 타입으로 좁힐 수 있도록 알려주는 타입 서술어다.
+   ┗━ ex. function isPostListArray(value: unkown): value is PostList {...};
+
+**배열 데이터 검증**
+
+1. Array.isArray(): 값이 배열인지 확인한다.
+
+2. every(): 배열의 모든 요소가 조건을 만족하는지 확인한다.
+
+3. 빈 배열에 every()를 호출하면 true를 반환한다.
+
+**데이터 검증과 HTTP 요청**
+
+1. HTTP 상태 코드가 200이어도 응답 데이터의 구조가 올바르다는 보장은 없다.
+
+2. HTTP 오류: 응답 상태 코드 검사에서 발견
+
+3. JSON 변환 오류: response.json() 처리 과정에서 발생
+
+4. 데이터 검증 오류: JSON 변환 후 타입 가드 검사에서 발견
+
+## 주말 과제
+
+이번 주말에는 오후 정규 수업이 없으므로, 오늘 배운 범위 안에서 다음 세 가지만 복습하자.
+
+1. 코드 정리: CommentsPractice.tsx에서 사용하지 않는 testData, 디버깅용 console.log()를 정리하고 실제 API 요청 코드로 복구한다. 정상 조회, 빈 배열, 404 오류가 유지되는지 확인한다.
+
+2. 타입 가드 응용: isPostListItem()과 isPostListArray()를 이용해 숫자형 id, 필수 문자열 속성, null, 빈 배열을 검사한 테스트를 각각 만들어 본다. 예상 결과와 실제 결과를 기록한다.
+
+3. 개념 설명: unknown과 any의 차이, value is PostList의 역할, HTTP 200과 데이터 검증 성공이 서로 다른 이유를 자기 말로 정리한다.
