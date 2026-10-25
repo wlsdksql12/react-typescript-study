@@ -650,7 +650,7 @@ console.log("5");
 
 ### 2026-10-23
 
-## 오전 수업
+## 수업
 
 **unknown과 타입 가드**
 
@@ -723,13 +723,44 @@ console.log("5");
 
 const testData = [];
 
-예상 결과: true / 이유: 빈 배열이지만 배열이므로 배열을 검사하는 isPostListArray() true로 통과, 빈 배열이라 테스트데이터를 검사하는 isPostListItem()에는 조건에 걸리는것이 없기 때문에 전부 통과로 true 따라서 최종 결과는 true / 실제 결과:
+예상 결과: true / 이유: 빈 배열이지만 배열이므로 배열을 검사하는 isPostListArray() true로 통과, 빈 배열이라 테스트데이터를 검사하는 isPostListItem()에는 조건에 걸리는것이 없기 때문에 전부 통과로 true 따라서 최종 결과는 true / 실제 결과: true
 
 3. 개념 설명: unknown과 any의 차이, value is PostList의 역할, HTTP 200과 데이터 검증 성공이 서로 다른 이유를 자기 말로 정리한다.
 
 3-1. unknown과 any의 차이: 둘의 차이점은 unknown은 데이터의 타입을 알 수 없다는 뜻이고, any는 아무거나 들어오거나 될 수 있다는 뜻으로 해석.
 
 3-2. value is PostList의 역할은 value가 true라면 타입을 PostList로 지정하겠다 라는 의미.
+┗━ 답 보안: value가 true인 것이 아니라, 타입 가드 함수가 true를 반환했을 때 value를 PostList로 좁히겠다는 의미.
 
 3-3. HTTP 200과 데이터 검증 성공이 다른 이유는 HTTP 200은 API를 통해 받은 데이터가 정상적으로 잘 왔다란 의미로 지정한 데이터 타입과 일치한다는 의미는 아니다.
 따라서 HTTP 200과 데이터 검증 성공이 다른 이유이며 두 가지를 동시에 사용하는 이유이기도 하다.
+
+### 2026-10-24
+
+## 수업
+
+**async / await**
+
+1. async 함수는 항상 Promise를 반환한다.
+
+2. await는 Promise가 이행한 결과값을 얻는다.
+
+3. response.json()은 JSON 변환이라는 별도의 비동기 작업이므로 추가 await가 필요하다.
+
+4. 이미 검증된 결과를 반환하는 함수의 결과에는 .json()을 다시 호출할 필요가 없다.
+
+**throw와 catch**
+
+1. catch로 전달되는 값이 Error 객체인지 확인할 때 instanceof Error를 사용할 수 있다.
+
+2. Error 객체라면 .message에 접근할 수 있다.
+
+## 다음 수업 과제
+
+오늘 구현한 코드는 기능적으로 검증을 마쳤으므로 큰 추가 과제는 필요하지 않아.
+
+1. 코드 정리: 디버깅이 끝난 console.log()를 정리하고, 검색어의 trim().toLowerCase() 결과를 normalizedKeyword라는 일반 변수로 분리해 보기.
+
+2. 개념 설명: fetchComments()와 getPostList()의 역할이 왜 다른지 자기 말로 정리하기.
+
+3. 결과 예측: 검색어가 입력된 상태에서 다른 게시글을 선택하면 검색어와 검색 결과가 각각 어떻게 되는지 설명하기.

@@ -47,7 +47,6 @@ export default function TaskPractice() {
         ? todoList.filter((prev) => prev.done === false)
         : todoList;
 
-  console.log(todoList);
   return (
     <form onSubmit={onSubmit}>
       <div className="todo-input">
