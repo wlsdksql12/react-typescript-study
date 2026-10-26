@@ -400,3 +400,139 @@
 .post-card-body {
   line-height: 30px;
 }
+
+.comment-search {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+
+.comment-search-area {
+  margin: 0px 16px 20px 16px;
+  box-sizing: border-box;
+}
+
+.comment-search-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-search-area label {
+  display: block;
+}
+
+.comment-item {
+  width: 100%;
+  max-width: 580px;
+  box-sizing: border-box;
+  padding: 10px 16px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #111827;
+  color: white;
+  /* margin-bottom: 15px; */
+}
+
+/* .comment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+} */
+
+.comment-item-name {
+  margin: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow-wrap: anywhere;
+}
+
+.comment-item-name span:last-child {
+  font-size: 10px;
+}
+
+.comment-item-email {
+  margin: 5px 0px 20px 0px;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-item-email button {
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 14px;
+  padding: 0px;
+}
+
+.comment-item-body {
+  margin: 0px;
+  line-height: 30px;
+  overflow-wrap: anywhere;
+}
+
+.comment-item-container {
+  margin: 0px 16px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 15px;
+  list-style: none;
+}
+
+.comment-buttons {
+  margin: 20px 16px 0px 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .comment-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .comment-buttons button {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
+
+.comment-container {
+  width: 100%;
+  max-width: 700px;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.comment-button-1,
+.comment-button-2,
+.comment-button-3,
+.comment-button-500,
+.comment-button--1,
+.comment-button--2,
+.comment-button-refresh {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 15px;
+  width: 130px;
+}

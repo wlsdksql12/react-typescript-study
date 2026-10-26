@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
+import CommentItem from "./CommentItem";
+import type { PostList } from "./CommentType";
 
-interface PostList {
-  postId: number;
-  id: number;
-  name: string;
-  email: string;
-  body: string;
-}
+// interface PostList {
+//   postId: number;
+//   id: number;
+//   name: string;
+//   email: string;
+//   body: string;
+// }
 
 function isPostListItem(value: unknown): value is PostList {
   if (typeof value !== "object" || value === null) return false;
@@ -49,16 +51,12 @@ async function fetchComments(
 
   const response = await fetch(url, { signal });
 
-  console.log(response);
-
   if (!response.ok) {
     throw new Error("HTTP 요청 실패");
   }
 
   // 데이터 타입 검증을 위해 unknown 타입으로 받음
   const result: unknown = await response.json();
-
-  console.log(result);
 
   return parsePostList(result);
 }
@@ -70,6 +68,7 @@ export default function CommentsPractice() {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [commentSelect, setCommentSelect] = useState<number[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -107,29 +106,44 @@ export default function CommentsPractice() {
 
     return () => {
       controller.abort();
-      console.log(controller.signal.aborted);
     };
   }, [postId, refresh]);
 
+  const normalizedKeyword = searchKeyword.trim().toLowerCase();
+
   const searchKeywordList = postList.filter(
     (prev) =>
-      prev.body.toLowerCase().includes(searchKeyword.trim().toLowerCase()) ||
-      prev.name.toLowerCase().includes(searchKeyword.trim().toLowerCase()),
+      prev.body.toLowerCase().includes(normalizedKeyword) ||
+      prev.name.toLowerCase().includes(normalizedKeyword),
   );
 
+  const handleCommentSelectList = (value: number) => {
+    const commentSelectList = commentSelect.some((item) => item === value);
+
+    if (commentSelectList) {
+      setCommentSelect((prev) => prev.filter((item) => item !== value));
+    } else {
+      setCommentSelect((prev) => [...prev, value]);
+    }
+  };
+  console.log(commentSelect);
   return (
-    <>
-      <input
-        value={searchKeyword}
-        onChange={(e) => setSearchKeyword(e.target.value)}
-        placeholder="검색어를 입력해 주세요."
-        style={{
-          margin: "24px",
-          padding: "6px 10px",
-          width: "300px",
-        }}
-      />
-      <ul>
+    <div className="comment-container">
+      <div className="comment-search-area">
+        <div className="comment-search-content">
+          <label htmlFor="comment-search">댓글 검색</label>
+          <span>선택한 댓글의 총 개수 : {commentSelect.length}개</span>
+        </div>
+
+        <input
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          placeholder="검색어를 입력해 주세요."
+          className="comment-search"
+          id="comment-search"
+        />
+      </div>
+      <ul className="comment-item-container">
         {loading ? (
           <li>댓글을 불러오는 중입니다.</li>
         ) : errorMessage !== "" ? (
@@ -140,44 +154,73 @@ export default function CommentsPractice() {
           <li>검색 결과가 없습니다.</li>
         ) : (
           searchKeywordList.map((prev) => (
-            <li key={prev.id}>
-              <article>
-                <p>
-                  작성자: {prev.name} / 이메일: {prev.email}
-                </p>
-                <p>{prev.body}</p>
-              </article>
-            </li>
+            <CommentItem
+              key={prev.id}
+              prev={prev}
+              commentSelect={commentSelect}
+              handleCommentSelectList={handleCommentSelectList}
+            />
           ))
         )}
       </ul>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <button type="button" onClick={() => setPostId(1)} disabled={loading}>
+      <div className="comment-buttons">
+        <button
+          type="button"
+          onClick={() => setPostId(1)}
+          disabled={loading}
+          className="comment-button-1"
+        >
           게시글 1
         </button>
-        <button type="button" onClick={() => setPostId(2)} disabled={loading}>
+        <button
+          type="button"
+          onClick={() => setPostId(2)}
+          disabled={loading}
+          className="comment-button-2"
+        >
           게시글 2
         </button>
-        <button type="button" onClick={() => setPostId(3)} disabled={loading}>
+        <button
+          type="button"
+          onClick={() => setPostId(3)}
+          disabled={loading}
+          className="comment-button-3"
+        >
           게시글 3
         </button>
-        <button type="button" onClick={() => setPostId(500)} disabled={loading}>
+        <button
+          type="button"
+          onClick={() => setPostId(500)}
+          disabled={loading}
+          className="comment-button-500"
+        >
           게시글 500
         </button>
-        <button type="button" onClick={() => setPostId(-1)} disabled={loading}>
+        <button
+          type="button"
+          onClick={() => setPostId(-1)}
+          disabled={loading}
+          className="comment-button--1"
+        >
           게시글 -1
         </button>
-        <button type="button" onClick={() => setPostId(-2)} disabled={loading}>
+        <button
+          type="button"
+          onClick={() => setPostId(-2)}
+          disabled={loading}
+          className="comment-button--2"
+        >
           게시글 -2
         </button>
         <button
           type="button"
           onClick={() => setRefresh((prev) => !prev)}
           disabled={loading}
+          className="comment-button-refresh"
         >
           새로 고침
         </button>
       </div>
-    </>
+    </div>
   );
 }
