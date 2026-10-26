@@ -131,6 +131,10 @@ export default function CommentsPractice() {
       setCommentSelect((prev) => [...prev, value]);
     }
   };
+
+  const handleSelectListAllCancel = () => {
+    setCommentSelect([]);
+  };
   console.log(selectCheck);
   return (
     <div className="comment-container">
@@ -155,6 +159,21 @@ export default function CommentsPractice() {
             />
             선택한 댓글만 보기
           </label>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            margin: "10px 0px",
+          }}
+        >
+          <button
+            type="button"
+            onClick={handleSelectListAllCancel}
+            disabled={commentSelect.length === 0}
+          >
+            선택한 댓글 전체 해제
+          </button>
         </div>
       </div>
       <ul className="comment-item-container">
