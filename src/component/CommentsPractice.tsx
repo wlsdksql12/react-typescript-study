@@ -69,6 +69,7 @@ export default function CommentsPractice() {
   const [refresh, setRefresh] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [commentSelect, setCommentSelect] = useState<number[]>([]);
+  const [selectCheck, setSelectCheck] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -117,6 +118,10 @@ export default function CommentsPractice() {
       prev.name.toLowerCase().includes(normalizedKeyword),
   );
 
+  const filteredCommentList = selectCheck
+    ? searchKeywordList.filter((prev) => commentSelect.includes(prev.id))
+    : searchKeywordList;
+
   const handleCommentSelectList = (value: number) => {
     const commentSelectList = commentSelect.some((item) => item === value);
 
@@ -126,7 +131,7 @@ export default function CommentsPractice() {
       setCommentSelect((prev) => [...prev, value]);
     }
   };
-  console.log(commentSelect);
+  console.log(selectCheck);
   return (
     <div className="comment-container">
       <div className="comment-search-area">
@@ -135,13 +140,22 @@ export default function CommentsPractice() {
           <span>선택한 댓글의 총 개수 : {commentSelect.length}개</span>
         </div>
 
-        <input
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          placeholder="검색어를 입력해 주세요."
-          className="comment-search"
-          id="comment-search"
-        />
+        <div className="comment-input">
+          <input
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            placeholder="검색어를 입력해 주세요."
+            className="comment-search"
+            id="comment-search"
+          />
+          <label>
+            <input
+              type="checkbox"
+              onChange={(e) => setSelectCheck(e.target.checked)}
+            />
+            선택한 댓글만 보기
+          </label>
+        </div>
       </div>
       <ul className="comment-item-container">
         {loading ? (
@@ -152,8 +166,10 @@ export default function CommentsPractice() {
           <li>등록된 댓글이 없습니다.</li>
         ) : searchKeywordList.length === 0 ? (
           <li>검색 결과가 없습니다.</li>
+        ) : selectCheck && filteredCommentList.length === 0 ? (
+          <li>선택한 댓글이 없습니다.</li>
         ) : (
-          searchKeywordList.map((prev) => (
+          filteredCommentList.map((prev) => (
             <CommentItem
               key={prev.id}
               prev={prev}

@@ -420,6 +420,12 @@
   margin-bottom: 8px;
 }
 
+.comment-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .comment-search-area label {
   display: block;
 }
