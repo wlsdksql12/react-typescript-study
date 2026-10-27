@@ -821,6 +821,10 @@ CSS 추가하지 않아도 됨
 
 1. handleSelectAllList에서 이미 선택한 댓글을 제외하기 위해 filter()를 사용하는 이유와, 그다음 map()을 사용하는 이유를 각각 설명해 보기.
 
+답변 : 1. filter를 사용한 이유는 includes를 이용해서 commentSelect에 이미 선택되어 있는 id를 걸러내고 나머지를 filter로 새 배열로 반환 이걸 map 메서드를 이용해서 댓글의 id만 추출후 새 배열에 추출한 id를 추가해서 CommentSelect 상태 변환 함수로 저장.
+
 2. 게시글 1에서 댓글 3개, 게시글 2에서 댓글 2개를 선택한 상황에서 게시글 1의 전체 선택을 해제하면 commentSelect에는 어떤 댓글 ID가 남아야 하는지, 그 이유를 설명해 보기.
+
+답변: 2. commentSelect에는 게시글 2의 댓글 id 2개가 남아있어. 이유는 현재 게시글 선택 해제를 하면 postList의 id와 commentSelect에 있는 id를 비교 겹치는건 filter를 통해 걸러내므로 게시글 2의 댓글 id 2개만 commentSelect 남아있어.
 
 완료 조건은 코드를 복사하지 않고 네 말로 동작 원리를 설명하는 것이야.
