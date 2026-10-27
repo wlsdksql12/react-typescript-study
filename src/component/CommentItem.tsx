@@ -2,17 +2,15 @@ import type { PostList } from "./CommentType";
 
 interface CommentItemProps {
   prev: PostList;
-  commentSelect: number[];
-  handleCommentSelectList: (isSelect: number) => void;
+  isSelected: boolean;
+  onToggleSelect: (isSelect: number) => void;
 }
 
 export default function CommentItem({
   prev,
-  commentSelect,
-  handleCommentSelectList,
+  isSelected,
+  onToggleSelect,
 }: CommentItemProps) {
-  const isSelect = commentSelect.some((item) => item === prev.id);
-
   return (
     <>
       <li className="comment-item">
@@ -23,11 +21,8 @@ export default function CommentItem({
           </p>
           <p className="comment-item-email">
             <span>{prev.email}</span>
-            <button
-              type="button"
-              onClick={() => handleCommentSelectList(prev.id)}
-            >
-              {isSelect ? "선택 해제" : "선택"}
+            <button type="button" onClick={() => onToggleSelect(prev.id)}>
+              {isSelected ? "선택 해제" : "선택"}
             </button>
           </p>
           <p className="comment-item-body">{prev.body}</p>

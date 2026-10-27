@@ -122,30 +122,38 @@ export default function CommentsPractice() {
     ? searchKeywordList.filter((prev) => commentSelect.includes(prev.id))
     : searchKeywordList;
 
-  const handleCommentSelectList = (value: number) => {
-    const commentSelectList = commentSelect.some((item) => item === value);
+  const onToggleSelect = (value: number) => {
+    setCommentSelect((prev) => {
+      if (prev.some((item) => item === value)) {
+        return prev.filter((item) => item !== value);
+      }
 
-    if (commentSelectList) {
-      setCommentSelect((prev) => prev.filter((item) => item !== value));
-    } else {
-      setCommentSelect((prev) => [...prev, value]);
-    }
+      return [...prev, value];
+    });
   };
 
   const handleSelectListAllCancel = () => {
     setCommentSelect([]);
   };
-  console.log(selectCheck);
+
+  const selectedPosts = postList.filter((prev) =>
+    commentSelect.includes(prev.id),
+  );
+
   return (
     <div className="comment-container">
       <div className="comment-search-area">
+        <span className="comment-select-all-count">
+          선택한 댓글의 총 개수 : {commentSelect.length}개
+        </span>
         <div className="comment-search-content">
           <label htmlFor="comment-search">댓글 검색</label>
-          <span>선택한 댓글의 총 개수 : {commentSelect.length}개</span>
+          <span>현재 게시글 선택 개수 : {selectedPosts.length}개</span>
         </div>
 
         <div className="comment-input">
           <input
+            type="text"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
             placeholder="검색어를 입력해 주세요."
@@ -155,6 +163,7 @@ export default function CommentsPractice() {
           <label>
             <input
               type="checkbox"
+              checked={selectCheck}
               onChange={(e) => setSelectCheck(e.target.checked)}
             />
             선택한 댓글만 보기
@@ -169,6 +178,7 @@ export default function CommentsPractice() {
         >
           <button
             type="button"
+            className="select-all-check-cancel"
             onClick={handleSelectListAllCancel}
             disabled={commentSelect.length === 0}
           >
@@ -192,8 +202,8 @@ export default function CommentsPractice() {
             <CommentItem
               key={prev.id}
               prev={prev}
-              commentSelect={commentSelect}
-              handleCommentSelectList={handleCommentSelectList}
+              isSelected={commentSelect.some((item) => item === prev.id)}
+              onToggleSelect={onToggleSelect}
             />
           ))
         )}

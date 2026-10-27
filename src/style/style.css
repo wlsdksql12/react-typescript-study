@@ -542,3 +542,27 @@
   font-size: 15px;
   width: 130px;
 }
+
+.comment-buttons button:enabled:hover {
+  background-color: #ff9100;
+}
+
+.comment-search-area button:disabled,
+.comment-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comment-item-email button:focus-visible,
+.comment-input input:focus-visible,
+.select-all-check-cancel:focus-visible,
+.comment-buttons button:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 3px;
+}
+
+.comment-select-all-count {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
