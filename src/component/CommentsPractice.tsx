@@ -2,14 +2,6 @@ import { useEffect, useState } from "react";
 import CommentItem from "./CommentItem";
 import type { PostList } from "./CommentType";
 
-// interface PostList {
-//   postId: number;
-//   id: number;
-//   name: string;
-//   email: string;
-//   body: string;
-// }
-
 function isPostListItem(value: unknown): value is PostList {
   if (typeof value !== "object" || value === null) return false;
 
@@ -140,6 +132,25 @@ export default function CommentsPractice() {
     commentSelect.includes(prev.id),
   );
 
+  const handleSelectListCancel = () => {
+    if (selectedPosts.length === 0) return;
+
+    setCommentSelect((prev) =>
+      prev.filter((item) => !selectedPosts.some((post) => post.id === item)),
+    );
+  };
+
+  const handleSelectAllList = () => {
+    setCommentSelect((prev) => {
+      const newIds = postList
+        .filter((post) => !prev.includes(post.id))
+        .map((post) => post.id);
+
+      return [...prev, ...newIds];
+    });
+  };
+
+  console.log(commentSelect);
   return (
     <div className="comment-container">
       <div className="comment-search-area">
@@ -169,18 +180,34 @@ export default function CommentsPractice() {
             선택한 댓글만 보기
           </label>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            margin: "10px 0px",
-          }}
-        >
+        <div className="comment-select-buttons">
+          <button
+            type="button"
+            className="select-all-check"
+            onClick={handleSelectAllList}
+            disabled={
+              postList.length === 0 ||
+              loading ||
+              selectedPosts.length === postList.length
+            }
+          >
+            현재 게시글 댓글 전체 선택
+          </button>
+        </div>
+        <div className="comment-select-cancel-buttons">
+          <button
+            type="button"
+            className="select-check-cancel"
+            onClick={handleSelectListCancel}
+            disabled={selectedPosts.length === 0 || loading}
+          >
+            현재 게시글 선택 해제
+          </button>
           <button
             type="button"
             className="select-all-check-cancel"
             onClick={handleSelectListAllCancel}
-            disabled={commentSelect.length === 0}
+            disabled={commentSelect.length === 0 || loading}
           >
             선택한 댓글 전체 해제
           </button>
