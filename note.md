@@ -852,3 +852,25 @@ React Router의 핵심 구성 요소 4가지
 1. /posts/는 게시글 ID가 달라져도 하나의 Route로 처리할 수 있는 동적 경로다. ex. /posts/:postId
 
 2. useParams를 사용하면 URL에서 postId 값을 읽을 수 있다. ex. {postId} = useParams();
+
+## 오후 수업
+
+## 다음 수업 전 과제
+
+오늘 구현한 PostPage는 동작하지만 App.tsx에 코드가 많이 모여 있어. 다음 과제는 기능을 새로 만드는 것이 아니라 기존 기능을 유지하면서 컴포넌트를 분리하는 리팩터링이야.
+
+과제: PostPage.tsx 파일 분리
+
+- 작업 위치: src/component/PostPage.tsx, src/App.tsx
+
+- PostItem, isPostItem, PostPage를 새 파일로 이동
+
+- App.tsx에서 새 컴포넌트를 import
+
+- 기존 <Route path="/posts/:postId" element={<PostPage />} /> 유지
+
+- URL별 게시글 표시, 로딩, 오류, 요청 취소 동작 유지
+
+- 새로운 CSS나 라이브러리 추가하지 않기
+
+완료 조건: 파일을 분리한 뒤에도 /posts/1, /posts/abc, /posts/500, /comments가 기존처럼 동작하고, TypeScript 및 ESLint 오류가 없어야 해.
