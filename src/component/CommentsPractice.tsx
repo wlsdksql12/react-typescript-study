@@ -150,7 +150,6 @@ export default function CommentsPractice() {
     });
   };
 
-  console.log(commentSelect);
   return (
     <div className="comment-container">
       <div className="comment-search-area">

@@ -585,3 +585,33 @@
   flex-wrap: 0;
   white-space: nowrap;
 } */
+
+.site-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.site-home,
+.site-about,
+.site-comments {
+  text-decoration: none;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.site-nav a.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+.site-nav a:not(.active):hover {
+  color: #2563eb;
+}
+
+.site-nav a:focus-visible {
+  outline: 2px solid black;
+  outline-offset: 2px;
+}

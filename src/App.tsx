@@ -11,6 +11,7 @@ import UserLookupPractice from "./component/UserLookupPractice";
 import ApiPractice from "./component/ApiPractice";
 import PostListPractice from "./component/PostListPractice";
 import CommentsPractice from "./component/CommentsPractice";
+import { NavLink, Route, Routes, useParams } from "react-router";
 
 interface NameProps {
   name: string;
@@ -85,6 +86,32 @@ function ProfilePractice({
       <button onClick={onClickAllChange}>한 번에 변경</button>
     </>
   );
+}
+
+function Home() {
+  return <h1>홈 화면입니다.</h1>;
+}
+
+function About() {
+  return <h1>소개 화면입니다.</h1>;
+}
+
+function NotFound() {
+  return (
+    <>
+      <h1>Error 404</h1>
+      <h3>요청한 페이지를 찾을 수 없습니다.</h3>
+    </>
+  );
+}
+
+function PostPage() {
+  const { postId } = useParams();
+
+  if (!Number.isInteger(Number(postId)) || Number(postId) <= 0) {
+    return <h2>올바르지 않은 게시글 ID입니다.</h2>;
+  }
+  return <h2>현재 게시글 ID: {postId ?? "없음"}</h2>;
 }
 
 function App() {
@@ -287,7 +314,33 @@ function App() {
       <hr style={{ margin: "40px 0px" }} />
       <PostListPractice />
       <hr style={{ margin: "40px 0px" }} />
-      <CommentsPractice />
+      <div>
+        <nav className="site-nav">
+          <NavLink className="site-home" to="/">
+            홈
+          </NavLink>
+          <NavLink className="site-about" to="/about">
+            소개
+          </NavLink>
+          <NavLink className="site-comments" to="/comments">
+            댓글
+          </NavLink>
+          <NavLink className="site-comments" to="/posts/1">
+            게시글 1
+          </NavLink>
+          <NavLink className="site-comments" to="/posts/2">
+            게시글 2
+          </NavLink>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/comments" element={<CommentsPractice />} />
+          <Route path="/posts/:postId" element={<PostPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </>
   );
 }

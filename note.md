@@ -828,3 +828,27 @@ CSS 추가하지 않아도 됨
 답변: 2. commentSelect에는 게시글 2의 댓글 id 2개가 남아있어. 이유는 현재 게시글 선택 해제를 하면 postList의 id와 commentSelect에 있는 id를 비교 겹치는건 filter를 통해 걸러내므로 게시글 2의 댓글 id 2개만 commentSelect 남아있어.
 
 완료 조건은 코드를 복사하지 않고 네 말로 동작 원리를 설명하는 것이야.
+
+### 2026-10-28
+
+## 오전 수업
+
+**React Router**
+
+React Router의 핵심 구성 요소 4가지
+
+1. BrowserRouter: 브라우저 주소와 탐색 기록을 활용할 수 있는 라우팅 환경 제공
+
+2. Routes: 현재 URL에 맞는 Route 선택
+
+3. Route: 특정 URL과 컴포넌트 연결
+
+4. Link: Link는 페이지 이동을 위한 컴포넌트다.
+
+5. NavLink: NavLink는 Link의 이동 기능에 더해 현재 주소와 일치하면 active 클래스를 적용하고 aria-current="page" 속성을 제공한다.
+
+**동적 경로와 useParams**
+
+1. /posts/는 게시글 ID가 달라져도 하나의 Route로 처리할 수 있는 동적 경로다. ex. /posts/:postId
+
+2. useParams를 사용하면 URL에서 postId 값을 읽을 수 있다. ex. {postId} = useParams();
