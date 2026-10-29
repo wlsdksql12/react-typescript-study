@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router";
 import type { PostList } from "./PostType";
 
 interface PostListPracticeProps {
   postList: PostList[] | null;
   setPostList: React.Dispatch<React.SetStateAction<PostList[] | null>>;
+  postListSearch: string;
+  setPostListSearch: React.Dispatch<React.SetStateAction<string>>;
+  filteredPostList: PostList[] | undefined;
 }
 
 function isPostList(data: unknown): data is PostList[] {
@@ -29,14 +32,20 @@ function PostListItem(data: unknown): data is PostList {
 export default function PostListPractice({
   postList,
   setPostList,
+  postListSearch,
+  setPostListSearch,
+  filteredPostList,
 }: PostListPracticeProps) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function getPostList(id: number) {
     setPostList(null);
     setErrorMessage("");
+    setPostListSearch("");
     setLoading(true);
+    inputRef.current?.focus();
 
     try {
       const url =
@@ -67,8 +76,24 @@ export default function PostListPractice({
   }
 
   return (
-    <>
-      <h3 className="post-title">게시글 목록</h3>
+    <div className="post-container">
+      <div className="post-title-header">
+        <h3 className="post-title">게시글 목록</h3>
+        <span>전체 게시글 수: {postList === null ? 0 : postList.length}개</span>
+      </div>
+      <div className="post-input-header">
+        <input
+          value={postListSearch}
+          onChange={(e) => setPostListSearch(e.target.value)}
+          placeholder="검색어를 입력해 주세요."
+          className="post-input"
+          ref={inputRef}
+        />
+        <span>
+          검색 결과 수:{" "}
+          {filteredPostList === undefined ? 0 : filteredPostList.length}개
+        </span>
+      </div>
       <ul className="post-ul">
         {loading ? (
           <li>불러오는 중입니다.</li>
@@ -78,8 +103,10 @@ export default function PostListPractice({
           <li>버튼을 눌러 사용자 게시글을 조회하세요.</li>
         ) : postList.length === 0 ? (
           <li>등록된 게시글이 없습니다.</li>
+        ) : filteredPostList?.length === 0 ? (
+          <li>검색 결과가 없습니다.</li>
         ) : (
-          postList.map((item) => (
+          filteredPostList?.map((item) => (
             <li key={item.id} className="post-li">
               <Link className="post-link" to={`/posts/${item.id}`}>
                 {item.title}
@@ -110,6 +137,6 @@ export default function PostListPractice({
           없는 사용자 게시글
         </button>
       </div>
-    </>
+    </div>
   );
 }

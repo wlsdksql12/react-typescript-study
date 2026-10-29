@@ -892,3 +892,17 @@ React Router의 핵심 구성 요소 4가지
 5. flex-shrink: 0과 white-space: nowrap으로 게시글 ID 영역이 줄어들거나 줄바꿈되지 않도록 했다.
 
 360px 화면에서 반응형 배치를 확인했다.
+
+## 오후 수업
+
+## 다음 수업 준비 및 과제
+
+오늘은 독립 구현을 완료했으므로 추가 코딩 과제는 없어.
+
+다만 다음 수업을 시작할 때 아래 질문 하나를 복습하자.
+
+PostListPractice에서 API 요청을 시작한 후 /comments로 이동했어. API 응답이 나중에 도착하면 부모 App의 postList state는 변경될 수 있을까?
+
+이 문제는 오늘 마지막에 남겨둔 응용 질문이야. 지금 답할 필요는 없어.
+
+답변: 내 답변은 아니야 이유는 PostListPractice에서 API 요청후 /comments로 이동을 했다면 PostListPractice가 언마운트 되면서 요청은 지속되어도 state에는 변경을 할 수 없을거 같아.

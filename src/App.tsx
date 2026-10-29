@@ -121,6 +121,7 @@ function App() {
   const [autoApply, setAutoApply] = useState(true);
   const [memoList, setMemoList] = useState<MemoRecord[]>([]);
   const [postList, setPostList] = useState<PostList[] | null>(null);
+  const [postListSearch, setPostListSearch] = useState("");
 
   const nextMemoIdRef = useRef(1);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -232,6 +233,10 @@ function App() {
     );
   };
 
+  const filteredPostList = postList?.filter((prev) =>
+    prev.title.toLowerCase().includes(postListSearch.toLowerCase().trim()),
+  );
+
   return (
     <>
       <ProfilePractice
@@ -330,7 +335,13 @@ function App() {
           <Route
             path="/posts"
             element={
-              <PostListPractice postList={postList} setPostList={setPostList} />
+              <PostListPractice
+                postList={postList}
+                setPostList={setPostList}
+                postListSearch={postListSearch}
+                setPostListSearch={setPostListSearch}
+                filteredPostList={filteredPostList}
+              />
             }
           />
           <Route path="/posts/:postId" element={<PostPage />} />
