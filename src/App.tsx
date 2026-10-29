@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ProfileList from "./component/ProfileList";
 import DelayedMemo from "./component/DelayedMemo";
 import MemoHistory from "./component/MemoHistory";
@@ -11,8 +11,9 @@ import UserLookupPractice from "./component/UserLookupPractice";
 import ApiPractice from "./component/ApiPractice";
 import PostListPractice from "./component/PostListPractice";
 import CommentsPractice from "./component/CommentsPractice";
-import { NavLink, Route, Routes, useParams } from "react-router";
+import { NavLink, Route, Routes } from "react-router";
 import PostPage from "./component/PostPage";
+import type { PostList } from "./component/PostType";
 
 interface NameProps {
   name: string;
@@ -119,6 +120,7 @@ function App() {
   const [prefix, setPreFix] = useState("메모: ");
   const [autoApply, setAutoApply] = useState(true);
   const [memoList, setMemoList] = useState<MemoRecord[]>([]);
+  const [postList, setPostList] = useState<PostList[] | null>(null);
 
   const nextMemoIdRef = useRef(1);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -305,8 +307,6 @@ function App() {
       <hr style={{ margin: "40px 0px" }} />
       <ApiPractice />
       <hr style={{ margin: "40px 0px" }} />
-      <PostListPractice />
-      <hr style={{ margin: "40px 0px" }} />
       <div>
         <nav className="site-nav">
           <NavLink className="site-home" to="/">
@@ -318,11 +318,8 @@ function App() {
           <NavLink className="site-comments" to="/comments">
             댓글
           </NavLink>
-          <NavLink className="site-comments" to="/posts/1">
-            게시글 1
-          </NavLink>
-          <NavLink className="site-comments" to="/posts/2">
-            게시글 2
+          <NavLink className="site-comments" to="/posts">
+            게시글
           </NavLink>
         </nav>
 
@@ -330,6 +327,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/comments" element={<CommentsPractice />} />
+          <Route
+            path="/posts"
+            element={
+              <PostListPractice postList={postList} setPostList={setPostList} />
+            }
+          />
           <Route path="/posts/:postId" element={<PostPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

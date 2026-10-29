@@ -874,3 +874,21 @@ React Router의 핵심 구성 요소 4가지
 - 새로운 CSS나 라이브러리 추가하지 않기
 
 완료 조건: 파일을 분리한 뒤에도 /posts/1, /posts/abc, /posts/500, /comments가 기존처럼 동작하고, TypeScript 및 ESLint 오류가 없어야 해.
+
+### 2026-10-29
+
+## 오전 수업
+
+**css 관련**
+
+1. display: block과 padding으로 링크의 클릭 영역을 넓혔다.
+
+2. flex-wrap: wrap으로 좁은 화면에서 버튼이 다음 줄로 넘어가도록 했다.
+
+3. box-sizing: border-box로 너비에 테두리와 안쪽 여백을 포함했다.
+
+4. overflow-wrap: anywhere로 긴 제목의 줄바꿈을 처리했다.
+
+5. flex-shrink: 0과 white-space: nowrap으로 게시글 ID 영역이 줄어들거나 줄바꿈되지 않도록 했다.
+
+360px 화면에서 반응형 배치를 확인했다.

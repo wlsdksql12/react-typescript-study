@@ -90,7 +90,7 @@ export default function PostPage() {
   }
 
   return (
-    <ul>
+    <ul className="postPage-ul">
       {loading ? (
         <li>로딩중 입니다.</li>
       ) : errorMessage !== "" ? (
@@ -98,19 +98,12 @@ export default function PostPage() {
       ) : postList === undefined ? (
         <li>게시글이 없습니다.</li>
       ) : (
-        <li key={postList.id} style={{ listStyle: "none" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "10px",
-            }}
-          >
-            <span>{postList.title}</span>
-            <span>#{postList.id}</span>
+        <li key={postList.id} className="postPage-li">
+          <div className="postPage-header">
+            <span className="postPage-title">{postList.title}</span>
+            <span className="postPage-id">#{postList.id}</span>
           </div>
-          <div style={{ lineHeight: "20px" }}>
+          <div>
             <span>{postList.body}</span>
           </div>
         </li>
