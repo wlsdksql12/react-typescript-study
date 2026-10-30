@@ -641,6 +641,7 @@
 .post-link {
   display: block;
   padding: 12px 16px;
+  width: 70%;
 }
 
 .post-ul {

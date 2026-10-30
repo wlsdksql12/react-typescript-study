@@ -906,3 +906,52 @@ PostListPractice에서 API 요청을 시작한 후 /comments로 이동했어. AP
 이 문제는 오늘 마지막에 남겨둔 응용 질문이야. 지금 답할 필요는 없어.
 
 답변: 내 답변은 아니야 이유는 PostListPractice에서 API 요청후 /comments로 이동을 했다면 PostListPractice가 언마운트 되면서 요청은 지속되어도 state에는 변경을 할 수 없을거 같아.
+┗━ 보안: 함수를 호출했던 자식 컴포넌트가 언마운트되더라도, 그 함수에 전달된 부모의 state setter가 자동으로 사라지거나 무효화되는 것은 아니라는 점.
+
+### 2026-10-30
+
+## 오전 수업
+
+**CSS 관련 - Tailwind CSS**
+
+1. flex: Flexbox 사용
+
+2. flex-wrap: 공간이 부족하면 다음 줄로 이동
+
+3. gap-2.5: 요소 사이 간격 설정
+
+4. px-4, py-2: 좌우 및 상하 padding
+
+5. rounded-md: 모서리 둥글게 처리
+
+6. bg-blue-600: 배경색 지정
+
+7. text-white: 글자색 지정
+
+8. hover:는 마우스를 요소 위에 올렸을 때 적용할 스타일을 지정한다.
+
+   • hover:bg-blue-700: Hover 상태에서 배경색 변경
+
+   • hover:scale-105: Hover 상태에서 1.05배 확대
+
+9. Transition
+
+   • transition-colors: 색상 관련 속성의 전환을 지정
+
+   • transition-all: 전환 가능한 여러 속성을 대상으로 지정
+
+   • duration-200: 전환 시간을 200ms로 지정
+
+   • duration-500: 전환 시간을 500ms로 지정
+
+## 오후 수업
+
+**CSS 관련 - Tailwind CSS**
+
+1. items-center: align-items: center 란뜻.
+
+2. border-transparent: border-color: transparent 란뜻.
+
+3. bg-transparent: background-color: transparent 란뜻.
+
+4. text-{lg, sm 등등}: font-size: ...px; 란뜻.

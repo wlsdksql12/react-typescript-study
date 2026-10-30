@@ -1,6 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import type { PostList } from "./PostType";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons/faBookmark";
+import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons/faBookmark";
 
 interface PostListPracticeProps {
   postList: PostList[] | null;
@@ -8,6 +11,11 @@ interface PostListPracticeProps {
   postListSearch: string;
   setPostListSearch: React.Dispatch<React.SetStateAction<string>>;
   filteredPostList: PostList[] | undefined;
+  bookmark: number[];
+  handleBookmark: (id: number) => void;
+  setIsBookmark: React.Dispatch<React.SetStateAction<boolean>>;
+  isBookmark: boolean;
+  BookmarkPostList: PostList[] | undefined;
 }
 
 function isPostList(data: unknown): data is PostList[] {
@@ -35,12 +43,23 @@ export default function PostListPractice({
   postListSearch,
   setPostListSearch,
   filteredPostList,
+  bookmark,
+  handleBookmark,
+  setIsBookmark,
+  isBookmark,
+  BookmarkPostList,
 }: PostListPracticeProps) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   async function getPostList(id: number) {
+    abortControllerRef.current?.abort();
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setPostList(null);
     setErrorMessage("");
     setPostListSearch("");
@@ -53,8 +72,14 @@ export default function PostListPractice({
           ? "https://jsonplaceholder.typicode.com/posts/101"
           : `https://jsonplaceholder.typicode.com/posts?userId=${id}`;
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        signal: controller.signal,
+      });
       console.log(response);
+
+      if (controller.signal.aborted) {
+        throw new Error("API 요청을 취소했습니다.");
+      }
 
       if (!response.ok) {
         throw new Error("조회에 실패했습니다.");
@@ -66,20 +91,42 @@ export default function PostListPractice({
         throw new Error("타입 검증에 실패했습니다.");
       }
 
-      setPostList(postList);
+      if (!controller.signal.aborted) {
+        setPostList(postList);
+      }
     } catch (error) {
-      console.error(error);
-      setErrorMessage("게시글을 불러오는데 실패했습니다.");
+      if (controller.signal.aborted) {
+        return;
+      } else {
+        console.error(error);
+        setErrorMessage("게시글을 불러오는데 실패했습니다.");
+      }
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
   }
+
+  useEffect(() => {
+    return () => {
+      console.log("정리 함수 실행");
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   return (
     <div className="post-container">
       <div className="post-title-header">
         <h3 className="post-title">게시글 목록</h3>
-        <span>전체 게시글 수: {postList === null ? 0 : postList.length}개</span>
+        <span>전체 게시글 수: {postList?.length ?? 0}개</span>
+      </div>
+      <div className="flex justify-between items-center my-2.5 ">
+        <div className="flex gap-2">
+          <button onClick={() => setIsBookmark(false)}>전체 보기</button>
+          <button onClick={() => setIsBookmark(true)}>북마크만 보기</button>
+        </div>
+        <span>북마크 총 개수: {bookmark.length}개</span>
       </div>
       <div className="post-input-header">
         <input
@@ -89,10 +136,7 @@ export default function PostListPractice({
           className="post-input"
           ref={inputRef}
         />
-        <span>
-          검색 결과 수:{" "}
-          {filteredPostList === undefined ? 0 : filteredPostList.length}개
-        </span>
+        <span>검색 결과 수: {BookmarkPostList?.length ?? 0}개</span>
       </div>
       <ul className="post-ul">
         {loading ? (
@@ -103,37 +147,55 @@ export default function PostListPractice({
           <li>버튼을 눌러 사용자 게시글을 조회하세요.</li>
         ) : postList.length === 0 ? (
           <li>등록된 게시글이 없습니다.</li>
-        ) : filteredPostList?.length === 0 ? (
-          <li>검색 결과가 없습니다.</li>
+        ) : BookmarkPostList?.length === 0 ? (
+          <li>
+            {isBookmark
+              ? postListSearch.trim() === ""
+                ? "북마크한 게시글이 없습니다."
+                : "조건에 맞는 게시글이 없습니다."
+              : "검색 결과가 없습니다."}
+          </li>
         ) : (
-          filteredPostList?.map((item) => (
-            <li key={item.id} className="post-li">
-              <Link className="post-link" to={`/posts/${item.id}`}>
+          BookmarkPostList?.map((item) => (
+            <li
+              key={item.id}
+              className="box-border border flex justify-between items-center"
+            >
+              <Link className="block px-3 py-4 w-9/12" to={`/posts/${item.id}`}>
                 {item.title}
               </Link>
+              <button
+                className="border-transparent bg-transparent"
+                onClick={() => handleBookmark(item.id)}
+              >
+                {bookmark.includes(item.id) ? (
+                  <FontAwesomeIcon icon={faBookmarkSolid} className="text-lg" />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faBookmarkRegular}
+                    className="text-lg"
+                  />
+                )}
+              </button>
             </li>
           ))
         )}
       </ul>
-      <div className="post-buttons">
-        <button type="button" onClick={() => getPostList(1)} disabled={loading}>
+      <div className="flex flex-wrap gap-2.5">
+        <button
+          type="button"
+          className="rounded-md border-0 bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 hover:scale-105 duration-200 focus-visible:outline-2 focus-visible:outline-blue-800"
+          onClick={() => getPostList(1)}
+        >
           사용자 1 게시글
         </button>
-        <button type="button" onClick={() => getPostList(2)} disabled={loading}>
+        <button type="button" onClick={() => getPostList(2)}>
           사용자 2 게시글
         </button>
-        <button
-          type="button"
-          onClick={() => getPostList(99)}
-          disabled={loading}
-        >
+        <button type="button" onClick={() => getPostList(99)}>
           사용자 99 게시글
         </button>
-        <button
-          type="button"
-          onClick={() => getPostList(-1)}
-          disabled={loading}
-        >
+        <button type="button" onClick={() => getPostList(-1)}>
           없는 사용자 게시글
         </button>
       </div>

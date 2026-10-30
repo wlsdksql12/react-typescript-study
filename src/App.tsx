@@ -14,6 +14,7 @@ import CommentsPractice from "./component/CommentsPractice";
 import { NavLink, Route, Routes } from "react-router";
 import PostPage from "./component/PostPage";
 import type { PostList } from "./component/PostType";
+import "../src/style/tailwind.css";
 
 interface NameProps {
   name: string;
@@ -91,7 +92,11 @@ function ProfilePractice({
 }
 
 function Home() {
-  return <h1>홈 화면입니다.</h1>;
+  return (
+    <div className="w-fit rounded-lg bg-blue-100 p-4 text-blue-800">
+      Tailwind CSS 적용 테스트
+    </div>
+  );
 }
 
 function About() {
@@ -122,6 +127,8 @@ function App() {
   const [memoList, setMemoList] = useState<MemoRecord[]>([]);
   const [postList, setPostList] = useState<PostList[] | null>(null);
   const [postListSearch, setPostListSearch] = useState("");
+  const [bookmark, setBookmark] = useState<number[]>([]);
+  const [isBookmark, setIsBookmark] = useState(false);
 
   const nextMemoIdRef = useRef(1);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,6 +244,18 @@ function App() {
     prev.title.toLowerCase().includes(postListSearch.toLowerCase().trim()),
   );
 
+  const BookmarkPostList = isBookmark
+    ? filteredPostList?.filter((prev) => bookmark.includes(prev.id))
+    : filteredPostList;
+
+  const handleBookmark = (id: number) => {
+    bookmark.includes(id)
+      ? setBookmark((prev) => prev.filter((item) => item !== id))
+      : setBookmark((prev) => [...prev, id]);
+  };
+
+  console.log(bookmark);
+
   return (
     <>
       <ProfilePractice
@@ -341,6 +360,11 @@ function App() {
                 postListSearch={postListSearch}
                 setPostListSearch={setPostListSearch}
                 filteredPostList={filteredPostList}
+                bookmark={bookmark}
+                isBookmark={isBookmark}
+                handleBookmark={handleBookmark}
+                setIsBookmark={setIsBookmark}
+                BookmarkPostList={BookmarkPostList}
               />
             }
           />

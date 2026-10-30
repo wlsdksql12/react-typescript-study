@@ -81,6 +81,7 @@ export default function PostPage() {
 
     getPost();
     return () => {
+      console.log("정리 함수 실행");
       controller.abort();
     };
   }, [postId, isValidPostId]);
