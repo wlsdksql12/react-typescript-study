@@ -10,7 +10,6 @@ interface PostListPracticeProps {
   setPostList: React.Dispatch<React.SetStateAction<PostList[] | null>>;
   postListSearch: string;
   setPostListSearch: React.Dispatch<React.SetStateAction<string>>;
-  filteredPostList: PostList[] | undefined;
   bookmark: number[];
   handleBookmark: (id: number) => void;
   setIsBookmark: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,7 +41,6 @@ export default function PostListPractice({
   setPostList,
   postListSearch,
   setPostListSearch,
-  filteredPostList,
   bookmark,
   handleBookmark,
   setIsBookmark,
@@ -169,11 +167,18 @@ export default function PostListPractice({
                 onClick={() => handleBookmark(item.id)}
               >
                 {bookmark.includes(item.id) ? (
-                  <FontAwesomeIcon icon={faBookmarkSolid} className="text-lg" />
+                  <FontAwesomeIcon
+                    icon={faBookmarkSolid}
+                    className="text-lg"
+                    aria-label="북마크 해제"
+                    aria-pressed="true"
+                  />
                 ) : (
                   <FontAwesomeIcon
                     icon={faBookmarkRegular}
                     className="text-lg"
+                    aria-label="북마크 추가"
+                    aria-pressed="false"
                   />
                 )}
               </button>

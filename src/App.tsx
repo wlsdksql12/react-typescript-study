@@ -359,7 +359,6 @@ function App() {
                 setPostList={setPostList}
                 postListSearch={postListSearch}
                 setPostListSearch={setPostListSearch}
-                filteredPostList={filteredPostList}
                 bookmark={bookmark}
                 isBookmark={isBookmark}
                 handleBookmark={handleBookmark}

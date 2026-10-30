@@ -955,3 +955,46 @@ PostListPractice에서 API 요청을 시작한 후 /comments로 이동했어. AP
 3. bg-transparent: background-color: transparent 란뜻.
 
 4. text-{lg, sm 등등}: font-size: ...px; 란뜻.
+
+## 2026년 10월 30일 과제
+
+게시글 북마크 기능 마무리
+
+약 15~25분 분량
+
+목표: 불필요한 props를 정리하고 북마크 버튼의 접근성을 개선한다.
+
+**과제 1. 사용하지 않는 props 정리 (필수)**
+
+작업 파일: App.tsx, PostListPractice.tsx
+
+현재 자식 컴포넌트에서 더 이상 사용하지 않는 filteredPostList props를 제거해 봐.
+
+- PostListPracticeProps 인터페이스에서 제거
+- PostListPractice의 매개변수에서 제거
+- App.tsx에서 자식에게 전달하는 부분 제거
+- 단, App.tsx의 filteredPostList 계산 변수는 그대로 유지
+  완료 조건은 TypeScript 오류 없이 기존 검색과 북마크 필터가 정상적으로 동작하는 거야.
+
+**과제 2. 북마크 버튼 접근성 개선 (필수)**
+
+작업 파일: PostListPractice.tsx
+
+현재 북마크 버튼에는 아이콘만 표시돼 있어.
+
+여기에 이전 코드 검토에서 설명한 aria-label과 aria-pressed를 직접 적용해 봐.
+북마크 상태 aria-label aria-pressed
+등록하지 않음 북마크 추가 false
+등록함 북마크 해제 true
+
+aria-label은 버튼의 역할을 설명하고, aria-pressed는 현재 토글 버튼의 선택 상태를 나타내.
+
+기존 bookmark.includes(item.id) 조건을 활용하면 돼. 새로운 state는 필요 없어.
+완료 후 확인 순서
+[○] 사용자 1 게시글을 조회하고 북마크 버튼을 클릭한다.
+[○] 북마크 아이콘과 aria-pressed 값이 변경되는지 확인한다.
+[○] 북마크를 해제하면 원래 상태로 돌아오는지 확인한다.
+[○] 북마크만 보기와 제목 검색이 정상 동작하는지 확인한다.
+[○] VS Code 및 빌드에서 TypeScript 오류가 발생하지 않는지 확인한다.
+
+aria-pressed 확인은 브라우저 개발자 도구의 Elements 탭에서 해당 버튼을 선택하면 돼.
