@@ -15,6 +15,8 @@ interface PostListPracticeProps {
   setIsBookmark: React.Dispatch<React.SetStateAction<boolean>>;
   isBookmark: boolean;
   BookmarkPostList: PostList[] | undefined;
+  handleAllBookmark: () => void;
+  bookmarkCheck: boolean | undefined;
 }
 
 function isPostList(data: unknown): data is PostList[] {
@@ -46,6 +48,8 @@ export default function PostListPractice({
   setIsBookmark,
   isBookmark,
   BookmarkPostList,
+  handleAllBookmark,
+  bookmarkCheck,
 }: PostListPracticeProps) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -113,8 +117,15 @@ export default function PostListPractice({
     };
   }, []);
 
+  const findpost3 = postList?.find((prev) => prev.id === 3);
+
   return (
     <div className="post-container">
+      <p>
+        {findpost3 === undefined
+          ? "3번 게시글이 없습니다."
+          : `3번 게시글 제목: ${findpost3.title}`}
+      </p>
       <div className="post-title-header">
         <h3 className="post-title">게시글 목록</h3>
         <span>전체 게시글 수: {postList?.length ?? 0}개</span>
@@ -123,6 +134,12 @@ export default function PostListPractice({
         <div className="flex gap-2">
           <button onClick={() => setIsBookmark(false)}>전체 보기</button>
           <button onClick={() => setIsBookmark(true)}>북마크만 보기</button>
+          <button
+            onClick={handleAllBookmark}
+            disabled={postList === null || bookmarkCheck}
+          >
+            조회한 게시글 전부 북마크
+          </button>
         </div>
         <span>북마크 총 개수: {bookmark.length}개</span>
       </div>
@@ -165,20 +182,15 @@ export default function PostListPractice({
               <button
                 className="border-transparent bg-transparent"
                 onClick={() => handleBookmark(item.id)}
+                aria-label={`${item.title} 북마크`}
+                aria-pressed={bookmark.includes(item.id)}
               >
                 {bookmark.includes(item.id) ? (
-                  <FontAwesomeIcon
-                    icon={faBookmarkSolid}
-                    className="text-lg"
-                    aria-label="북마크 해제"
-                    aria-pressed="true"
-                  />
+                  <FontAwesomeIcon icon={faBookmarkSolid} className="text-lg" />
                 ) : (
                   <FontAwesomeIcon
                     icon={faBookmarkRegular}
                     className="text-lg"
-                    aria-label="북마크 추가"
-                    aria-pressed="false"
                   />
                 )}
               </button>

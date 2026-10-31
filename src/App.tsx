@@ -249,13 +249,30 @@ function App() {
     : filteredPostList;
 
   const handleBookmark = (id: number) => {
-    bookmark.includes(id)
-      ? setBookmark((prev) => prev.filter((item) => item !== id))
-      : setBookmark((prev) => [...prev, id]);
+    // bookmark.includes(id)
+    //   ? setBookmark((prev) => prev.filter((item) => item !== id))
+    //   : setBookmark((prev) => [...prev, id]);
+
+    setBookmark((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
   };
 
-  console.log(bookmark);
+  const handleAllBookmark = () => {
+    if (postList !== null) {
+      setBookmark((prev) => {
+        const numberList = postList
+          .filter((item) => !prev.includes(item.id))
+          .map((id) => id.id);
 
+        return [...prev, ...numberList];
+      });
+    }
+  };
+
+  const bookmarkCheck = postList?.every((prev) => bookmark.includes(prev.id));
+
+  console.log(bookmark);
   return (
     <>
       <ProfilePractice
@@ -364,6 +381,8 @@ function App() {
                 handleBookmark={handleBookmark}
                 setIsBookmark={setIsBookmark}
                 BookmarkPostList={BookmarkPostList}
+                handleAllBookmark={handleAllBookmark}
+                bookmarkCheck={bookmarkCheck}
               />
             }
           />

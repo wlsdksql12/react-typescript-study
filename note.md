@@ -998,3 +998,33 @@ aria-label은 버튼의 역할을 설명하고, aria-pressed는 현재 토글 �
 [○] VS Code 및 빌드에서 TypeScript 오류가 발생하지 않는지 확인한다.
 
 aria-pressed 확인은 브라우저 개발자 도구의 Elements 탭에서 해당 버튼을 선택하면 돼.
+
+### 2026-10-31
+
+## 오전 수업
+
+**TypeScript 타입 좁히기**
+
+1. find()의 결과는 객체 또는 undefined가 될 수 있다.
+
+2. undefined인지 검사한 뒤 객체의 속성에 안전하게 접근할 수 있다.
+
+3. postList?.find()는 postList가 null일 때 검색을 건너뛴다.
+
+## 오늘 과제
+
+오늘은 주말 오전 수업이므로 과제도 작게 내줄게.
+
+과제 목표: find()와 undefined 처리 복습
+
+현재 게시글 프로젝트를 변경할 필요 없이 다음 코드의 결과를 예측해서 정리하면 돼.
+
+const numbers = [10, 20, 30];
+
+const a = numbers.find((num) => num > 15);
+const b = numbers.filter((num) => num > 15);
+const c = numbers.find((num) => num > 50);
+
+각 변수의 값과 TypeScript가 추론하는 타입을 적고, c를 안전하게 사용하는 방법을 설명하면 완료야.
+
+오늘 오전에는 특히 함수형 업데이트를 실제로 실험하면서 예상과 다른 결과의 원인까지 확인했어. 단순히 정답을 따라 작성한 것보다 의미 있는 학습이었어.
