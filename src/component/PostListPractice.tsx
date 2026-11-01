@@ -99,9 +99,13 @@ export default function PostListPractice({
     } catch (error) {
       if (controller.signal.aborted) {
         return;
+      }
+
+      if (error instanceof Error) {
+        console.error(error.message);
+        setErrorMessage(error.message);
       } else {
-        console.error(error);
-        setErrorMessage("게시글을 불러오는데 실패했습니다.");
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
       }
     } finally {
       if (!controller.signal.aborted) {
@@ -117,15 +121,10 @@ export default function PostListPractice({
     };
   }, []);
 
-  const findpost3 = postList?.find((prev) => prev.id === 3);
+  const checkTitleLength = postList?.filter((prev) => prev.title.length >= 20);
 
   return (
     <div className="post-container">
-      <p>
-        {findpost3 === undefined
-          ? "3번 게시글이 없습니다."
-          : `3번 게시글 제목: ${findpost3.title}`}
-      </p>
       <div className="post-title-header">
         <h3 className="post-title">게시글 목록</h3>
         <span>전체 게시글 수: {postList?.length ?? 0}개</span>
@@ -152,6 +151,19 @@ export default function PostListPractice({
           ref={inputRef}
         />
         <span>검색 결과 수: {BookmarkPostList?.length ?? 0}개</span>
+      </div>
+      <div>
+        {loading ? (
+          <p>게시글을 불러오는 중입니다.</p>
+        ) : errorMessage !== "" ? (
+          <p>게시글 조회에 실패했습니다.</p>
+        ) : postList === null ? (
+          <p>게시글을 먼저 조회해 주세요.</p>
+        ) : checkTitleLength?.length === 0 ? (
+          <p>조건에 맞는 게시글이 없습니다.</p>
+        ) : (
+          <p>제목 20글자 이상: {checkTitleLength?.length}개</p>
+        )}
       </div>
       <ul className="post-ul">
         {loading ? (

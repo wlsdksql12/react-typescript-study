@@ -451,7 +451,7 @@ showTodoList는 useState로 관리하고 filteredTodoList는 일반 변수로 �
 CartType.d.ts와 CartType.ts의 차이를 설명하고, export interface와 import type을 사용하는 방식으로 변경해 보기.
 
 답변: 1. .d.ts는 전역 변수 타입을 정의 하는것이고 .ts는 모듈 타입을 정의 한것.
-┖─ 답변 보안: .ts는 typeScript 코드와 타입 선언 작성 / .d.ts는 타입 선언을 제공하는 파일. 일반적인 실행 코드 구현용이 아님.
+┖─ 답변 오류 수정: .ts는 typeScript 코드와 타입 선언 작성 / .d.ts는 타입 선언을 제공하는 파일. 일반적인 실행 코드 구현용이 아님.
 
 과제 2 — 컴포넌트 역할
 
@@ -730,7 +730,7 @@ const testData = [];
 3-1. unknown과 any의 차이: 둘의 차이점은 unknown은 데이터의 타입을 알 수 없다는 뜻이고, any는 아무거나 들어오거나 될 수 있다는 뜻으로 해석.
 
 3-2. value is PostList의 역할은 value가 true라면 타입을 PostList로 지정하겠다 라는 의미.
-┗━ 답 보안: value가 true인 것이 아니라, 타입 가드 함수가 true를 반환했을 때 value를 PostList로 좁히겠다는 의미.
+┗━ 답 오류 수정: value가 true인 것이 아니라, 타입 가드 함수가 true를 반환했을 때 value를 PostList로 좁히겠다는 의미.
 
 3-3. HTTP 200과 데이터 검증 성공이 다른 이유는 HTTP 200은 API를 통해 받은 데이터가 정상적으로 잘 왔다란 의미로 지정한 데이터 타입과 일치한다는 의미는 아니다.
 따라서 HTTP 200과 데이터 검증 성공이 다른 이유이며 두 가지를 동시에 사용하는 이유이기도 하다.
@@ -906,7 +906,7 @@ PostListPractice에서 API 요청을 시작한 후 /comments로 이동했어. AP
 이 문제는 오늘 마지막에 남겨둔 응용 질문이야. 지금 답할 필요는 없어.
 
 답변: 내 답변은 아니야 이유는 PostListPractice에서 API 요청후 /comments로 이동을 했다면 PostListPractice가 언마운트 되면서 요청은 지속되어도 state에는 변경을 할 수 없을거 같아.
-┗━ 보안: 함수를 호출했던 자식 컴포넌트가 언마운트되더라도, 그 함수에 전달된 부모의 state setter가 자동으로 사라지거나 무효화되는 것은 아니라는 점.
+┗━ 답변 오류 수정: 함수를 호출했던 자식 컴포넌트가 언마운트되더라도, 그 함수에 전달된 부모의 state setter가 자동으로 사라지거나 무효화되는 것은 아니라는 점.
 
 ### 2026-10-30
 
@@ -1032,9 +1032,74 @@ const c = numbers.find((num) => num > 50);
 a의 값은 20이고 TypeScript가 추론하는 타입은 number | undefined야. 이유는 find는 조건에 맞는 처음 값을 반환해 따라서 20이 조건에 맞으므로 20을 반환한거야.
 
 b의 값은 [20, 30]이고 TypeScript가 추론하는 타입은 number[] | unll야. 이유는 filter는 조건에 맞는 값을 찾아 새 배열로 반환해줘 따라서 [20, 30]이야.
+┗━ 답변 오류 수정: filter()는 null을 반환하지 않는다. filter는 조건에 맞는 요소가 하나도 없더라도 빈 배열을 반환한다. 따라서 반환 타입은 항상 number[]이다.
 
 c의 값은 undefined야 TypeScript가 추론하는 타입 또한 undefined 일거라 생각해. 이유는 다른 것들은 조건에 해당하는 값이 있기 때문에 그 값 타입 또는 undefined 였던건데 이건 값이 undefined이기 때문에 그래. 안전하게 사용하는 방법은 조건문으로 처리하는거야 예시로는
+┗━ 답변 오류 수정: 배열 요소의 타입과 find()의 반환 규칙을 기준으로 추론하여 추론 타입은 number | indefined 이다.
 
 if(c === undefined) {console.log("조건에 해당하는 값이 없습니다.")}
 
 오늘 오전에는 특히 함수형 업데이트를 실제로 실험하면서 예상과 다른 결과의 원인까지 확인했어. 단순히 정답을 따라 작성한 것보다 의미 있는 학습이었어.
+
+### 2026-11-01
+
+## 오전 수업
+
+**find()와 filter()**
+
+1. find()는 조건에 맞는 첫 번째 요소를 반환하며, 없으면 undefined를 반환한다.
+
+2. filter()는 조건에 맞는 요소들을 새 배열로 반환하며, 없으면 []를 반환한다.
+
+**옵셔널 체이닝(?.)과 널 병합 연산자(??)**
+
+1. ?.는 왼쪽 값이 null 또는 undefined면 접근이나 호출을 중단하고 undefined를 반환한다.
+
+2. ??는 왼쪽 값이 null 또는 undefined일 때 오른쪽 값을 사용한다. ex. null ?? "string"
+
+**타입 좁히기와 타입 가드**
+
+1. unknown은 타입을 확인하지 않은 데이터에 사용한다.
+
+2. data is string[] 같은 타입 서술어는 타입 검사 결과의 의미를 TypeScript에 알려준다.
+
+3. instanceof Error로 실제 오류 객체인지 확인한 후 error.message에 접근할 수 있다. ex. if(error instanceof Error) console.error(error.message);
+
+## 오늘의 과제
+
+과제: 유효한 검색어 하나 찾기
+
+목적: 오늘 배운 타입 가드, map(), find(), trim(), ??를 연결해서 직접 함수를 구현하는 거야.
+
+작업 파일: TypeGuardPractice.ts
+
+구현할 함수: getFirstKeyword(data: unknown): string
+
+요구사항
+
+1. 기존에 작성한 isStringArray() 타입 가드를 재사용해.
+
+2. 전달된 데이터가 문자열 배열이 아니라면 "잘못된 입력"을 반환해.
+
+3. 문자열 배열이라면 각 문자열의 앞뒤 공백을 제거해.
+
+4. 공백 제거 후 빈 문자열이 아닌 첫 번째 값을 찾아 반환해.
+
+5. 유효한 문자열이 하나도 없다면 "검색어 없음"을 반환해.
+
+6. 새로운 React 컴포넌트나 useState는 필요 없어.
+
+완료 조건 및 예상 결과
+
+입력 데이터 | 예상 결과
+
+[" ", " React ", "TypeScript"] | "React"
+["", " ", "JavaScript"] | "JavaScript"
+[" ", ""] | "검색어 없음"
+[] | "검색어 없음"
+["React", 10] | "잘못된 입력"
+null | "잘못된 입력"
+
+이번에는 완성 코드를 먼저 제공하지 않을게. 이미 배운 문법만으로 구현할 수 있어.
+
+추가 설명 문제: 이 함수에서 find() 대신 filter()를 사용해도 첫 번째 검색어를 구할 수 있을까? 가능하다면 결과를 어떻게 사용해야 하는지 함께 설명해 봐.

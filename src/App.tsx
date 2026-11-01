@@ -15,6 +15,7 @@ import { NavLink, Route, Routes } from "react-router";
 import PostPage from "./component/PostPage";
 import type { PostList } from "./component/PostType";
 import "../src/style/tailwind.css";
+import TypeGuard from "./component/TypeGuardPractice";
 
 interface NameProps {
   name: string;
