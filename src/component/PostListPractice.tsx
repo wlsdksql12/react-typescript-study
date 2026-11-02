@@ -38,6 +38,8 @@ function PostListItem(data: unknown): data is PostList {
   );
 }
 
+type RequestStatus = "idle" | "loading" | "success" | "error";
+
 export default function PostListPractice({
   postList,
   setPostList,
@@ -51,8 +53,8 @@ export default function PostListPractice({
   handleAllBookmark,
   bookmarkCheck,
 }: PostListPracticeProps) {
-  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [status, setStatus] = useState<RequestStatus>("idle");
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -65,7 +67,7 @@ export default function PostListPractice({
     setPostList(null);
     setErrorMessage("");
     setPostListSearch("");
-    setLoading(true);
+    setStatus("loading");
     inputRef.current?.focus();
 
     try {
@@ -95,21 +97,19 @@ export default function PostListPractice({
 
       if (!controller.signal.aborted) {
         setPostList(postList);
+        setStatus("success");
       }
     } catch (error) {
       if (controller.signal.aborted) {
         return;
       }
 
+      setStatus("error");
       if (error instanceof Error) {
         console.error(error.message);
         setErrorMessage(error.message);
       } else {
         setErrorMessage("알 수 없는 오류가 발생했습니다.");
-      }
-    } finally {
-      if (!controller.signal.aborted) {
-        setLoading(false);
       }
     }
   }
@@ -136,26 +136,33 @@ export default function PostListPractice({
           <button
             onClick={handleAllBookmark}
             disabled={postList === null || bookmarkCheck}
+            className="rounded-md border-0 px-4 py-2 box-border bg-cyan-600 
+            enabled:hover:scale-105 transition duration-200 enabled:hover:bg-cyan-300 
+            disabled:cursor-not-allowed disabled:bg-stone-600 disabled:text-white 
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900"
           >
             조회한 게시글 전부 북마크
           </button>
         </div>
         <span>북마크 총 개수: {bookmark.length}개</span>
       </div>
-      <div className="post-input-header">
+      <div className="flex flex-col w-full sm:flex-row sm:flex-1 justify-between items-center border-2 border-gray-400 focus-within:border-blue-400">
+        <label htmlFor="search">게시글 검색:</label>
         <input
           value={postListSearch}
           onChange={(e) => setPostListSearch(e.target.value)}
           placeholder="검색어를 입력해 주세요."
-          className="post-input"
+          className="px-2.5 py-3 w-1/2"
+          id="search"
+          type="search"
           ref={inputRef}
         />
         <span>검색 결과 수: {BookmarkPostList?.length ?? 0}개</span>
       </div>
       <div>
-        {loading ? (
+        {status === "loading" ? (
           <p>게시글을 불러오는 중입니다.</p>
-        ) : errorMessage !== "" ? (
+        ) : status === "error" ? (
           <p>게시글 조회에 실패했습니다.</p>
         ) : postList === null ? (
           <p>게시글을 먼저 조회해 주세요.</p>
@@ -166,9 +173,9 @@ export default function PostListPractice({
         )}
       </div>
       <ul className="post-ul">
-        {loading ? (
+        {status === "loading" ? (
           <li>불러오는 중입니다.</li>
-        ) : errorMessage !== "" ? (
+        ) : status === "error" ? (
           <li>{errorMessage}</li>
         ) : postList === null ? (
           <li>버튼을 눌러 사용자 게시글을 조회하세요.</li>
