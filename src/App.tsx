@@ -18,6 +18,7 @@ import "../src/style/tailwind.css";
 import TypeGuard from "./component/TypeGuardPractice";
 import RequestStatePractice from "./component/RequestStatePractice";
 import CouponPractice from "./component/CouponPractice";
+import InventorySearchPractice from "./component/InventorySearchPractice";
 
 interface NameProps {
   name: string;
@@ -371,6 +372,9 @@ function App() {
           <NavLink className="site-comments" to="/coupon">
             쿠폰
           </NavLink>
+          <NavLink className="site-comments" to="/inventorySearch">
+            재고 검색
+          </NavLink>
         </nav>
 
         <Routes>
@@ -398,6 +402,10 @@ function App() {
           <Route path="/posts/:postId" element={<PostPage />} />
           <Route path="/request" element={<RequestStatePractice />} />
           <Route path="/coupon" element={<CouponPractice />} />
+          <Route
+            path="/inventorySearch"
+            element={<InventorySearchPractice />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
