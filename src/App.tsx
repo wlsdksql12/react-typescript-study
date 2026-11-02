@@ -17,6 +17,7 @@ import type { PostList } from "./component/PostType";
 import "../src/style/tailwind.css";
 import TypeGuard from "./component/TypeGuardPractice";
 import RequestStatePractice from "./component/RequestStatePractice";
+import CouponPractice from "./component/CouponPractice";
 
 interface NameProps {
   name: string;
@@ -367,6 +368,9 @@ function App() {
           <NavLink className="site-comments" to="/request">
             판별 유니언
           </NavLink>
+          <NavLink className="site-comments" to="/coupon">
+            쿠폰
+          </NavLink>
         </nav>
 
         <Routes>
@@ -393,6 +397,7 @@ function App() {
           />
           <Route path="/posts/:postId" element={<PostPage />} />
           <Route path="/request" element={<RequestStatePractice />} />
+          <Route path="/coupon" element={<CouponPractice />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
