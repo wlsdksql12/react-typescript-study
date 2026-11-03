@@ -18,7 +18,7 @@ import "../src/style/tailwind.css";
 import RequestStatePractice from "./component/RequestStatePractice";
 import CouponPractice from "./component/CouponPractice";
 import InventorySearchPractice from "./component/InventorySearchPractice";
-import StockReducerPractice from "./component/StockReducerPractice";
+import OrderReducerPractice from "./component/OrderReducerPractice";
 
 interface NameProps {
   name: string;
@@ -375,8 +375,8 @@ function App() {
           <NavLink className="site-comments" to="/inventorySearch">
             재고 검색
           </NavLink>
-          <NavLink className="site-comments" to="/useReducer">
-            useReducer 테스트
+          <NavLink className="site-comments" to="/orderReducer">
+            주문 정보
           </NavLink>
         </nav>
 
@@ -409,7 +409,7 @@ function App() {
             path="/inventorySearch"
             element={<InventorySearchPractice />}
           />
-          <Route path="/useReducer" element={<StockReducerPractice />} />
+          <Route path="/orderReducer" element={<OrderReducerPractice />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
