@@ -1,15 +1,59 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type status =
   | { status: "idle" }
   | { status: "found"; name: string; stock: number }
-  | { status: "error"; message: string };
+  | { status: "error"; message: string }
+  | { status: "loading" };
+
+function getSearchResultText(result: status): string {
+  switch (result.status) {
+    case "idle":
+      return "상품 이름을 입력해 주세요.";
+
+    case "error":
+      return result.message;
+
+    case "found":
+      return `${result.name} / 재고 ${result.stock}개 ${result.stock > 0 ? "(구매 가능)" : "(품절)"}`;
+
+    case "loading":
+      return "상품을 검색하고 있습니다.";
+
+    default: {
+      const remaining: never = result;
+      return remaining;
+    }
+  }
+}
+
+function getSearchResultClassName(result: status): string {
+  switch (result.status) {
+    case "idle":
+      return "text-gray-500";
+
+    case "error":
+      return "text-red-500";
+
+    case "loading":
+      return "text-blue-600";
+
+    case "found":
+      return result.stock > 0 ? "text-green-700" : "text-amber-600";
+
+    default: {
+      const remaining: never = result;
+      return remaining;
+    }
+  }
+}
 
 export default function InventorySearchPractice() {
   const [productKeyword, setProductKeyword] = useState("");
   const [productsStatus, setProductsStatus] = useState<status>({
     status: "idle",
   });
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const products = [
     { name: "키보드", stock: 5 },
     { name: "마우스", stock: 0 },
@@ -19,34 +63,58 @@ export default function InventorySearchPractice() {
   const handleProductKeyword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProductsStatus({ status: "idle" });
     setProductKeyword(event.target.value);
+
+    clearTimer();
   };
 
   const handleFoundProduct = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
+    clearTimer();
 
     const keyword = productKeyword.trim();
     if (keyword.length === 0) return;
 
-    const data = products.find((prev) => prev.name === productKeyword);
+    setProductsStatus({ status: "loading" });
+    timerRef.current = setTimeout(() => {
+      timerRef.current = null;
+      const data = products.find((prev) => prev.name === keyword);
 
-    if (data === undefined) {
+      if (data === undefined) {
+        return setProductsStatus({
+          status: "error",
+          message: "상품을 찾을 수 없습니다.",
+        });
+      }
+
       return setProductsStatus({
-        status: "error",
-        message: "상품을 찾을 수 없습니다.",
+        status: "found",
+        name: data.name,
+        stock: data.stock,
       });
-    }
-
-    return setProductsStatus({
-      status: "found",
-      name: data.name,
-      stock: data.stock,
-    });
+    }, 5000);
   };
 
   const handleResetProduct = () => {
     setProductKeyword("");
     setProductsStatus({ status: "idle" });
+    clearTimer();
   };
+
+  const clearTimer = () => {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <form
@@ -82,15 +150,9 @@ export default function InventorySearchPractice() {
           초기화
         </button>
       </div>
-      {productsStatus.status === "idle" ? (
-        <p>상품 이름을 입력해 주세요.</p>
-      ) : productsStatus.status === "error" ? (
-        <p>{productsStatus.message}</p>
-      ) : (
-        <p>
-          {productsStatus.name} / {productsStatus.stock}개
-        </p>
-      )}
+      <p className={getSearchResultClassName(productsStatus)}>
+        {getSearchResultText(productsStatus)}
+      </p>
     </form>
   );
 }

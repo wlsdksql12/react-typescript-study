@@ -15,10 +15,10 @@ import { NavLink, Route, Routes } from "react-router";
 import PostPage from "./component/PostPage";
 import type { PostList } from "./component/PostType";
 import "../src/style/tailwind.css";
-import TypeGuard from "./component/TypeGuardPractice";
 import RequestStatePractice from "./component/RequestStatePractice";
 import CouponPractice from "./component/CouponPractice";
 import InventorySearchPractice from "./component/InventorySearchPractice";
+import StockReducerPractice from "./component/StockReducerPractice";
 
 interface NameProps {
   name: string;
@@ -375,6 +375,9 @@ function App() {
           <NavLink className="site-comments" to="/inventorySearch">
             재고 검색
           </NavLink>
+          <NavLink className="site-comments" to="/useReducer">
+            useReducer 테스트
+          </NavLink>
         </nav>
 
         <Routes>
@@ -406,6 +409,7 @@ function App() {
             path="/inventorySearch"
             element={<InventorySearchPractice />}
           />
+          <Route path="/useReducer" element={<StockReducerPractice />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
