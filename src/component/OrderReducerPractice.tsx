@@ -1,15 +1,19 @@
+import { faGift } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useReducer } from "react";
 
 type OrderState = {
   qty: number;
   delivery: string;
+  giftWrap: boolean;
 };
 
 type OrderAction =
   | { type: "increase" }
   | { type: "decrease" }
   | { type: "reset" }
-  | { type: "changeDelivery"; delivery: "일반 배송" | "빠른 배송" };
+  | { type: "changeDelivery"; delivery: "일반 배송" | "빠른 배송" }
+  | { type: "changeGiftWrap"; giftWrap: true | false };
 
 function OrderInformation(state: OrderState, action: OrderAction): OrderState {
   switch (action.type) {
@@ -20,10 +24,13 @@ function OrderInformation(state: OrderState, action: OrderAction): OrderState {
       return { ...state, qty: Math.max(1, state.qty - 1) };
 
     case "reset":
-      return { qty: 1, delivery: "일반 배송" };
+      return { qty: 1, delivery: "일반 배송", giftWrap: false };
 
     case "changeDelivery":
       return { ...state, delivery: action.delivery };
+
+    case "changeGiftWrap":
+      return { ...state, giftWrap: !action.giftWrap };
 
     default: {
       const remaining: never = action;
@@ -36,14 +43,16 @@ export default function OrderReducerPractice() {
   const [order, dispath] = useReducer(OrderInformation, {
     qty: 1,
     delivery: "일반 배송",
+    giftWrap: false,
   });
   const productTotal = order.qty * 12000;
   const deliveryFee = order.delivery === "빠른 배송" ? 3000 : 0;
-  const totalPrice = productTotal + deliveryFee;
+  const giftWrap = order.giftWrap === true ? 1000 : 0;
+  const totalPrice = productTotal + deliveryFee + giftWrap;
 
   return (
     <div className="border border-black rounded-md box-border px-6 py-6 w-full max-w-170">
-      <p>주문 정보</p>
+      <p className="text-lg">주문 정보</p>
       <div className="flex justify-between">
         <span>주문 수량</span>
         <div className="flex gap-1.5">
@@ -94,6 +103,29 @@ export default function OrderReducerPractice() {
           </button>
         </div>
       </div>
+      <hr />
+      <div className="flex justify-between">
+        <div className="flex flex-col">
+          <span>선물 포장</span>
+          <span className="text-sm">추가 비용 1,000원</span>
+        </div>
+        <button
+          className="rounded-md border"
+          onClick={() =>
+            dispath({ type: "changeGiftWrap", giftWrap: order.giftWrap })
+          }
+        >
+          <FontAwesomeIcon icon={faGift} />
+          {order.giftWrap === true ? " 포장 해제" : " 포장"}
+        </button>
+      </div>
+      {order.giftWrap === true ? (
+        <span className="text-xs text-green-500">
+          선물 포징이 선택되어 있습니다.
+        </span>
+      ) : (
+        ""
+      )}
       <hr />
       <div className="flex flex-col">
         <div className="flex flex-col mb-3.5">
