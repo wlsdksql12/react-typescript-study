@@ -8,14 +8,15 @@ interface Product {
 }
 
 export default function ProductSelectorPractice() {
-  const [product, setProduct] = useState<Product[]>([
+  const product: Product[] = [
     { id: 1, name: "연필", price: 500 },
     { id: 2, name: "지우개", price: 800 },
     { id: 3, name: "노트", price: 2000 },
-  ]);
+  ];
+
   const [productId, setProductId] = useState(1);
 
-  const filterdProduct = product.filter((prev) => prev.id === productId);
+  const selectedProduct = product.find((prev) => prev.id === productId);
 
   return (
     <div className="border box-border w-full max-w-3xl rounded-md p-4">
@@ -47,7 +48,7 @@ export default function ProductSelectorPractice() {
       >
         선택 해제
       </button>
-      <ProductInfo filterdProduct={filterdProduct} />
+      <ProductInfo selectedProduct={selectedProduct} />
     </div>
   );
 }
