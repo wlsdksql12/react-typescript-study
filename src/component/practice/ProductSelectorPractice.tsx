@@ -13,7 +13,7 @@ export default function ProductSelectorPractice() {
     { id: 2, name: "지우개", price: 800 },
     { id: 3, name: "노트", price: 2000 },
   ]);
-  const [productId, setProductId] = useState(0);
+  const [productId, setProductId] = useState(1);
 
   const filterdProduct = product.filter((prev) => prev.id === productId);
 
@@ -40,7 +40,11 @@ export default function ProductSelectorPractice() {
           노트
         </button>
       </div>
-      <button className="w-full mb-3.5" onClick={() => setProductId(0)}>
+      <button
+        type="button"
+        className="w-full mb-3.5"
+        onClick={() => setProductId(0)}
+      >
         선택 해제
       </button>
       <ProductInfo filterdProduct={filterdProduct} />
