@@ -42,6 +42,7 @@ export default function NotificationPractice() {
         </header>
         <div className="flex gap-2.5">
           <button
+            type="button"
             className="rounded-3xl px-2 border border-[#262626] bg-[#000000] text-[#686868] 
           hover:text-[#ACACAC] hover:border-[#3C3C3C] hover:cursor-pointer visited:bg-[#303030] duration-200"
             onClick={() => setAllNotification(true)}
@@ -49,6 +50,7 @@ export default function NotificationPractice() {
             전체 보기
           </button>
           <button
+            type="button"
             className="rounded-3xl px-2 border border-[#262626] bg-[#000000] text-[#686868]
              hover:text-[#ACACAC] hover:border-[#3C3C3C] hover:cursor-pointer visited:bg-[#303030] enabled:hover:bg-[#1A1A1A] duration-200"
             onClick={() => setAllNotification(false)}
@@ -80,12 +82,14 @@ export default function NotificationPractice() {
 
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     className="px-3.5 py-1.5 rounded-full border border-neutral-500 text-sm enabled:hover:cursor-pointer"
                     onClick={() => handleNotificationRead(prev.id)}
                   >
                     {prev.isRead ? "읽음 취소" : "읽음 처리"}
                   </button>
                   <button
+                    type="button"
                     className="px-3.5 py-1.5 rounded-full border border-neutral-500 text-sm enabled:hover:cursor-pointer"
                     onClick={() => handleNotificationDle(prev.id)}
                   >
