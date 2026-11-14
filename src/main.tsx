@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router";
 import "./component/practice/TypeGuardPractice.ts";
-import TimerReviewPractice from "./component/practice/TimerReviewPractice";
+import ProfileReviewPractice from "./component/practice/ProfileReviewPractice.tsx";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -11,6 +11,6 @@ createRoot(document.getElementById("root")!).render(
   // </StrictMode>,
   <BrowserRouter>
     {/* <App /> */}
-    <TimerReviewPractice />
+    <ProfileReviewPractice />
   </BrowserRouter>,
 );
