@@ -35,7 +35,7 @@ export default function ProfileEditForm({
         </button>
         <button
           type="button"
-          disabled={editName.trim().length < 2 || editName.trim() === editName}
+          disabled={editName.trim().length < 2 || editName.trim() === profile}
           onClick={() => handleEdit(editName.trim())}
         >
           저장
