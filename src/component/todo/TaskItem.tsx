@@ -1,4 +1,4 @@
-import "../component/memoTypes";
+import "../memo/memoTypes";
 
 interface TaskItemProps {
   item: ItemListProps;

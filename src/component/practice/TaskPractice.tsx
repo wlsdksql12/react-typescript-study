@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import TaskItem from "./TaskItem";
+import TaskItem from "../todo/TaskItem";
 import "../component/memoTypes";
 
 export default function TaskPractice() {
