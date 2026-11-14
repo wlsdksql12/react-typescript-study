@@ -12,11 +12,10 @@ export default function ProfileEditForm({
   handleEditCancel,
 }: ProfileEditProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [editName, setEditName] = useState("");
+  const [editName, setEditName] = useState(profile);
 
   useEffect(() => {
     inputRef.current?.focus();
-    setEditName(profile);
   }, []);
 
   return (
@@ -36,12 +35,8 @@ export default function ProfileEditForm({
         </button>
         <button
           type="button"
-          disabled={
-            editName.length < 1 ||
-            editName.trim().length === 0 ||
-            profile === editName
-          }
-          onClick={() => handleEdit(editName)}
+          disabled={editName.trim().length < 2 || editName.trim() === editName}
+          onClick={() => handleEdit(editName.trim())}
         >
           저장
         </button>

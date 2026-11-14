@@ -32,14 +32,12 @@ export default function ProfileReviewPractice() {
           true
         )}
       </div>
-      {edit ? (
+      {edit && (
         <ProfileEditForm
           profile={profile}
           handleEdit={handleEdit}
           handleEditCancel={handleEditCancel}
         />
-      ) : (
-        true
       )}
     </div>
   );
