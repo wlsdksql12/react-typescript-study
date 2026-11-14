@@ -49,12 +49,12 @@ export default function TypeGuard() {
   const e: unknown = ["React", 10];
   const f: unknown = null;
 
-  console.log(getFirstKeyword(a));
-  console.log(getFirstKeyword(b));
-  console.log(getFirstKeyword(c));
-  console.log(getFirstKeyword(d));
-  console.log(getFirstKeyword(e));
-  console.log(getFirstKeyword(f));
+  // console.log(getFirstKeyword(a));
+  // console.log(getFirstKeyword(b));
+  // console.log(getFirstKeyword(c));
+  // console.log(getFirstKeyword(d));
+  // console.log(getFirstKeyword(e));
+  // console.log(getFirstKeyword(f));
 }
 
 TypeGuard();
