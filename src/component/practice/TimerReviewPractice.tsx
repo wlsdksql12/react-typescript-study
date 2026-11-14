@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type TimeHTMLAttributes } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TimerReviewPractice() {
   const [count, setCount] = useState(0);
