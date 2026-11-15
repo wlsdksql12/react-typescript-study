@@ -5,6 +5,7 @@ export default function PostCreatePractice() {
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,12 +33,17 @@ export default function PostCreatePractice() {
         );
         console.log(response);
 
-        if (response.ok) {
-          setTitle("");
-          setBody("");
-        } else {
+        if (!response.ok) {
           throw new Error("POST 요청 실패");
         }
+
+        setSuccess(true);
+        setTitle("");
+        setBody("");
+
+        setTimeout(() => {
+          setSuccess(false);
+        }, 5000);
       } catch (error) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -58,13 +64,18 @@ export default function PostCreatePractice() {
     >
       <h4>새 게시글 작성</h4>
 
-      {loading ? (
-        <p>등록 중...</p>
-      ) : error !== "" ? (
-        <p className="text-sm">{error}</p>
-      ) : (
-        <p className="text-sm">게시글 등록 요청이 성공했습니다.</p>
-      )}
+      {
+        loading ? (
+          <p>등록 중...</p>
+        ) : error !== "" ? (
+          <p className="text-sm">{error}</p>
+        ) : success ? (
+          <p className="text-sm">게시글 등록 요청이 성공했습니다.</p>
+        ) : (
+          true
+        )
+        // <p className="text-sm">게시글 등록 요청이 성공했습니다.</p>
+      }
 
       <div className="flex flex-col gap-1.5 mb-4">
         <label htmlFor="title">제목</label>
@@ -91,7 +102,7 @@ export default function PostCreatePractice() {
         className="flex justify-self-end"
         disabled={title.trim() === "" || body.trim() === "" || loading}
       >
-        게시글 작성
+        {loading ? "등록중..." : "게시글 작성"}
       </button>
     </form>
   );
