@@ -18,8 +18,6 @@ export default function PostListCreatePractice() {
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setPostId((prev) => prev + 1);
-
     const item = {
       id: postId,
       title: title,
@@ -30,6 +28,7 @@ export default function PostListCreatePractice() {
       try {
         setLoading(true);
         setError("");
+        setSuccess(false);
 
         const response = await fetch(
           "https://jsonplaceholder.typicode.com/posts",
@@ -50,6 +49,7 @@ export default function PostListCreatePractice() {
         setSuccess(true);
 
         setPostList((prev) => [...prev, item]);
+        setPostId((prev) => prev + 1);
       } catch (error) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -75,15 +75,11 @@ export default function PostListCreatePractice() {
           true
         )} */}
 
-        {loading ? (
-          true
-        ) : error !== "" ? (
+        {loading ? null : error !== "" ? (
           <p className="text-xs">{error}</p>
         ) : success ? (
           <p className="text-xs">게시글 등록에 성공했습니다.</p>
-        ) : (
-          true
-        )}
+        ) : null}
 
         <div className="flex flex-col gap-1 mb-4">
           <label htmlFor="title" className="text-sm">
@@ -125,7 +121,10 @@ export default function PostListCreatePractice() {
             <li className="text-center">등록된 게시글이 없습니다.</li>
           ) : (
             postList.map((prev) => (
-              <li className="border box-border rounded-md p-3 mb-3.5">
+              <li
+                key={prev.id}
+                className="border box-border rounded-md p-3 mb-3.5"
+              >
                 <div className="flex justify-between items-center">
                   <span className="font-bold">{prev.title}</span>
                   <span>{prev.id}</span>
