@@ -13,10 +13,13 @@ export default function PostFetchPractice() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function getPost() {
       try {
         const response = await fetch(
           "https://jsonplaceholder.typicode.com/posts/1",
+          { signal: controller.signal },
         );
         console.log(response);
         if (!response.ok) {
@@ -26,16 +29,22 @@ export default function PostFetchPractice() {
         setPost(result);
         console.log(result);
       } catch (error) {
-        if (error instanceof Error) {
+        if (error instanceof Error && controller.signal.aborted === false) {
           console.error(error.message);
           setError("게시글 조회에 실패했습니다.");
         }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     }
 
     getPost();
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return (
