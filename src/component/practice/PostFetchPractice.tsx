@@ -18,6 +18,9 @@ export default function PostFetchPractice() {
 
     async function getPost() {
       try {
+        setLoading(true);
+        setError("");
+
         const response = await fetch(
           `https://jsonplaceholder.typicode.com/posts/${postId}`,
           { signal: controller.signal },
@@ -44,7 +47,6 @@ export default function PostFetchPractice() {
     getPost();
 
     return () => {
-      setLoading(true);
       controller.abort();
     };
   }, [postId]);
