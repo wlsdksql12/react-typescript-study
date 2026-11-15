@@ -67,14 +67,6 @@ export default function PostListCreatePractice() {
     <div className="border box-border rounded-md p-4 w-full max-w-3xl">
       <form onSubmit={handleSubmit}>
         <h4>게시글 관리</h4>
-        {/* {error !== "" ? (
-          <p className="text-xs">{error}</p>
-        ) : success ? (
-          <p className="text-xs">게시글 등록에 성공했습니다.</p>
-        ) : (
-          true
-        )} */}
-
         {loading ? null : error !== "" ? (
           <p className="text-xs">{error}</p>
         ) : success ? (
