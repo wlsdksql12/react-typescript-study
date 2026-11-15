@@ -36,7 +36,7 @@ export default function PostFeedPractice() {
         }
 
         const result = await response.json();
-        setPostList(result);
+        setPostList((prev) => [...prev, ...result]);
       } catch (error) {
         if (error instanceof Error && controller.signal.aborted === false) {
           console.error(error.message);
@@ -155,31 +155,9 @@ export default function PostFeedPractice() {
       <div>
         <h5>게시글 목록</h5>
         <ul className="list-none pl-0">
-          {/* {getLoading ? (
-            <li>게시글 목록을 불러오는 중...</li>
-          ) : postList.length === 0 ? (
-            <li className="text-center">등록된 게시글이 없습니다.</li>
-          ) : (
-            postList.map((prev) => (
-              <li
-                key={prev.id}
-                className="border box-border rounded-md p-3 mb-3.5"
-              >
-                <div className="flex justify-between items-center">
-                  <span className="font-bold">{prev.title}</span>
-                  <span>{prev.id}</span>
-                </div>
-                <p className="mb-0 text-sm">{prev.body}</p>
-              </li>
-            ))
-          )} */}
           {getLoading ? (
             <li>게시글 목록을 불러오는 중...</li>
-          ) : getError !== "" ? (
-            <li className="text-center">{getError}</li>
-          ) : postList.length === 0 ? (
-            <li className="text-center">등록된 게시글이 없습니다.</li>
-          ) : (
+          ) : postList.length > 0 ? (
             postList.map((prev) => (
               <li
                 key={prev.id}
@@ -192,6 +170,10 @@ export default function PostFeedPractice() {
                 <p className="mb-0 text-sm">{prev.body}</p>
               </li>
             ))
+          ) : getError !== "" ? (
+            <li className="text-center">{getError}</li>
+          ) : (
+            <li className="text-center">등록된 게시글이 없습니다.</li>
           )}
         </ul>
       </div>
