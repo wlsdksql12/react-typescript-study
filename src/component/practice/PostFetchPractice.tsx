@@ -16,7 +16,7 @@ export default function PostFetchPractice() {
     async function getPost() {
       try {
         const response = await fetch(
-          "https://jsonplaceholder.typicode.com/posts/500",
+          "https://jsonplaceholder.typicode.com/posts/1",
         );
         console.log(response);
         if (!response.ok) {
@@ -39,7 +39,7 @@ export default function PostFetchPractice() {
   }, []);
 
   return (
-    <div className="border box-border w-full max-w-3xl rounded-md p-4">
+    <div className="border box-border w-full max-w-3xl mx-auto rounded-md p-4">
       {loading ? (
         <span>게시글을 불러오는 중...</span>
       ) : error !== "" ? (
@@ -48,7 +48,7 @@ export default function PostFetchPractice() {
         <span>알수없는 오류가 발생했습니다.</span>
       ) : (
         <div key={post.id}>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-center">
             <h4 className="wrap-anywhere">{post.title}</h4>
             <span>게시글 번호: {post.id}</span>
           </div>
