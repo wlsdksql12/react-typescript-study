@@ -9,6 +9,7 @@ interface Post {
 
 export default function PostFetchPractice() {
   const [post, setPost] = useState<Post | null>(null);
+  const [postId, setPostId] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -18,7 +19,7 @@ export default function PostFetchPractice() {
     async function getPost() {
       try {
         const response = await fetch(
-          "https://jsonplaceholder.typicode.com/posts/1",
+          `https://jsonplaceholder.typicode.com/posts/${postId}`,
           { signal: controller.signal },
         );
         console.log(response);
@@ -43,9 +44,10 @@ export default function PostFetchPractice() {
     getPost();
 
     return () => {
+      setLoading(true);
       controller.abort();
     };
-  }, []);
+  }, [postId]);
 
   return (
     <div className="border box-border w-full max-w-3xl mx-auto rounded-md p-4">
@@ -64,6 +66,22 @@ export default function PostFetchPractice() {
           <p className="wrap-anywhere">{post.body}</p>
         </div>
       )}
+      <div className="flex gap-1.5 items-center justify-center">
+        <button
+          className="whitespace-nowrap enabled:hover:cursor-pointer"
+          onClick={() => setPostId((prev) => prev - 1)}
+          disabled={postId === 1}
+        >
+          이전 게시글
+        </button>
+        <button
+          className="whitespace-nowrap enabled:hover:cursor-pointer"
+          onClick={() => setPostId((prev) => prev + 1)}
+          disabled={postId === 10}
+        >
+          다음 게시글
+        </button>
+      </div>
     </div>
   );
 }
