@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Post {
   userId: number;
@@ -141,7 +141,10 @@ export default function PostPatchPractice() {
                   <button
                     type="button"
                     className="rounded-3xl w-auto border box-border whitespace-nowrap enabled:hover:cursor-pointer"
-                    onClick={() => setEditId(prev.id)}
+                    onClick={() => {
+                      setEditId(prev.id);
+                      setDraftTitle(prev.title);
+                    }}
                     disabled={editId !== null}
                   >
                     수정
@@ -173,7 +176,7 @@ export default function PostPatchPractice() {
                       onClick={handlePostPatch}
                       disabled={draftTitle.trim() === "" || editLoading}
                     >
-                      저장
+                      {editLoading ? "저장 중..." : "저장"}
                     </button>
                   </div>
                 </>
