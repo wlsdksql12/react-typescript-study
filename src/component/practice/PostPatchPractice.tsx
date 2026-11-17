@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PostEditForm from "./PostEditForm";
+import PostItem from "./PostItem";
 
 interface Post {
   userId: number;
@@ -137,20 +138,12 @@ export default function PostPatchPractice() {
               className="border box-border rounded-md p-2 mb-3"
             >
               {editId !== prev.id ? (
-                <div className="flex justify-between items-center mb-1.5 mt-2">
-                  <span className="font-semibold">{prev.title}</span>
-                  <button
-                    type="button"
-                    className="rounded-3xl w-auto border box-border whitespace-nowrap enabled:hover:cursor-pointer"
-                    onClick={() => {
-                      setEditId(prev.id);
-                      setDraftTitle(prev.title);
-                    }}
-                    disabled={editId !== null}
-                  >
-                    수정
-                  </button>
-                </div>
+                <PostItem
+                  post={prev}
+                  setEditId={setEditId}
+                  setDraftTitle={setDraftTitle}
+                  editId={editId}
+                />
               ) : (
                 <PostEditForm
                   draftTitle={draftTitle}
