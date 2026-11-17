@@ -7,6 +7,27 @@ interface PostList {
   body: string;
 }
 
+function isPost(data: unknown): data is PostList {
+  if (typeof data !== "object" || data === null) return false;
+
+  return (
+    "userId" in data &&
+    "id" in data &&
+    "title" in data &&
+    "body" in data &&
+    typeof data.userId === "number" &&
+    typeof data.id === "number" &&
+    typeof data.title === "string" &&
+    typeof data.body === "string"
+  );
+}
+
+function isPostArray(data: unknown): data is PostList[] {
+  if (!Array.isArray(data)) return false;
+
+  return data.every(isPost);
+}
+
 export default function PostFeedPractice() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -35,7 +56,12 @@ export default function PostFeedPractice() {
           throw new Error("HTTP 요청 실패");
         }
 
-        const result = await response.json();
+        const result: unknown = await response.json();
+
+        if (!isPostArray(result)) {
+          throw new Error("게시글 데이터 검증 실패");
+        }
+
         setPostList((prev) => [...prev, ...result]);
       } catch (error) {
         if (error instanceof Error && controller.signal.aborted === false) {
