@@ -52,6 +52,8 @@ export default function PostValidatedFetchPractice() {
         setStatus("success");
         setPost(result);
       } catch (error) {
+        if (controller.signal.aborted) return;
+
         setStatus("error");
         if (error instanceof Error) {
           console.error(error);
