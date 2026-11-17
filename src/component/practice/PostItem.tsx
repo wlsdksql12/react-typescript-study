@@ -19,19 +19,25 @@ export default function PostItem({
   editId,
 }: PostItemProps) {
   return (
-    <div className="flex justify-between items-center mb-1.5 mt-2">
-      <span className="font-semibold">{post.title}</span>
-      <button
-        type="button"
-        className="rounded-3xl w-auto border box-border whitespace-nowrap enabled:hover:cursor-pointer"
-        onClick={() => {
-          setEditId(post.id);
-          setDraftTitle(post.title);
-        }}
-        disabled={editId !== null}
-      >
-        수정
-      </button>
-    </div>
+    <>
+      <div className="flex justify-between items-center mb-1.5 mt-2">
+        <span className="font-semibold">{post.title}</span>
+        <button
+          type="button"
+          className="rounded-3xl w-auto border box-border whitespace-nowrap enabled:hover:cursor-pointer"
+          onClick={() => {
+            setEditId(post.id);
+            setDraftTitle(post.title);
+          }}
+          disabled={editId !== null}
+        >
+          수정
+        </button>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <span className="text-xs">ID:{post.id}</span>
+        <span className="wrap-anywhere">{post.body}</span>
+      </div>
+    </>
   );
 }
