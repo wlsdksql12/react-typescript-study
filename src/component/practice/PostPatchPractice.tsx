@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import PostEditForm from "./PostEditForm";
 import PostItem from "./PostItem";
-
-interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
+import type { Post } from "./post.type";
 
 type Status = "loading" | "error" | "success";
 

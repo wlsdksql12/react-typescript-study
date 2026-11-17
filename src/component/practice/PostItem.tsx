@@ -1,9 +1,4 @@
-interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
+import type { Post } from "./post.type";
 
 interface PostItemProps {
   post: Post;
