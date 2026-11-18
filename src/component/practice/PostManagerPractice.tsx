@@ -141,7 +141,7 @@ export default function PostManagerPractice() {
 
       setPostList((prev) =>
         prev.map((item) =>
-          item.id === editId ? { ...item, title: draftTitle } : item,
+          item.id === editId ? { ...item, title: draftTitle.trim() } : item,
         ),
       );
       setEditId(null);
@@ -181,10 +181,13 @@ export default function PostManagerPractice() {
                         onClick={() => {
                           (setEditId(prev.id), setDraftTitle(""));
                         }}
+                        disabled={editLoading}
                       >
                         수정
                       </button>
-                      <button type="button">삭제</button>
+                      <button type="button" disabled={editLoading}>
+                        삭제
+                      </button>
                     </div>
                   </div>
                 ) : (
