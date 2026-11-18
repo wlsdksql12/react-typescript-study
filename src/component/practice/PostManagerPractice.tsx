@@ -116,6 +116,7 @@ export default function PostManagerPractice() {
         }
         setPostList((prev) => [...prev, item]);
         setNewPostId((prev) => prev + 1);
+        setStatus("success");
         return true;
       } catch (error) {
         if (error instanceof Error) {
@@ -201,6 +202,7 @@ export default function PostManagerPractice() {
 
   console.log(postList);
   console.log(id);
+  console.log(status);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>게시글 관리</h4>
@@ -212,8 +214,6 @@ export default function PostManagerPractice() {
       <ul className="list-none pl-0">
         {status === "loading" ? (
           <li>게시글을 불러오는중...</li>
-        ) : status === "error" ? (
-          <li>게시글을 불러오지 못했습니다.</li>
         ) : status === "success" ? (
           postList.length === 0 ? (
             <li>등록된 게시글이 없습니다.</li>
@@ -265,6 +265,8 @@ export default function PostManagerPractice() {
               </li>
             ))
           )
+        ) : status === "error" ? (
+          <li>게시글을 불러오지 못했습니다.</li>
         ) : null}
       </ul>
     </div>
