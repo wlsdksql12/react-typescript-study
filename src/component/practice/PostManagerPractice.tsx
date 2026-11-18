@@ -27,8 +27,14 @@ function isPostArray(data: unknown): data is Post[] {
 export default function PostManagerPractice() {
   const [postList, setPostList] = useState<Post[]>([]);
   const [status, setStatus] = useState<Status>("loading");
-  const [postId, setPostId] = useState(1001);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [newPostId, setNewPostId] = useState(1001);
+  //   const [editId, setEditId] = useState<number | null>(null);
+  const [id, setId] = useState<{ editId: number | null; delId: number | null }>(
+    {
+      editId: null,
+      delId: null,
+    },
+  );
   //   const [editLoading, setEditLoading] = useState(false);
   //   const [editErrorMessage, setEditErrorMessage] = useState("");
   const [error, setError] = useState({
@@ -86,7 +92,7 @@ export default function PostManagerPractice() {
   function handleCreate(data: { title: string; body: string }) {
     const item = {
       userId: 1,
-      id: postId,
+      id: newPostId,
       title: data.title,
       body: data.body,
     };
@@ -109,7 +115,7 @@ export default function PostManagerPractice() {
           throw new Error("POST HTTP 요청 실패");
         }
         setPostList((prev) => [...prev, item]);
-        setPostId((prev) => prev + 1);
+        setNewPostId((prev) => prev + 1);
         return true;
       } catch (error) {
         if (error instanceof Error) {
@@ -129,7 +135,7 @@ export default function PostManagerPractice() {
       setError((prev) => ({ ...prev, editErrorMessage: "" }));
 
       const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${editId}`,
+        `https://jsonplaceholder.typicode.com/posts/${id.editId}`,
         {
           method: "PATCH",
           headers: {
@@ -149,10 +155,10 @@ export default function PostManagerPractice() {
 
       setPostList((prev) =>
         prev.map((item) =>
-          item.id === editId ? { ...item, title: draftTitle.trim() } : item,
+          item.id === id.editId ? { ...item, title: draftTitle.trim() } : item,
         ),
       );
-      setEditId(null);
+      setId((prev) => ({ ...prev, editId: null }));
     } catch (error) {
       setError((prev) => ({
         ...prev,
@@ -163,14 +169,14 @@ export default function PostManagerPractice() {
     }
   };
 
-  const handlePostDel = async (id: number) => {
-    const deleteId = id;
+  const handlePostDel = async (data: number) => {
+    setId((prev) => ({ ...prev, delId: data }));
     try {
-      setLoading((prev) => ({ ...prev, editLoading: true }));
+      setLoading((prev) => ({ ...prev, delLoading: true }));
       setError((prev) => ({ ...prev, delErrorMessage: "" }));
 
       const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${deleteId}`,
+        `https://jsonplaceholder.typicode.com/posts/${data}`,
         {
           method: "DELETE",
         },
@@ -180,7 +186,7 @@ export default function PostManagerPractice() {
       if (!response.ok) {
         throw new Error("DELETE 요청 실패");
       }
-      setPostList((prev) => prev.filter((item) => item.id !== deleteId));
+      setPostList((prev) => prev.filter((item) => item.id !== data));
     } catch (error) {
       console.error(error);
       setError((prev) => ({
@@ -188,11 +194,12 @@ export default function PostManagerPractice() {
         delErrorMessage: "게시글 삭제를 실패했습니다.",
       }));
     } finally {
-      setLoading((prev) => ({ ...prev, editLoading: false }));
+      setLoading((prev) => ({ ...prev, delLoading: false }));
     }
   };
 
   console.log(postList);
+  console.log(id);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>게시글 관리</h4>
@@ -215,14 +222,15 @@ export default function PostManagerPractice() {
                 key={prev.id}
                 className="border box-border rounded-md p-1.5 mb-4"
               >
-                {editId !== prev.id ? (
+                {id.editId !== prev.id ? (
                   <div className="flex justify-between">
                     <span className="font-semibold">{prev.title}</span>
                     <div className="flex gap-1.5">
                       <button
                         type="button"
                         onClick={() => {
-                          (setEditId(prev.id), setDraftTitle(""));
+                          (setId((item) => ({ ...item, editId: prev.id })),
+                            setDraftTitle(""));
                         }}
                         disabled={loading.editLoading || loading.delLoading}
                       >
@@ -239,7 +247,9 @@ export default function PostManagerPractice() {
                   </div>
                 ) : (
                   <PostEditForm
-                    setEditId={setEditId}
+                    setEditId={(item) =>
+                      setId((prev) => ({ ...prev, editId: item }))
+                    }
                     editErrorMessage={error.editErrorMessage}
                     editLoading={loading.editLoading}
                     draftTitle={draftTitle}

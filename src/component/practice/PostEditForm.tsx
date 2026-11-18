@@ -2,7 +2,8 @@ interface PostEditFormProps {
   draftTitle: string;
   setDraftTitle: React.Dispatch<React.SetStateAction<string>>;
   editErrorMessage: string;
-  setEditId: React.Dispatch<React.SetStateAction<number | null>>;
+  // setEditId: React.Dispatch<React.SetStateAction<number | null>>;
+  setEditId: (value: number | null) => void;
   editLoading: boolean;
   handlePostPatch: () => Promise<void>;
 }
