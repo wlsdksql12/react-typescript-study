@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PostCreateForm from "./PostCreateForm";
 import type { Post, Status } from "./post.type";
 import PostEditForm from "./PostEditForm";
-import { fetchPosts } from "./postApi";
+import { fetchGetPost, fetchPostPost } from "./postApi";
 
 function isPost(data: unknown): data is Post {
   if (typeof data !== "object" || data === null) return false;
@@ -53,18 +53,7 @@ export default function PostManagerPractice() {
 
     async function getPost() {
       try {
-        // const response = await fetch(
-        //   "https://jsonplaceholder.typicode.com/posts?_limit=5",
-        //   { signal: controller.signal },
-        // );
-        // console.log(response);
-
-        // if (!response.ok) {
-        //   throw new Error("GET HTTP 요청 실패");
-        // }
-
-        // const result: unknown = await response.json();
-        const result = await fetchPosts(controller.signal);
+        const result = await fetchGetPost(controller.signal);
         console.log(result);
 
         if (!isPostArray(result)) {
@@ -101,21 +90,24 @@ export default function PostManagerPractice() {
 
     const postPost = async () => {
       try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/posts",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(item),
-          },
-        );
+        // const response = await fetch(
+        //   "https://jsonplaceholder.typicode.com/posts",
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(item),
+        //   },
+        // );
 
-        // console.log(response);
-        if (!response.ok) {
-          throw new Error("POST HTTP 요청 실패");
-        }
+        // // console.log(response);
+        // if (!response.ok) {
+        //   throw new Error("POST HTTP 요청 실패");
+        // }
+
+        await fetchPostPost(item);
+
         setPostList((prev) => [...prev, item]);
         setNewPostId((prev) => prev + 1);
         setStatus("success");

@@ -1,4 +1,6 @@
-export async function fetchPosts(signal: AbortSignal): Promise<unknown> {
+import type { Post } from "./post.type";
+
+export async function fetchGetPost(signal: AbortSignal): Promise<unknown> {
   const response = await fetch(
     "https://jsonplaceholder.typicode.com/posts?_limit=5",
     {
@@ -13,4 +15,18 @@ export async function fetchPosts(signal: AbortSignal): Promise<unknown> {
   const result: unknown = await response.json();
 
   return result;
+}
+
+export async function fetchPostPost(item: Post): Promise<void> {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(item),
+  });
+
+  if (!response.ok) {
+    throw new Error("POST HTTP 요청 실패");
+  }
 }
