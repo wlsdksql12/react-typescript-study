@@ -1,0 +1,147 @@
+import { useEffect, useState } from "react";
+import PostCreateForm from "./PostCreateForm";
+import type { Post, Status } from "./post.type";
+
+function isPost(data: unknown): data is Post {
+  if (typeof data !== "object" || data === null) return false;
+
+  return (
+    "userId" in data &&
+    "id" in data &&
+    "title" in data &&
+    "body" in data &&
+    typeof data.userId === "number" &&
+    typeof data.id === "number" &&
+    typeof data.title === "string" &&
+    typeof data.body === "string"
+  );
+}
+
+function isPostArray(data: unknown): data is Post[] {
+  if (!Array.isArray(data)) return false;
+
+  return data.every(isPost);
+}
+
+export default function PostManagerPractice() {
+  const [postList, setPostList] = useState<Post[]>([]);
+  const [status, setStatus] = useState<Status>("loading");
+  const [postId, setPostId] = useState(1001);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function getPost() {
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/posts?_limit=5",
+          { signal: controller.signal },
+        );
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error("GET HTTP 요청 실패");
+        }
+
+        const result: unknown = await response.json();
+        console.log(result);
+
+        if (!isPostArray(result)) {
+          throw new Error("데이터 타입 검증 실패");
+        }
+
+        setStatus("success");
+        setPostList((prev) => [...prev, ...result]);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+
+        setStatus("error");
+        if (error instanceof Error) {
+          console.error(error);
+        }
+      } finally {
+      }
+    }
+
+    getPost();
+  }, []);
+
+  function handleCreate(data: { title: string; body: string }) {
+    const item = {
+      userId: 1,
+      id: postId,
+      title: data.title,
+      body: data.body,
+    };
+
+    const postPost = async () => {
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/posts",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(item),
+          },
+        );
+
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("POST HTTP 요청 실패");
+        }
+        setPostList((prev) => [...prev, item]);
+        setPostId((prev) => prev + 1);
+        return true;
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error);
+          return false;
+        }
+      } finally {
+      }
+    };
+
+    return postPost();
+  }
+
+  console.log(postList);
+  return (
+    <div className="border box-border rounded-md w-full max-w-3xl p-4">
+      <h4>게시글 관리</h4>
+      <PostCreateForm onCreate={handleCreate} />
+      <h4>게시글 목록</h4>
+      <ul className="list-none pl-0">
+        {status === "loading" ? (
+          <li>게시글을 불러오는중...</li>
+        ) : status === "error" ? (
+          <li>게시글을 불러오지 못했습니다.</li>
+        ) : status === "success" ? (
+          postList.length === 0 ? (
+            <li>등록된 게시글이 없습니다.</li>
+          ) : (
+            postList.map((prev) => (
+              <li
+                key={prev.id}
+                className="border box-border rounded-md p-1.5 mb-4"
+              >
+                <div className="flex justify-between">
+                  <span className="font-semibold">{prev.title}</span>
+                  <div className="flex gap-1.5">
+                    <button type="button">수정</button>
+                    <button type="button">삭제</button>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs">ID: {prev.id}</span>
+                  <span className="wrap-anywhere">{prev.body}</span>
+                </div>
+              </li>
+            ))
+          )
+        ) : null}
+      </ul>
+    </div>
+  );
+}
