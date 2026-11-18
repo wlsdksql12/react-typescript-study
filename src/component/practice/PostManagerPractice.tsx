@@ -64,6 +64,10 @@ export default function PostManagerPractice() {
     }
 
     getPost();
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   function handleCreate(data: { title: string; body: string }) {
@@ -97,8 +101,8 @@ export default function PostManagerPractice() {
       } catch (error) {
         if (error instanceof Error) {
           console.error(error);
-          return false;
         }
+        return false;
       } finally {
       }
     };

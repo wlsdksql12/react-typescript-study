@@ -1,10 +1,7 @@
 import { useState } from "react";
 
 interface PostCreateFormPorps {
-  onCreate: (data: {
-    title: string;
-    body: string;
-  }) => Promise<boolean | undefined>;
+  onCreate: (data: { title: string; body: string }) => Promise<boolean>;
 }
 
 export default function PostCreateForm({ onCreate }: PostCreateFormPorps) {
@@ -18,16 +15,15 @@ export default function PostCreateForm({ onCreate }: PostCreateFormPorps) {
   const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    setChcek(null);
     setLoading(true);
     const result = await onCreate(formState);
-    if (typeof result === "boolean") {
-      setChcek(result);
+    setChcek(result);
 
-      if (result === true) {
-        setFormState({ title: "", body: "" });
-      }
-      setLoading(false);
+    if (result === true) {
+      setFormState({ title: "", body: "" });
     }
+    setLoading(false);
   };
 
   return (
@@ -64,7 +60,11 @@ export default function PostCreateForm({ onCreate }: PostCreateFormPorps) {
       <button
         type="submit"
         className="flex justify-self-end rounded-sm border"
-        disabled={loading}
+        disabled={
+          loading ||
+          formState.title.trim() === "" ||
+          formState.body.trim() === ""
+        }
       >
         {loading ? "등록중..." : "게시글 등록"}
       </button>
