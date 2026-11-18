@@ -195,6 +195,7 @@ export default function PostManagerPractice() {
       }));
     } finally {
       setLoading((prev) => ({ ...prev, delLoading: false }));
+      setId((prev) => ({ ...prev, delId: null }));
     }
   };
 
