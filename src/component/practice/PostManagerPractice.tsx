@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PostCreateForm from "./PostCreateForm";
 import type { Post, Status } from "./post.type";
+import PostEditForm from "./PostEditForm";
 
 function isPost(data: unknown): data is Post {
   if (typeof data !== "object" || data === null) return false;
@@ -27,6 +28,10 @@ export default function PostManagerPractice() {
   const [postList, setPostList] = useState<Post[]>([]);
   const [status, setStatus] = useState<Status>("loading");
   const [postId, setPostId] = useState(1001);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editErrorMessage, setEditErrorMessage] = useState("");
+  const [draftTitle, setDraftTitle] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -110,6 +115,43 @@ export default function PostManagerPractice() {
     return postPost();
   }
 
+  const handlePostPatch = async () => {
+    try {
+      setEditLoading(true);
+      setEditErrorMessage("");
+
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/${editId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: draftTitle.trim(),
+          }),
+        },
+      );
+
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error("PATCH 요청 실패");
+      }
+
+      setPostList((prev) =>
+        prev.map((item) =>
+          item.id === editId ? { ...item, title: draftTitle } : item,
+        ),
+      );
+      setEditId(null);
+    } catch (error) {
+      setEditErrorMessage("게시글 제목 수정에 실패했습니다.");
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   console.log(postList);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
@@ -130,13 +172,31 @@ export default function PostManagerPractice() {
                 key={prev.id}
                 className="border box-border rounded-md p-1.5 mb-4"
               >
-                <div className="flex justify-between">
-                  <span className="font-semibold">{prev.title}</span>
-                  <div className="flex gap-1.5">
-                    <button type="button">수정</button>
-                    <button type="button">삭제</button>
+                {editId !== prev.id ? (
+                  <div className="flex justify-between">
+                    <span className="font-semibold">{prev.title}</span>
+                    <div className="flex gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          (setEditId(prev.id), setDraftTitle(""));
+                        }}
+                      >
+                        수정
+                      </button>
+                      <button type="button">삭제</button>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <PostEditForm
+                    setEditId={setEditId}
+                    editErrorMessage={editErrorMessage}
+                    editLoading={editLoading}
+                    draftTitle={draftTitle}
+                    setDraftTitle={setDraftTitle}
+                    handlePostPatch={handlePostPatch}
+                  />
+                )}
                 <div className="flex flex-col gap-2">
                   <span className="text-xs">ID: {prev.id}</span>
                   <span className="wrap-anywhere">{prev.body}</span>
