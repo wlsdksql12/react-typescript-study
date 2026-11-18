@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PostCreateForm from "./PostCreateForm";
 import type { Post, Status } from "./post.type";
 import PostEditForm from "./PostEditForm";
+import { fetchPosts } from "./postApi";
 
 function isPost(data: unknown): data is Post {
   if (typeof data !== "object" || data === null) return false;
@@ -52,17 +53,18 @@ export default function PostManagerPractice() {
 
     async function getPost() {
       try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/posts?_limit=5",
-          { signal: controller.signal },
-        );
-        console.log(response);
+        // const response = await fetch(
+        //   "https://jsonplaceholder.typicode.com/posts?_limit=5",
+        //   { signal: controller.signal },
+        // );
+        // console.log(response);
 
-        if (!response.ok) {
-          throw new Error("GET HTTP 요청 실패");
-        }
+        // if (!response.ok) {
+        //   throw new Error("GET HTTP 요청 실패");
+        // }
 
-        const result: unknown = await response.json();
+        // const result: unknown = await response.json();
+        const result = await fetchPosts(controller.signal);
         console.log(result);
 
         if (!isPostArray(result)) {
@@ -110,7 +112,7 @@ export default function PostManagerPractice() {
           },
         );
 
-        console.log(response);
+        // console.log(response);
         if (!response.ok) {
           throw new Error("POST HTTP 요청 실패");
         }
@@ -200,9 +202,9 @@ export default function PostManagerPractice() {
     }
   };
 
-  console.log(postList);
-  console.log(id);
-  console.log(status);
+  //   console.log(postList);
+  //   console.log(id);
+  //   console.log(status);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>게시글 관리</h4>
