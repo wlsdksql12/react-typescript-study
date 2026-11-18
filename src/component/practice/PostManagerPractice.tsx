@@ -29,8 +29,16 @@ export default function PostManagerPractice() {
   const [status, setStatus] = useState<Status>("loading");
   const [postId, setPostId] = useState(1001);
   const [editId, setEditId] = useState<number | null>(null);
-  const [editLoading, setEditLoading] = useState(false);
-  const [editErrorMessage, setEditErrorMessage] = useState("");
+  //   const [editLoading, setEditLoading] = useState(false);
+  //   const [editErrorMessage, setEditErrorMessage] = useState("");
+  const [error, setError] = useState({
+    editErrorMessage: "",
+    delErrorMessage: "",
+  });
+  const [loading, setLoading] = useState({
+    editLoading: false,
+    delLoading: false,
+  });
   const [draftTitle, setDraftTitle] = useState("");
 
   useEffect(() => {
@@ -117,8 +125,8 @@ export default function PostManagerPractice() {
 
   const handlePostPatch = async () => {
     try {
-      setEditLoading(true);
-      setEditErrorMessage("");
+      setLoading((prev) => ({ ...prev, editLoading: true }));
+      setError((prev) => ({ ...prev, editErrorMessage: "" }));
 
       const response = await fetch(
         `https://jsonplaceholder.typicode.com/posts/${editId}`,
@@ -146,9 +154,41 @@ export default function PostManagerPractice() {
       );
       setEditId(null);
     } catch (error) {
-      setEditErrorMessage("게시글 제목 수정에 실패했습니다.");
+      setError((prev) => ({
+        ...prev,
+        editErrorMessage: "게시글 제목 수정에 실패했습니다.",
+      }));
     } finally {
-      setEditLoading(false);
+      setLoading((prev) => ({ ...prev, editLoading: false }));
+    }
+  };
+
+  const handlePostDel = async (id: number) => {
+    const deleteId = id;
+    try {
+      setLoading((prev) => ({ ...prev, editLoading: true }));
+      setError((prev) => ({ ...prev, delErrorMessage: "" }));
+
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/${deleteId}`,
+        {
+          method: "DELETE",
+        },
+      );
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error("DELETE 요청 실패");
+      }
+      setPostList((prev) => prev.filter((item) => item.id !== deleteId));
+    } catch (error) {
+      console.error(error);
+      setError((prev) => ({
+        ...prev,
+        delErrorMessage: "게시글 삭제를 실패했습니다.",
+      }));
+    } finally {
+      setLoading((prev) => ({ ...prev, editLoading: false }));
     }
   };
 
@@ -158,6 +198,9 @@ export default function PostManagerPractice() {
       <h4>게시글 관리</h4>
       <PostCreateForm onCreate={handleCreate} />
       <h4>게시글 목록</h4>
+      {error.delErrorMessage !== "" ? (
+        <p className="text-sm text-red-500">{error.delErrorMessage}</p>
+      ) : null}
       <ul className="list-none pl-0">
         {status === "loading" ? (
           <li>게시글을 불러오는중...</li>
@@ -181,11 +224,15 @@ export default function PostManagerPractice() {
                         onClick={() => {
                           (setEditId(prev.id), setDraftTitle(""));
                         }}
-                        disabled={editLoading}
+                        disabled={loading.editLoading || loading.delLoading}
                       >
                         수정
                       </button>
-                      <button type="button" disabled={editLoading}>
+                      <button
+                        type="button"
+                        onClick={() => handlePostDel(prev.id)}
+                        disabled={loading.editLoading || loading.delLoading}
+                      >
                         삭제
                       </button>
                     </div>
@@ -193,8 +240,8 @@ export default function PostManagerPractice() {
                 ) : (
                   <PostEditForm
                     setEditId={setEditId}
-                    editErrorMessage={editErrorMessage}
-                    editLoading={editLoading}
+                    editErrorMessage={error.editErrorMessage}
+                    editLoading={loading.editLoading}
                     draftTitle={draftTitle}
                     setDraftTitle={setDraftTitle}
                     handlePostPatch={handlePostPatch}
