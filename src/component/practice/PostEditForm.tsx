@@ -6,6 +6,7 @@ interface PostEditFormProps {
   setEditId: (value: number | null) => void;
   editLoading: boolean;
   handlePostPatch: () => Promise<void>;
+  delLoading: boolean;
 }
 
 export default function PostEditForm({
@@ -15,6 +16,7 @@ export default function PostEditForm({
   setEditId,
   editLoading,
   handlePostPatch,
+  delLoading,
 }: PostEditFormProps) {
   return (
     <>
@@ -33,14 +35,14 @@ export default function PostEditForm({
         <button
           type="button"
           onClick={() => setEditId(null)}
-          disabled={editLoading}
+          disabled={editLoading || delLoading}
         >
           취소
         </button>
         <button
           type="button"
           onClick={handlePostPatch}
-          disabled={draftTitle.trim() === "" || editLoading}
+          disabled={draftTitle.trim() === "" || editLoading || delLoading}
         >
           {editLoading ? "저장 중..." : "저장"}
         </button>
