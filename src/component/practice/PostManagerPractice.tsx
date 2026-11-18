@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PostCreateForm from "./PostCreateForm";
 import type { Post, Status } from "./post.type";
 import PostEditForm from "./PostEditForm";
-import { fetchGetPost, fetchPostPost } from "./postApi";
+import { fetchGetPost, fetchPatchPost, fetchPostPost } from "./postApi";
 
 function isPost(data: unknown): data is Post {
   if (typeof data !== "object" || data === null) return false;
@@ -90,22 +90,6 @@ export default function PostManagerPractice() {
 
     const postPost = async () => {
       try {
-        // const response = await fetch(
-        //   "https://jsonplaceholder.typicode.com/posts",
-        //   {
-        //     method: "POST",
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(item),
-        //   },
-        // );
-
-        // // console.log(response);
-        // if (!response.ok) {
-        //   throw new Error("POST HTTP 요청 실패");
-        // }
-
         await fetchPostPost(item);
 
         setPostList((prev) => [...prev, item]);
@@ -129,24 +113,7 @@ export default function PostManagerPractice() {
       setLoading((prev) => ({ ...prev, editLoading: true }));
       setError((prev) => ({ ...prev, editErrorMessage: "" }));
 
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${id.editId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: draftTitle.trim(),
-          }),
-        },
-      );
-
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error("PATCH 요청 실패");
-      }
+      await fetchPatchPost(id.editId, draftTitle);
 
       setPostList((prev) =>
         prev.map((item) =>

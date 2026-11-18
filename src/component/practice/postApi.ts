@@ -30,3 +30,27 @@ export async function fetchPostPost(item: Post): Promise<void> {
     throw new Error("POST HTTP 요청 실패");
   }
 }
+
+export async function fetchPatchPost(
+  id: number | null,
+  title: string,
+): Promise<void> {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title.trim(),
+      }),
+    },
+  );
+
+  console.log(response);
+
+  if (!response.ok) {
+    throw new Error("PATCH 요청 실패");
+  }
+}
