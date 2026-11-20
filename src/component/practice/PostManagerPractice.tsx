@@ -5,7 +5,8 @@ import { fetchDeletePost, fetchPatchPost, fetchPostPost } from "./postApi";
 import { usePostList } from "./usePostList";
 
 export default function PostManagerPractice() {
-  const { postList, setPostList, status, setStatus } = usePostList();
+  const { postList, status, addPost, updatePostTitle, removePost } =
+    usePostList();
   const [newPostId, setNewPostId] = useState(1001);
 
   const [id, setId] = useState<{ editId: number | null; delId: number | null }>(
@@ -37,9 +38,9 @@ export default function PostManagerPractice() {
       try {
         await fetchPostPost(item);
 
-        setPostList((prev) => [...prev, item]);
+        addPost(item);
         setNewPostId((prev) => prev + 1);
-        setStatus("success");
+
         return true;
       } catch (error) {
         if (error instanceof Error) {
@@ -61,11 +62,7 @@ export default function PostManagerPractice() {
 
       await fetchPatchPost(id.editId, draftTitle);
 
-      setPostList((prev) =>
-        prev.map((item) =>
-          item.id === id.editId ? { ...item, title: draftTitle.trim() } : item,
-        ),
-      );
+      updatePostTitle(id.editId, draftTitle.trim());
       setId((prev) => ({ ...prev, editId: null }));
     } catch (error) {
       setError((prev) => ({
@@ -85,7 +82,7 @@ export default function PostManagerPractice() {
 
       await fetchDeletePost(data);
 
-      setPostList((prev) => prev.filter((item) => item.id !== data));
+      removePost(data);
     } catch (error) {
       console.error(error);
       setError((prev) => ({

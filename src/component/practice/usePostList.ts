@@ -27,6 +27,21 @@ export function usePostList() {
   const [postList, setPostList] = useState<Post[]>([]);
   const [status, setStatus] = useState<Status>("loading");
 
+  function addPost(item: Post) {
+    setPostList((prev) => [...prev, item]);
+    setStatus("success");
+  }
+
+  function updatePostTitle(id: number, title: string) {
+    setPostList((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, title: title } : item)),
+    );
+  }
+
+  function removePost(id: number) {
+    setPostList((prev) => prev.filter((item) => item.id !== id));
+  }
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -59,5 +74,11 @@ export function usePostList() {
     };
   }, []);
 
-  return { postList, setPostList, status, setStatus };
+  return {
+    postList,
+    status,
+    addPost,
+    updatePostTitle,
+    removePost,
+  };
 }
