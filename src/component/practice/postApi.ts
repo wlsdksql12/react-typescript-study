@@ -31,10 +31,7 @@ export async function fetchPostPost(item: Post): Promise<void> {
   }
 }
 
-export async function fetchPatchPost(
-  id: number | null,
-  title: string,
-): Promise<void> {
+export async function fetchPatchPost(id: number, title: string): Promise<void> {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/posts/${id}`,
     {
@@ -52,5 +49,19 @@ export async function fetchPatchPost(
 
   if (!response.ok) {
     throw new Error("PATCH 요청 실패");
+  }
+}
+
+export async function fetchDeletePost(id: number): Promise<void> {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${id}`,
+    {
+      method: "DELETE",
+    },
+  );
+  console.log(response);
+
+  if (!response.ok) {
+    throw new Error("DELETE 요청 실패");
   }
 }

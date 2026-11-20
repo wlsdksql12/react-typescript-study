@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import PostCreateForm from "./PostCreateForm";
 import type { Post, Status } from "./post.type";
 import PostEditForm from "./PostEditForm";
-import { fetchGetPost, fetchPatchPost, fetchPostPost } from "./postApi";
+import {
+  fetchDeletePost,
+  fetchGetPost,
+  fetchPatchPost,
+  fetchPostPost,
+} from "./postApi";
 
 function isPost(data: unknown): data is Post {
   if (typeof data !== "object" || data === null) return false;
@@ -109,6 +114,7 @@ export default function PostManagerPractice() {
   }
 
   const handlePostPatch = async () => {
+    if (id.editId === null) return;
     try {
       setLoading((prev) => ({ ...prev, editLoading: true }));
       setError((prev) => ({ ...prev, editErrorMessage: "" }));
@@ -137,17 +143,8 @@ export default function PostManagerPractice() {
       setLoading((prev) => ({ ...prev, delLoading: true }));
       setError((prev) => ({ ...prev, delErrorMessage: "" }));
 
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${data}`,
-        {
-          method: "DELETE",
-        },
-      );
-      console.log(response);
+      await fetchDeletePost(data);
 
-      if (!response.ok) {
-        throw new Error("DELETE 요청 실패");
-      }
       setPostList((prev) => prev.filter((item) => item.id !== data));
     } catch (error) {
       console.error(error);
@@ -161,9 +158,6 @@ export default function PostManagerPractice() {
     }
   };
 
-  //   console.log(postList);
-  //   console.log(id);
-  //   console.log(status);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>게시글 관리</h4>
