@@ -1,25 +1,25 @@
 import { useState } from "react";
-import type { PostList } from "../posts/PostType";
-// import type { Post } from "./post.type";
+import type { Post } from "./post.type";
 
 export function useSearchPost() {
-  //   const searchPostList: Post[] = [];
   const [search, setSearch] = useState({
     keyword: "",
     check: false,
   });
 
-  function filteredPostList(postList: PostList[]) {
+  function filteredPostList(postList: Post[]) {
     if (search.check === true) {
       return postList.filter(
         (prev) =>
           prev.title.length >= 20 &&
-          prev.title.toUpperCase().includes(search.keyword.toUpperCase()),
+          prev.title
+            .toUpperCase()
+            .includes(search.keyword.trim().toUpperCase()),
       );
     }
 
     return postList.filter((prev) =>
-      prev.title.toUpperCase().includes(search.keyword.toUpperCase()),
+      prev.title.toUpperCase().includes(search.keyword.trim().toUpperCase()),
     );
   }
 

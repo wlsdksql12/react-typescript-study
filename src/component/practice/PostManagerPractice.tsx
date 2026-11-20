@@ -134,7 +134,11 @@ export default function PostManagerPractice() {
         </div>
         <div className="flex justify-between">
           <span>검색 결과: {searchPostList.length}개</span>
-          <button type="button" onClick={searchReset}>
+          <button
+            type="button"
+            onClick={searchReset}
+            disabled={search.keyword === "" && !search.check}
+          >
             검색 초기화
           </button>
         </div>
