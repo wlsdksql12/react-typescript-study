@@ -26,6 +26,11 @@ export default function PostCreateForm({ onCreate }: PostCreateFormPorps) {
     setLoading(false);
   };
 
+  const handleClear = () => {
+    setFormState((prev) => ({ ...prev, title: "", body: "" }));
+    setChcek(null);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="border box-border rounded-md p-4">
       <h4>새 게시글 관리</h4>
@@ -57,17 +62,30 @@ export default function PostCreateForm({ onCreate }: PostCreateFormPorps) {
           placeholder="게시글 내용을 입력하세요."
         />
       </div>
-      <button
-        type="submit"
-        className="flex justify-self-end rounded-sm border"
-        disabled={
-          loading ||
-          formState.title.trim() === "" ||
-          formState.body.trim() === ""
-        }
-      >
-        {loading ? "등록중..." : "게시글 등록"}
-      </button>
+      <div className="flex justify-self-end items-center gap-1.5">
+        <button
+          type="button"
+          className="rounded-sm border"
+          disabled={
+            loading ||
+            (formState.title.trim() === "" && formState.body.trim() === "")
+          }
+          onClick={handleClear}
+        >
+          초기화
+        </button>
+        <button
+          type="submit"
+          className="rounded-sm border"
+          disabled={
+            loading ||
+            formState.title.trim() === "" ||
+            formState.body.trim() === ""
+          }
+        >
+          {loading ? "등록중..." : "게시글 등록"}
+        </button>
+      </div>
       {check === null ? null : check === false ? (
         <p className="text-sm text-red-500">게시글 등록에 실패했습니다.</p>
       ) : (

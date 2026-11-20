@@ -1,5 +1,4 @@
 import type { Post, Status } from "./post.type";
-import { usePostList } from "./usePostList";
 
 interface PostSummaryPracticeProp {
   postList: Post[];
