@@ -1,7 +1,16 @@
+import type { Post, Status } from "./post.type";
 import { usePostList } from "./usePostList";
 
-export default function PostSummaryPractice() {
-  const { status, postList } = usePostList();
+interface PostSummaryPracticeProp {
+  postList: Post[];
+  status: Status;
+}
+
+export default function PostSummaryPractice({
+  postList,
+  status,
+}: PostSummaryPracticeProp) {
+  //   const { status, postList } = usePostList();
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>게시글 개수 요약</h4>

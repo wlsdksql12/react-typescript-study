@@ -164,7 +164,7 @@ export default function PostManagerPractice() {
         ) : null}
       </ul>
       <hr />
-      <PostSummaryPractice />
+      <PostSummaryPractice postList={postList} status={status} />
     </div>
   );
 }
