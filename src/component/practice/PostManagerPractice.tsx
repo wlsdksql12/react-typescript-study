@@ -1,48 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PostCreateForm from "./PostCreateForm";
-import type { Post, Status } from "./post.type";
 import PostEditForm from "./PostEditForm";
-import {
-  fetchDeletePost,
-  fetchGetPost,
-  fetchPatchPost,
-  fetchPostPost,
-} from "./postApi";
-
-function isPost(data: unknown): data is Post {
-  if (typeof data !== "object" || data === null) return false;
-
-  return (
-    "userId" in data &&
-    "id" in data &&
-    "title" in data &&
-    "body" in data &&
-    typeof data.userId === "number" &&
-    typeof data.id === "number" &&
-    typeof data.title === "string" &&
-    typeof data.body === "string"
-  );
-}
-
-function isPostArray(data: unknown): data is Post[] {
-  if (!Array.isArray(data)) return false;
-
-  return data.every(isPost);
-}
+import { fetchDeletePost, fetchPatchPost, fetchPostPost } from "./postApi";
+import { usePostList } from "./usePostList";
 
 export default function PostManagerPractice() {
-  const [postList, setPostList] = useState<Post[]>([]);
-  const [status, setStatus] = useState<Status>("loading");
+  const { postList, setPostList, status, setStatus } = usePostList();
   const [newPostId, setNewPostId] = useState(1001);
-  //   const [editId, setEditId] = useState<number | null>(null);
+
   const [id, setId] = useState<{ editId: number | null; delId: number | null }>(
     {
       editId: null,
       delId: null,
     },
   );
-  //   const [editLoading, setEditLoading] = useState(false);
-  //   const [editErrorMessage, setEditErrorMessage] = useState("");
+
   const [error, setError] = useState({
     editErrorMessage: "",
     delErrorMessage: "",
@@ -52,38 +24,6 @@ export default function PostManagerPractice() {
     delLoading: false,
   });
   const [draftTitle, setDraftTitle] = useState("");
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function getPost() {
-      try {
-        const result = await fetchGetPost(controller.signal);
-        console.log(result);
-
-        if (!isPostArray(result)) {
-          throw new Error("데이터 타입 검증 실패");
-        }
-
-        setStatus("success");
-        setPostList((prev) => [...prev, ...result]);
-      } catch (error) {
-        if (controller.signal.aborted) return;
-
-        setStatus("error");
-        if (error instanceof Error) {
-          console.error(error);
-        }
-      } finally {
-      }
-    }
-
-    getPost();
-
-    return () => {
-      controller.abort();
-    };
-  }, []);
 
   function handleCreate(data: { title: string; body: string }) {
     const item = {
