@@ -4,10 +4,12 @@ import PostEditForm from "./PostEditForm";
 import { fetchDeletePost, fetchPatchPost, fetchPostPost } from "./postApi";
 import { usePostList } from "./usePostList";
 import PostSummaryPractice from "./PostSummaryPractice";
+import { useSearchPost } from "./useSearchPost";
 
 export default function PostManagerPractice() {
   const { postList, status, addPost, updatePostTitle, removePost } =
     usePostList();
+  const { search, setSearch, filteredPostList, searchReset } = useSearchPost();
   const [newPostId, setNewPostId] = useState(1001);
 
   const [id, setId] = useState<{ editId: number | null; delId: number | null }>(
@@ -96,10 +98,47 @@ export default function PostManagerPractice() {
     }
   };
 
+  const searchPostList = filteredPostList(postList);
+
+  console.log(searchPostList);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>게시글 관리</h4>
       <PostCreateForm onCreate={handleCreate} />
+      <h4>게시글 검색</h4>
+      <div className="border box-border rounded-md p-4">
+        <div className="flex flex-col gap-1.5 mb-2.5">
+          <label className="text-sm" htmlFor="searchTitle">
+            게시글 제목 검색
+          </label>
+          <input
+            id="searchTitle"
+            value={search.keyword}
+            onChange={(e) =>
+              setSearch((prev) => ({ ...prev, keyword: e.target.value }))
+            }
+            className="p-1"
+            placeholder="검색어를 입력하세요."
+          />
+          <label className="flex items-center text-sm gap-2">
+            <input
+              type="checkbox"
+              checked={search.check}
+              onChange={(e) =>
+                setSearch((prev) => ({ ...prev, check: e.target.checked }))
+              }
+              className="rounded-4xl"
+            />
+            제목이 20글자 이상인 게시글만 보기
+          </label>
+        </div>
+        <div className="flex justify-between">
+          <span>검색 결과: {searchPostList.length}개</span>
+          <button type="button" onClick={searchReset}>
+            검색 초기화
+          </button>
+        </div>
+      </div>
       <h4>게시글 목록</h4>
       {error.delErrorMessage !== "" ? (
         <p className="text-sm text-red-500">{error.delErrorMessage}</p>
@@ -110,8 +149,10 @@ export default function PostManagerPractice() {
         ) : status === "success" ? (
           postList.length === 0 ? (
             <li>등록된 게시글이 없습니다.</li>
+          ) : searchPostList.length === 0 ? (
+            <li>검색 결과가 없습니다.</li>
           ) : (
-            postList.map((prev) => (
+            searchPostList.map((prev) => (
               <li
                 key={prev.id}
                 className="border box-border rounded-md p-1.5 mb-4"
