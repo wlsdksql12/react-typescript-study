@@ -3,6 +3,7 @@ import PostCreateForm from "./PostCreateForm";
 import PostEditForm from "./PostEditForm";
 import { fetchDeletePost, fetchPatchPost, fetchPostPost } from "./postApi";
 import { usePostList } from "./usePostList";
+import PostSummaryPractice from "./PostSummaryPractice";
 
 export default function PostManagerPractice() {
   const { postList, status, addPost, updatePostTitle, removePost } =
@@ -162,6 +163,8 @@ export default function PostManagerPractice() {
           <li>게시글을 불러오지 못했습니다.</li>
         ) : null}
       </ul>
+      <hr />
+      <PostSummaryPractice />
     </div>
   );
 }
