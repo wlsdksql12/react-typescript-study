@@ -107,6 +107,10 @@ function About() {
   return <h1>소개 화면입니다.</h1>;
 }
 
+function StudyPage() {
+  return <h1>React Router 학습 중입니다.</h1>;
+}
+
 function NotFound() {
   return (
     <>
@@ -360,6 +364,12 @@ function App() {
           <NavLink className="site-about" to="/about">
             소개
           </NavLink>
+          <NavLink
+            to="/study"
+            className="no-underline text-black px-2 py-3 rounded-[8px]"
+          >
+            React 학습
+          </NavLink>
           <NavLink className="site-comments" to="/comments">
             댓글
           </NavLink>
@@ -383,6 +393,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/study" element={<StudyPage />} />
           <Route path="/comments" element={<CommentsPractice />} />
           <Route
             path="/posts"
