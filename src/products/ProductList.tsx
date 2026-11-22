@@ -20,7 +20,10 @@ export default function ProductList() {
 
   useEffect(() => {
     timer.current = setTimeout(() => {
-      setSearchParams({ keyword: productName.trim() }, { replace: true });
+      setSearchParams(
+        productName.trim() === "" ? {} : { keyword: productName.trim() },
+        { replace: true },
+      );
       timer.current = null;
     }, 500);
 
@@ -33,9 +36,14 @@ export default function ProductList() {
     };
   }, [productName]);
 
+  const handleReset = () => {
+    setProductName("");
+    setSearchParams({}, { replace: true });
+  };
+
   console.log(filteredProductList);
   return (
-    <div className="border box-border rounded-md w-full max-w-3xl p-4">
+    <div className="border box-border rounded-md flex-1 min-w-0 max-w-3xl p-4">
       <h4>상품 목록</h4>
       <div className="flex items-center justify-center mb-2.5 gap-1.5">
         <input
@@ -45,8 +53,9 @@ export default function ProductList() {
           placeholder="상품명을 입력하세요."
         />
         <button
+          type="button"
           className="whitespace-nowrap w-auto h-auto rounded-full border box-border p-1 bg-white enabled:hover:cursor-pointer"
-          onClick={() => setProductName("")}
+          onClick={handleReset}
         >
           초기화
         </button>
