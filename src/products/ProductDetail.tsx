@@ -22,7 +22,7 @@ export default function ProductDetail() {
       return setMessage("재고가 부족합니다. 최대 3개까지 구매할 수 있습니다.");
     }
 
-    return navigate("/purchase-complete");
+    return navigate("/purchase-complete", { replace: true });
   };
 
   return (
