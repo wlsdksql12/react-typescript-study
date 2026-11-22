@@ -11,7 +11,7 @@ import UserLookupPractice from "./component/practice/UserLookupPractice";
 import ApiPractice from "./component/practice/ApiPractice";
 import PostListPractice from "./component/posts/PostListPractice";
 import CommentsPractice from "./component/comments/CommentsPractice";
-import { NavLink, Route, Routes } from "react-router";
+import { Link, NavLink, Route, Routes } from "react-router";
 import PostPage from "./component/posts/PostPage";
 import type { PostList } from "./component/posts/PostType";
 import "../src/style/tailwind.css";
@@ -108,7 +108,13 @@ function About() {
 }
 
 function StudyPage() {
-  return <h1>React Router 학습 중입니다.</h1>;
+  return (
+    <>
+      <h1>React Router 학습 중입니다.</h1>
+      <hr />
+      <Link to="/posts/3">게시글 3번</Link>
+    </>
+  );
 }
 
 function NotFound() {
@@ -366,7 +372,7 @@ function App() {
           </NavLink>
           <NavLink
             to="/study"
-            className="no-underline text-black px-2 py-3 rounded-[8px]"
+            className="no-underline text-black px-3 py-2 rounded-lg"
           >
             React 학습
           </NavLink>
