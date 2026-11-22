@@ -5,14 +5,45 @@ import {
   faKeyboard,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router";
 
 export default function ProductList() {
   const productList = products;
+  const [productName, setProductName] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const timer = useRef<number | null>(null);
+  const keyword = searchParams.get("keyword") ?? "";
+  const filteredProductList = productList.filter((prev) =>
+    prev.name.includes(keyword),
+  );
+
+  useEffect(() => {
+    timer.current = setTimeout(() => {
+      setSearchParams({ keyword: productName.trim() }, { replace: true });
+      timer.current = null;
+    }, 500);
+
+    return () => {
+      if (timer.current !== null) {
+        console.log("timer 정리");
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
+    };
+  }, [productName]);
+
+  console.log(filteredProductList);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>상품 목록</h4>
-      {productList.map((prev) => (
+      <input
+        value={productName}
+        onChange={(e) => setProductName(e.target.value)}
+        className="p-2 border box-border rounded-md mb-2.5 w-full"
+        placeholder="상품명을 입력하세요."
+      />
+      {filteredProductList.map((prev) => (
         <div
           key={prev.id}
           className="border box-border rounded-md flex justify-between items-center p-2 mb-2"
