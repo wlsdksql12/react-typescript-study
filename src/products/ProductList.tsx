@@ -1,4 +1,4 @@
-import { products, type Product } from "./productData";
+import { products } from "./productData";
 import {
   faComputerMouse,
   faDisplay,
