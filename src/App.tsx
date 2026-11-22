@@ -21,6 +21,7 @@ import InventorySearchPractice from "./component/practice/InventorySearchPractic
 import OrderReducerPractice from "./component/practice/OrderReducerPractice";
 import ProductList from "./products/ProductList";
 import ProductDetail from "./products/ProductDetail";
+import PurchaseComplete from "./products/PurchaseComplete";
 
 // interface NameProps {
 //   name: string;
@@ -410,6 +411,7 @@ function App() {
         <Route path="/study" element={<StudyPage />} />
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:productId" element={<ProductDetail />} />
+        <Route path="/purchase-complete" element={<PurchaseComplete />} />
 
         {/* <Route path="/comments" element={<CommentsPractice />} />
           <Route
