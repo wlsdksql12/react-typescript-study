@@ -176,51 +176,51 @@ export default function PostManagerPractice({
                 key={prev.id}
                 className="border box-border rounded-md p-1.5 mb-4"
               >
-                <Link
-                  to={`/post-manager/${prev.id}`}
-                  className="no-underline text-inherit"
-                >
-                  {id.editId !== prev.id ? (
-                    <div className="flex justify-between">
-                      <span className="font-semibold">{prev.title}</span>
-                      <div className="flex gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            (setId((item) => ({ ...item, editId: prev.id })),
-                              setDraftTitle(""));
-                          }}
-                          disabled={loading.editLoading || loading.delLoading}
-                        >
-                          수정
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handlePostDel(prev.id)}
-                          disabled={loading.editLoading || loading.delLoading}
-                        >
-                          삭제
-                        </button>
-                      </div>
+                {id.editId !== prev.id ? (
+                  <div className="flex justify-between">
+                    <Link
+                      to={`/post-manager/${prev.id}`}
+                      className="no-underline text-inherit font-semibold"
+                    >
+                      {prev.title}
+                    </Link>
+                    <div className="flex gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          (setId((item) => ({ ...item, editId: prev.id })),
+                            setDraftTitle(""));
+                        }}
+                        disabled={loading.editLoading || loading.delLoading}
+                      >
+                        수정
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handlePostDel(prev.id)}
+                        disabled={loading.editLoading || loading.delLoading}
+                      >
+                        삭제
+                      </button>
                     </div>
-                  ) : (
-                    <PostEditForm
-                      setEditId={(item) =>
-                        setId((prev) => ({ ...prev, editId: item }))
-                      }
-                      editErrorMessage={error.editErrorMessage}
-                      editLoading={loading.editLoading}
-                      draftTitle={draftTitle}
-                      setDraftTitle={setDraftTitle}
-                      handlePostPatch={handlePostPatch}
-                      delLoading={loading.delLoading}
-                    />
-                  )}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs">ID: {prev.id}</span>
-                    <span className="wrap-anywhere">{prev.body}</span>
                   </div>
-                </Link>
+                ) : (
+                  <PostEditForm
+                    setEditId={(item) =>
+                      setId((prev) => ({ ...prev, editId: item }))
+                    }
+                    editErrorMessage={error.editErrorMessage}
+                    editLoading={loading.editLoading}
+                    draftTitle={draftTitle}
+                    setDraftTitle={setDraftTitle}
+                    handlePostPatch={handlePostPatch}
+                    delLoading={loading.delLoading}
+                  />
+                )}
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs">ID: {prev.id}</span>
+                  <span className="wrap-anywhere">{prev.body}</span>
+                </div>
               </li>
             ))
           )

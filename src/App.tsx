@@ -118,7 +118,7 @@ function App() {
           />
           <Route
             path=":postId"
-            element={<PostDetailPractice postList={postList} />}
+            element={<PostDetailPractice postList={postList} status={status} />}
           />
         </Route>
 
