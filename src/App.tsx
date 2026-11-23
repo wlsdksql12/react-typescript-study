@@ -11,6 +11,7 @@ import PostManagerPractice from "./component/practice/PostManagerPractice";
 import { usePostList } from "./component/practice/usePostList";
 import { useState } from "react";
 import PostDetailPractice from "./component/practice/PostDetailPractice";
+import QueryPostCountPractic from "./component/practice/QueryPostCountPractice";
 
 function Home() {
   return (
@@ -74,6 +75,12 @@ function App() {
         >
           게시글 관리
         </NavLink>
+        <NavLink
+          to="/post-count"
+          className="no-underline text-black px-3 py-2 rounded-lg"
+        >
+          TanStack Query 연습
+        </NavLink>
       </nav>
 
       <Routes>
@@ -87,20 +94,6 @@ function App() {
         </Route>
 
         <Route path="/purchase-complete" element={<PurchaseComplete />} />
-        {/* <Route
-          path="/post-manager"
-          element={
-            <PostManagerPractice
-              postList={postList}
-              status={status}
-              addPost={addPost}
-              updatePostTitle={updatePostTitle}
-              removePost={removePost}
-              newPostId={newPostId}
-              setNewPostId={setNewPostId}
-            />
-          }
-        /> */}
         <Route path="/post-manager">
           <Route
             index
@@ -121,6 +114,8 @@ function App() {
             element={<PostDetailPractice postList={postList} status={status} />}
           />
         </Route>
+
+        <Route path="/post-count" element={<QueryPostCountPractic />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
