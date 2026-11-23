@@ -33,11 +33,11 @@ export default function PostDetailPractice({
           </p>
         ) : (
           <div className="flex flex-col gap-1.5">
-            <dl className="text-sm">제목</dl>
+            <span className="text-sm">제목</span>
             <span id="title" className="font-semibold">
               {post.title}
             </span>
-            <dl className="text-sm">내용</dl>
+            <span className="text-sm">내용</span>
             <span id="body" className="wrap-anywhere">
               {post.body}
             </span>
