@@ -10,6 +10,7 @@ import ProductLayout from "./products/ProductLayout";
 import PostManagerPractice from "./component/practice/PostManagerPractice";
 import { usePostList } from "./component/practice/usePostList";
 import { useState } from "react";
+import PostDetailPractice from "./component/practice/PostDetailPractice";
 
 function Home() {
   return (
@@ -84,8 +85,9 @@ function App() {
           <Route index element={<ProductList />} />
           <Route path=":productId" element={<ProductDetail />} />
         </Route>
+
         <Route path="/purchase-complete" element={<PurchaseComplete />} />
-        <Route
+        {/* <Route
           path="/post-manager"
           element={
             <PostManagerPractice
@@ -98,7 +100,28 @@ function App() {
               setNewPostId={setNewPostId}
             />
           }
-        />
+        /> */}
+        <Route path="/post-manager">
+          <Route
+            index
+            element={
+              <PostManagerPractice
+                postList={postList}
+                status={status}
+                addPost={addPost}
+                updatePostTitle={updatePostTitle}
+                removePost={removePost}
+                newPostId={newPostId}
+                setNewPostId={setNewPostId}
+              />
+            }
+          />
+          <Route
+            path=":postId"
+            element={<PostDetailPractice postList={postList} />}
+          />
+        </Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
