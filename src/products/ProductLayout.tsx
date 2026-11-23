@@ -20,7 +20,7 @@ export default function ProductLayout() {
           <hr />
         </nav>
 
-        <main>
+        <main className="min-w-0">
           <Outlet />
         </main>
       </div>

@@ -23,6 +23,7 @@ import ProductList from "./products/ProductList";
 import ProductDetail from "./products/ProductDetail";
 import PurchaseComplete from "./products/PurchaseComplete";
 import ProductLayout from "./products/ProductLayout";
+import PostManagerPractice from "./component/practice/PostManagerPractice";
 
 // interface NameProps {
 //   name: string;
@@ -386,6 +387,12 @@ function App() {
         >
           상품 목록
         </NavLink>
+        <NavLink
+          to="/post-manager"
+          className="no-underline text-black px-3 py-2 rounded-lg"
+        >
+          게시글 관리
+        </NavLink>
         {/* <NavLink className="site-comments" to="/comments">
             댓글
           </NavLink>
@@ -415,9 +422,8 @@ function App() {
           <Route index element={<ProductList />} />
           <Route path=":productId" element={<ProductDetail />} />
         </Route>
-        {/* <Route path="/products" element={<ProductList />} />
-        <Route path="/products/:productId" element={<ProductDetail />} /> */}
         <Route path="/purchase-complete" element={<PurchaseComplete />} />
+        <Route path="/post-manager" element={<PostManagerPractice />} />
 
         {/* <Route path="/comments" element={<CommentsPractice />} />
           <Route
