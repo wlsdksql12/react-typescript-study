@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchGetPost } from "./postApi";
 
 export default function QueryPostCountPractic() {
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isError, isFetching } = useQuery({
     queryKey: ["post-count-practice"],
+    staleTime: 60_000,
+    gcTime: 10_000,
     queryFn: async ({ signal }) => {
       const result = await fetchGetPost(signal);
 
@@ -26,6 +28,9 @@ export default function QueryPostCountPractic() {
       ) : (
         <p>조회한 게시글: {data}개</p>
       )}
+      {isFetching && !isPending ? (
+        <p>최신 데이터를 확인하는 중입니다.</p>
+      ) : null}
     </div>
   );
 }

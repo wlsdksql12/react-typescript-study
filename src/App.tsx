@@ -12,6 +12,7 @@ import { usePostList } from "./component/practice/usePostList";
 import { useState } from "react";
 import PostDetailPractice from "./component/practice/PostDetailPractice";
 import QueryPostCountPractic from "./component/practice/QueryPostCountPractice";
+import QueryPostListPractice from "./component/practice/QueryPostListPractice";
 
 function Home() {
   return (
@@ -81,6 +82,12 @@ function App() {
         >
           TanStack Query 연습
         </NavLink>
+        <NavLink
+          to="/queryPostList"
+          className="no-underline text-black px-3 py-2 rounded-lg"
+        >
+          Query 게시글 목록
+        </NavLink>
       </nav>
 
       <Routes>
@@ -116,6 +123,7 @@ function App() {
         </Route>
 
         <Route path="/post-count" element={<QueryPostCountPractic />} />
+        <Route path="/queryPostList" element={<QueryPostListPractice />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
