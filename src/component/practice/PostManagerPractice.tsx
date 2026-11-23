@@ -5,12 +5,28 @@ import { fetchDeletePost, fetchPatchPost, fetchPostPost } from "./postApi";
 import { usePostList } from "./usePostList";
 import PostSummaryPractice from "./PostSummaryPractice";
 import { useSearchPost } from "./useSearchPost";
+import type { Post, Status } from "./post.type";
 
-export default function PostManagerPractice() {
-  const { postList, status, addPost, updatePostTitle, removePost } =
-    usePostList();
+interface PostManagerPracticeProps {
+  postList: Post[];
+  newPostId: number;
+  setNewPostId: React.Dispatch<React.SetStateAction<number>>;
+  status: Status;
+  addPost: (item: Post) => void;
+  updatePostTitle: (id: number, title: string) => void;
+  removePost: (id: number) => void;
+}
+
+export default function PostManagerPractice({
+  postList,
+  newPostId,
+  setNewPostId,
+  status,
+  addPost,
+  updatePostTitle,
+  removePost,
+}: PostManagerPracticeProps) {
   const { search, setSearch, filteredPostList, searchReset } = useSearchPost();
-  const [newPostId, setNewPostId] = useState(1001);
 
   const [id, setId] = useState<{ editId: number | null; delId: number | null }>(
     {
@@ -100,7 +116,6 @@ export default function PostManagerPractice() {
 
   const searchPostList = filteredPostList(postList);
 
-  console.log(searchPostList);
   return (
     <div className="border box-border rounded-md w-full max-w-3xl p-4">
       <h4>게시글 관리</h4>
