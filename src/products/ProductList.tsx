@@ -43,8 +43,10 @@ export default function ProductList() {
 
   console.log(filteredProductList);
   return (
-    <div className="border box-border rounded-md flex-1 min-w-0 max-w-3xl p-4">
-      <h4>상품 목록</h4>
+    // <div className="border box-border rounded-md flex-1 min-w-0 max-w-3xl p-4">
+    <div className="flex-1 min-w-0">
+      <h4 className="mt-0">상품 목록</h4>
+      <hr />
       <div className="flex items-center justify-center mb-2.5 gap-1.5">
         <input
           value={productName}

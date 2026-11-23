@@ -26,8 +26,9 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="border box-border rounded-md w-full max-w-3xl p-4">
-      <h4>상품 상세 정보</h4>
+    // <div className="border box-border rounded-md w-full max-w-3xl p-4">
+    <div className="w-full">
+      <h4 className="mt-0">상품 상세 정보</h4>
       <hr />
       {product !== undefined ? (
         <>
