@@ -28,7 +28,6 @@ export function usePostList() {
     async function getPost() {
       try {
         const result = await fetchGetPost(controller.signal);
-        console.log(result);
 
         if (!isPostArray(result)) {
           throw new Error("데이터 타입 검증 실패");

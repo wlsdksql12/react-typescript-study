@@ -1,20 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchGetPost } from "./postApi";
+import { fetchValidatedPosts } from "./postApi";
 
 export default function QueryPostCountPractic() {
   const { data, isPending, isError, isFetching } = useQuery({
-    queryKey: ["post-count-practice"],
-    staleTime: 60_000,
-    gcTime: 10_000,
+    queryKey: ["posts"],
+    staleTime: 120_000,
+    gcTime: 180_000,
+    refetchOnWindowFocus: false,
+    retry: false,
     queryFn: async ({ signal }) => {
-      const result = await fetchGetPost(signal);
+      const result = await fetchValidatedPosts(signal);
 
-      if (!Array.isArray(result)) {
-        throw new Error("게시글 응답이 배열이 아닙니다.");
-      }
-
-      return result.length;
+      return result;
     },
+    select: (posts) => posts.length,
   });
   console.log(data);
   return (

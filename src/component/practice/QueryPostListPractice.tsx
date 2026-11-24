@@ -1,33 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { isPostArray } from "./postGuards";
+import { fetchValidatedPosts } from "./postApi";
 
 export default function QueryPostListPractice() {
   const post = useQuery({
-    queryKey: ["QueryPostList"],
+    queryKey: ["posts"],
     staleTime: 120_000,
     gcTime: 180_000,
     refetchOnWindowFocus: false,
     retry: false,
     queryFn: async ({ signal }) => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts?_limit=5",
-        { signal },
-      );
-
-      if (!response.ok) {
-        throw new Error("HTTP 요청 실패");
-      }
-
-      const result: unknown = await response.json();
-
-      if (!isPostArray(result)) {
-        throw new Error("데이터 타입 검증 실패");
-      }
+      const result = await fetchValidatedPosts(signal);
 
       return result;
     },
   });
-
+  console.log(post.data);
   return (
     <>
       <div className="border box-border rounded-md w-full max-w-3xl p-4">

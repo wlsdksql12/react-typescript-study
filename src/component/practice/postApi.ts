@@ -1,4 +1,5 @@
 import type { Post } from "./post.type";
+import { isPostArray } from "./postGuards";
 
 export async function fetchGetPost(signal: AbortSignal): Promise<unknown> {
   const response = await fetch(
@@ -13,6 +14,18 @@ export async function fetchGetPost(signal: AbortSignal): Promise<unknown> {
   }
 
   const result: unknown = await response.json();
+
+  return result;
+}
+
+export async function fetchValidatedPosts(
+  signal: AbortSignal,
+): Promise<Post[]> {
+  const result = await fetchGetPost(signal);
+
+  if (!isPostArray(result)) {
+    throw new Error("게시글 타입 검증 실패");
+  }
 
   return result;
 }
