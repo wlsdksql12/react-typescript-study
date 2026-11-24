@@ -10,6 +10,7 @@ import { useState } from "react";
 import PostDetailPractice from "./component/practice/PostDetailPractice";
 import QueryPostCountPractic from "./component/practice/QueryPostCountPractice";
 import QueryPostListPractice from "./component/practice/QueryPostListPractice";
+import QueryPostCreatePractice from "./component/practice/QueryPostCreatePractice";
 
 function Home() {
   return (
@@ -112,6 +113,15 @@ function App() {
         >
           Query 게시글 목록
         </NavLink>
+        <NavLink
+          to="/query-post-crate"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
+        >
+          Mutation 게시글 등록
+        </NavLink>
       </nav>
 
       <Routes>
@@ -148,6 +158,7 @@ function App() {
 
         <Route path="/post-count" element={<QueryPostCountPractic />} />
         <Route path="/queryPostList" element={<QueryPostListPractice />} />
+        <Route path="/query-post-crate" element={<QueryPostCreatePractice />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
