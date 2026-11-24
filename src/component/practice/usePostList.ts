@@ -3,27 +3,6 @@ import type { Post, Status } from "./post.type";
 import { fetchGetPost } from "./postApi";
 import { isPostArray } from "./postGuards";
 
-// function isPost(data: unknown): data is Post {
-//   if (typeof data !== "object" || data === null) return false;
-
-//   return (
-//     "userId" in data &&
-//     "id" in data &&
-//     "title" in data &&
-//     "body" in data &&
-//     typeof data.userId === "number" &&
-//     typeof data.id === "number" &&
-//     typeof data.title === "string" &&
-//     typeof data.body === "string"
-//   );
-// }
-
-// function isPostArray(data: unknown): data is Post[] {
-//   if (!Array.isArray(data)) return false;
-
-//   return data.every(isPost);
-// }
-
 export function usePostList() {
   const [postList, setPostList] = useState<Post[]>([]);
   const [status, setStatus] = useState<Status>("loading");

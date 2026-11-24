@@ -6,6 +6,8 @@ export default function QueryPostListPractice() {
     queryKey: ["QueryPostList"],
     staleTime: 120_000,
     gcTime: 180_000,
+    refetchOnWindowFocus: false,
+    retry: false,
     queryFn: async ({ signal }) => {
       const response = await fetch(
         "https://jsonplaceholder.typicode.com/posts?_limit=5",

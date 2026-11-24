@@ -1,8 +1,5 @@
-import "../src/style/style.css";
-import { NavLink, Route, Routes } from "react-router";
-
 import "../src/style/tailwind.css";
-
+import { NavLink, Route, Routes } from "react-router";
 import ProductList from "./products/ProductList";
 import ProductDetail from "./products/ProductDetail";
 import PurchaseComplete from "./products/PurchaseComplete";
@@ -51,40 +48,60 @@ function App() {
 
   return (
     <div>
-      <nav className="site-nav">
-        <NavLink className="site-home" to="/">
+      <nav className="flex gap-2.5 mb-2.5 flex-wrap">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
+        >
           홈
         </NavLink>
-        <NavLink className="site-about" to="/about">
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
+        >
           소개
         </NavLink>
         <NavLink
           to="/study"
-          className="no-underline text-black px-3 py-2 rounded-lg"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
         >
           React 학습
         </NavLink>
         <NavLink
           to="/products"
-          className="no-underline text-black px-3 py-2 rounded-lg"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
         >
           상품 목록
         </NavLink>
         <NavLink
           to="/post-manager"
-          className="no-underline text-black px-3 py-2 rounded-lg"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
         >
           게시글 관리
         </NavLink>
         <NavLink
           to="/post-count"
-          className="no-underline text-black px-3 py-2 rounded-lg"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
         >
           TanStack Query 연습
         </NavLink>
         <NavLink
           to="/queryPostList"
-          className="no-underline text-black px-3 py-2 rounded-lg"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
         >
           Query 게시글 목록
         </NavLink>
