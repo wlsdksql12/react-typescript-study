@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { isPostArray } from "./postGuards";
 import { fetchValidatedPosts } from "./postApi";
 
 export default function QueryPostListPractice() {

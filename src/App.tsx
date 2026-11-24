@@ -52,7 +52,8 @@ function App() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible: outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
           }
         >
           홈
@@ -60,7 +61,8 @@ function App() {
         <NavLink
           to="/about"
           className={({ isActive }) =>
-            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible: outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
           }
         >
           소개
@@ -68,7 +70,8 @@ function App() {
         <NavLink
           to="/study"
           className={({ isActive }) =>
-            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible: outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
           }
         >
           React 학습
@@ -76,7 +79,8 @@ function App() {
         <NavLink
           to="/products"
           className={({ isActive }) =>
-            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible: outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
           }
         >
           상품 목록
@@ -84,7 +88,8 @@ function App() {
         <NavLink
           to="/post-manager"
           className={({ isActive }) =>
-            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible: outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
           }
         >
           게시글 관리
@@ -92,7 +97,8 @@ function App() {
         <NavLink
           to="/post-count"
           className={({ isActive }) =>
-            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible: outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
           }
         >
           TanStack Query 연습
@@ -100,7 +106,8 @@ function App() {
         <NavLink
           to="/queryPostList"
           className={({ isActive }) =>
-            `no-underline px-3 py-2 rounded-lg ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible: outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
           }
         >
           Query 게시글 목록
