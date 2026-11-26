@@ -1,18 +1,25 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Post } from "./post.type";
 import { fetchPostPost } from "./postApi";
 
 export default function QueryPostCreatePractice() {
+  const queryClient = useQueryClient();
   const [formState, setFormState] = useState({
     title: "",
     body: "",
   });
   const mutation = useMutation({
     mutationFn: async (item: Post) => fetchPostPost(item),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       console.log("요청 성공");
       setFormState({ title: "", body: "" });
+
+      queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
+        if (!oldposts) return oldposts;
+
+        return [...oldposts, variables];
+      });
     },
     onError: () => {
       console.log("요청 실패");
@@ -32,7 +39,7 @@ export default function QueryPostCreatePractice() {
 
     mutation.mutate(item);
   };
-  console.log(mutation.isPending);
+  console.log(queryClient.getQueryData(["posts"]));
   return (
     <form
       className="border box-border rounded-md p-4 w-full max-w-3xl"
@@ -40,6 +47,7 @@ export default function QueryPostCreatePractice() {
     >
       <header>
         <span className="font-semibold">useMutation 게시글 등록</span>
+        {/* {queryClient.getQueryData(["posts"]) === undefined ? (null) : (<span>게시글 개수: {queryClient.getQueryData(["posts"])}</span>)} */}
       </header>
       <hr />
       <div className="flex flex-col gap-2 mb-2.5">

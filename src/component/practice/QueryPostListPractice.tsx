@@ -35,7 +35,7 @@ export default function QueryPostListPractice() {
                 <span className="font-semibold">{prev.title}</span>
                 <span className="text-xs">ID:{prev.id}</span>
               </div>
-              <p className="wrap-anywhere">{prev.body}</p>
+              <p className="wrap-anywhere p-2">{prev.body}</p>
             </div>
           ))
         )}
