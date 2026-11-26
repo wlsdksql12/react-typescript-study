@@ -1,10 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import type { Post, UpdateTitleData } from "./post.type";
+import type { Post } from "./post.type";
 import { usePosts } from "./usePosts";
 
 export default function QueryPostListPractice() {
-  const queryClient = useQueryClient();
   const [editState, setEditState] = useState<{
     title: string;
     id: number | null;
@@ -28,41 +27,16 @@ export default function QueryPostListPractice() {
     patchMutation.mutate(
       { title: editState.title, id: editState.id },
       {
-        onSuccess: (_data, variables) => {
+        onSuccess: () => {
           console.log("요청 성공");
-          queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-            if (!oldposts) return oldposts;
-            console.log(oldposts);
-
-            return oldposts.map((prev) =>
-              prev.id === variables.id
-                ? { ...prev, title: variables.title.trim() }
-                : prev,
-            );
-          });
-
           setEditState({ title: "", id: null });
-        },
-        onError: () => {
-          console.log("요청 실패");
         },
       },
     );
   };
 
   const handleDelete = (id: number) => {
-    delMutation.mutate(id, {
-      onSuccess: (_data, variable) => {
-        console.log("삭제 성공");
-        console.log(variable);
-        queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-          return oldposts?.filter((prev) => prev.id !== variable);
-        });
-      },
-      onError: () => {
-        console.log("삭제 실패");
-      },
-    });
+    delMutation.mutate(id);
   };
   console.log(post.data);
   return (

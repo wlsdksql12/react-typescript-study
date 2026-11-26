@@ -1,51 +1,32 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Post } from "./post.type";
-import { fetchPostPost } from "./postApi";
 import { usePosts } from "./usePosts";
 
 export default function QueryPostCreatePractice() {
-  const queryClient = useQueryClient();
   const { postMutation } = usePosts();
   const [formState, setFormState] = useState({
     title: "",
     body: "",
   });
-  // const mutation = useMutation({
-  //   mutationFn: async (item: Post) => fetchPostPost(item),
-  //   networkMode: "always",
-  // });
+  const [newPostId, setNewPostId] = useState(1001);
 
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const item: Post = {
       userId: 1,
-      id: 1001,
+      id: newPostId,
       body: formState.body.trim(),
       title: formState.title.trim(),
     };
 
     postMutation.mutate(item, {
-      onSuccess: (_data, variables) => {
-        console.log("요청 성공");
+      onSuccess: () => {
         setFormState({ title: "", body: "" });
-
-        queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-          if (!oldposts) return oldposts;
-
-          return [...oldposts, variables];
-        });
-        // queryClient.invalidateQueries({
-        //   queryKey: ["posts"],
-        // });
-      },
-      onError: () => {
-        console.log("요청 실패");
+        setNewPostId((prev) => prev + 1);
       },
     });
   };
-  console.log(queryClient.getQueryData(["posts"]));
   return (
     <form
       className="border box-border rounded-md p-4 w-full max-w-3xl"
