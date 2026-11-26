@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchValidatedPosts } from "./postApi";
+import { fetchPatchPost, fetchValidatedPosts } from "./postApi";
 import { useState } from "react";
 import type { Post } from "./post.type";
+
+interface UpdateTitleData {
+  id: number;
+  title: string;
+}
 
 export default function QueryPostListPractice() {
   const queryClient = useQueryClient();
@@ -19,23 +24,25 @@ export default function QueryPostListPractice() {
   });
 
   const mutation = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${editState.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: editState.title.trim(),
-          }),
-        },
-      );
-      if (!response.ok) {
-        throw new Error("HTTP 요청 실패");
-      }
-    },
+    // mutationFn: async (data: UpdateTitleData) => {
+    //   const response = await fetch(
+    //     `https://jsonplaceholder.typicode.com/posts/${data.id}`,
+    //     {
+    //       method: "PATCH",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         title: data.title.trim(),
+    //       }),
+    //     },
+    //   );
+    //   if (!response.ok) {
+    //     throw new Error("HTTP 요청 실패");
+    //   }
+    // },
+    mutationFn: async (data: UpdateTitleData) =>
+      fetchPatchPost(data.id, data.title),
     onSuccess: (_data, variables) => {
       console.log("요청 성공");
       console.log(variables);
@@ -68,6 +75,7 @@ export default function QueryPostListPractice() {
   });
 
   const handleEdit = (title: string, id: number) => {
+    mutation.reset();
     setEditState({ title: title, id: id });
   };
 
@@ -77,7 +85,7 @@ export default function QueryPostListPractice() {
 
   const handleEditSave = () => {
     if (editState.id === null) return;
-    mutation.mutate();
+    mutation.mutate({ title: editState.title, id: editState.id });
   };
 
   return (
