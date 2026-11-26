@@ -120,12 +120,15 @@ export default function QueryPostListPractice() {
   const handleDelete = (id: number) => {
     delMutation.mutate(id);
   };
-
+  console.log(post.data);
   return (
     <>
       <div className="border box-border rounded-md w-full max-w-3xl p-4">
-        <header>
+        <header className="flex justify-between items-center ">
           <span className="font-semibold">TanStack Query 게시글 목록</span>
+          {post.data === undefined ? null : (
+            <span className="text-sm">총 {post.data.length}개</span>
+          )}
         </header>
         <hr />
         {post.isPending ? (

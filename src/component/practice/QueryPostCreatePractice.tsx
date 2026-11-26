@@ -9,21 +9,20 @@ export default function QueryPostCreatePractice() {
     title: "",
     body: "",
   });
-  const posts = queryClient.getQueryData<Post[]>(["posts"]);
   const mutation = useMutation({
     mutationFn: async (item: Post) => fetchPostPost(item),
     onSuccess: (_data, variables) => {
       console.log("요청 성공");
       setFormState({ title: "", body: "" });
 
-      // queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-      //   if (!oldposts) return oldposts;
+      queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
+        if (!oldposts) return oldposts;
 
-      //   return [...oldposts, variables];
-      // });
-      queryClient.invalidateQueries({
-        queryKey: ["posts"],
+        return [...oldposts, variables];
       });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["posts"],
+      // });
     },
     onError: () => {
       console.log("요청 실패");
@@ -49,11 +48,8 @@ export default function QueryPostCreatePractice() {
       className="border box-border rounded-md p-4 w-full max-w-3xl"
       onSubmit={handleSubmit}
     >
-      <header className="flex justify-between items-center">
-        <span className="font-semibold">useMutation 게시글 등록</span>
-        {posts === undefined ? null : (
-          <span className="text-sm">게시글 개수: {posts.length}개</span>
-        )}
+      <header>
+        <span className="font-semibold">TanStack Query 게시글 등록</span>
       </header>
       <hr />
       <div className="flex flex-col gap-2 mb-2.5">

@@ -11,6 +11,7 @@ import PostDetailPractice from "./component/practice/PostDetailPractice";
 import QueryPostCountPractic from "./component/practice/QueryPostCountPractice";
 import QueryPostListPractice from "./component/practice/QueryPostListPractice";
 import QueryPostCreatePractice from "./component/practice/QueryPostCreatePractice";
+import QueryPostManagerPractice from "./component/practice/QueryPostManagerPractice";
 
 function Home() {
   return (
@@ -122,6 +123,15 @@ function App() {
         >
           Mutation 게시글 등록
         </NavLink>
+        <NavLink
+          to="query-post-manager"
+          className={({ isActive }) =>
+            `no-underline px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2
+          ${isActive ? "bg-[#2563eb] text-white" : "text-black hover:text-blue-500"}`
+          }
+        >
+          TanStack Query 게시글 관리
+        </NavLink>
       </nav>
 
       <Routes>
@@ -159,6 +169,10 @@ function App() {
         <Route path="/post-count" element={<QueryPostCountPractic />} />
         <Route path="/queryPostList" element={<QueryPostListPractice />} />
         <Route path="/query-post-crate" element={<QueryPostCreatePractice />} />
+        <Route
+          path="/query-post-manager"
+          element={<QueryPostManagerPractice />}
+        />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
