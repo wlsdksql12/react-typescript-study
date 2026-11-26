@@ -11,7 +11,7 @@ export default function QueryPostCreatePractice() {
   });
   const mutation = useMutation({
     mutationFn: async (item: Post) => fetchPostPost(item),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       console.log("요청 성공");
       setFormState({ title: "", body: "" });
 
@@ -45,9 +45,13 @@ export default function QueryPostCreatePractice() {
       className="border box-border rounded-md p-4 w-full max-w-3xl"
       onSubmit={handleSubmit}
     >
-      <header>
+      <header className="flex justify-between items-center">
         <span className="font-semibold">useMutation 게시글 등록</span>
-        {/* {queryClient.getQueryData(["posts"]) === undefined ? (null) : (<span>게시글 개수: {queryClient.getQueryData(["posts"])}</span>)} */}
+        {queryClient.getQueryData(["posts"]) === undefined ? null : (
+          <span className="text-sm">
+            게시글 개수: {queryClient.getQueryData<Post[]>(["posts"])?.length}개
+          </span>
+        )}
       </header>
       <hr />
       <div className="flex flex-col gap-2 mb-2.5">
