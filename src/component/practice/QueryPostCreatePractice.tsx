@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Post } from "./post.type";
+import { fetchPostPost } from "./postApi";
 
 export default function QueryPostCreatePractice() {
   const [formState, setFormState] = useState({
@@ -8,22 +9,7 @@ export default function QueryPostCreatePractice() {
     body: "",
   });
   const mutation = useMutation({
-    mutationFn: async (item: Post) => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(item),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("HTTP 요청 실패");
-      }
-    },
+    mutationFn: async (item: Post) => fetchPostPost(item),
     onSuccess: () => {
       console.log("요청 성공");
       setFormState({ title: "", body: "" });
@@ -87,7 +73,8 @@ export default function QueryPostCreatePractice() {
         className="flex justify-self-end py-2 px-3 rounded-md border-0 box-border enabled:bg-blue-500 enabled:text-white enabled:hover:cursor-pointer"
         disabled={
           formState.title.trim().length === 0 ||
-          formState.body.trim().length === 0
+          formState.body.trim().length === 0 ||
+          mutation.isPending
         }
       >
         {mutation.isPending ? "등록중..." : "게시글 등록"}
