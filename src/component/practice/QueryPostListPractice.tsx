@@ -1,50 +1,33 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  fetchDeletePost,
-  fetchPatchPost,
-  fetchValidatedPosts,
-} from "./postApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchDeletePost, fetchPatchPost } from "./postApi";
 import { useState } from "react";
-import type { Post } from "./post.type";
-
-interface UpdateTitleData {
-  id: number;
-  title: string;
-}
+import type { Post, UpdateTitleData } from "./post.type";
+import { usePosts } from "./usePosts";
 
 export default function QueryPostListPractice() {
   const queryClient = useQueryClient();
-  const post = useQuery({
-    queryKey: ["posts"],
-    staleTime: 120_000,
-    gcTime: 180_000,
-    refetchOnWindowFocus: false,
-    retry: false,
-    queryFn: async ({ signal }) => {
-      const result = await fetchValidatedPosts(signal);
-
-      return result;
-    },
+  const [editState, setEditState] = useState<{
+    title: string;
+    id: number | null;
+  }>({
+    title: "",
+    id: null,
   });
+  const { post } = usePosts();
+  // const post = useQuery({
+  //   queryKey: ["posts"],
+  //   staleTime: 120_000,
+  //   gcTime: 180_000,
+  //   refetchOnWindowFocus: false,
+  //   retry: false,
+  //   queryFn: async ({ signal }) => {
+  //     const result = await fetchValidatedPosts(signal);
+
+  //     return result;
+  //   },
+  // });
 
   const mutation = useMutation({
-    // mutationFn: async (data: UpdateTitleData) => {
-    //   const response = await fetch(
-    //     `https://jsonplaceholder.typicode.com/posts/${data.id}`,
-    //     {
-    //       method: "PATCH",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         title: data.title.trim(),
-    //       }),
-    //     },
-    //   );
-    //   if (!response.ok) {
-    //     throw new Error("HTTP 요청 실패");
-    //   }
-    // },
     mutationFn: async (data: UpdateTitleData) =>
       fetchPatchPost(data.id, data.title),
     onSuccess: (_data, variables) => {
@@ -95,14 +78,6 @@ export default function QueryPostListPractice() {
     networkMode: "always",
   });
 
-  const [editState, setEditState] = useState<{
-    title: string;
-    id: number | null;
-  }>({
-    title: "",
-    id: null,
-  });
-
   const handleEdit = (title: string, id: number) => {
     mutation.reset();
     setEditState({ title: title, id: id });
@@ -134,7 +109,7 @@ export default function QueryPostListPractice() {
         {post.isPending ? (
           <p>게시글을 불러오는중입니다.</p>
         ) : post.isError ? (
-          <p>게시글을 불러오지 못했습니다.</p>
+          <p className="text-red-500">게시글을 불러오지 못했습니다.</p>
         ) : post.data.length === 0 ? (
           <p>게시글이 없습니다.</p>
         ) : (

@@ -5,4 +5,9 @@ export interface Post {
   body: string;
 }
 
+export interface UpdateTitleData {
+  id: number;
+  title: string;
+}
+
 export type Status = "idle" | "loading" | "error" | "success";
