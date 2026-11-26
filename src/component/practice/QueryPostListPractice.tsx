@@ -1,5 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchDeletePost, fetchPatchPost } from "./postApi";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Post, UpdateTitleData } from "./post.type";
 import { usePosts } from "./usePosts";
@@ -13,73 +12,10 @@ export default function QueryPostListPractice() {
     title: "",
     id: null,
   });
-  const { post } = usePosts();
-  // const post = useQuery({
-  //   queryKey: ["posts"],
-  //   staleTime: 120_000,
-  //   gcTime: 180_000,
-  //   refetchOnWindowFocus: false,
-  //   retry: false,
-  //   queryFn: async ({ signal }) => {
-  //     const result = await fetchValidatedPosts(signal);
-
-  //     return result;
-  //   },
-  // });
-
-  const mutation = useMutation({
-    mutationFn: async (data: UpdateTitleData) =>
-      fetchPatchPost(data.id, data.title),
-    onSuccess: (_data, variables) => {
-      console.log("요청 성공");
-      queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-        if (!oldposts) return oldposts;
-        console.log(oldposts);
-
-        return oldposts.map((prev) =>
-          prev.id === variables.id
-            ? { ...prev, title: variables.title.trim() }
-            : prev,
-        );
-      });
-
-      setEditState({ title: "", id: null });
-    },
-    onError: () => {
-      console.log("요청 실패");
-    },
-    networkMode: "always",
-  });
-
-  const delMutation = useMutation({
-    // mutationFn: async (id: number) => {
-    //   const response = await fetch(
-    //     `https://jsonplaceholder.typicode.com/posts/${id}`,
-    //     {
-    //       method: "DELETE",
-    //     },
-    //   );
-
-    //   if (!response.ok) {
-    //     throw new Error("HTTP 요청 실패");
-    //   }
-    // },
-    mutationFn: async (id: number) => fetchDeletePost(id),
-    onSuccess: (_data, variable) => {
-      console.log("삭제 성공");
-      console.log(variable);
-      queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-        return oldposts?.filter((prev) => prev.id !== variable);
-      });
-    },
-    onError: () => {
-      console.log("삭제 실패");
-    },
-    networkMode: "always",
-  });
+  const { post, patchMutation, delMutation } = usePosts();
 
   const handleEdit = (title: string, id: number) => {
-    mutation.reset();
+    patchMutation.reset();
     setEditState({ title: title, id: id });
   };
 
@@ -89,11 +25,44 @@ export default function QueryPostListPractice() {
 
   const handleEditSave = () => {
     if (editState.id === null) return;
-    mutation.mutate({ title: editState.title, id: editState.id });
+    patchMutation.mutate(
+      { title: editState.title, id: editState.id },
+      {
+        onSuccess: (_data, variables) => {
+          console.log("요청 성공");
+          queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
+            if (!oldposts) return oldposts;
+            console.log(oldposts);
+
+            return oldposts.map((prev) =>
+              prev.id === variables.id
+                ? { ...prev, title: variables.title.trim() }
+                : prev,
+            );
+          });
+
+          setEditState({ title: "", id: null });
+        },
+        onError: () => {
+          console.log("요청 실패");
+        },
+      },
+    );
   };
 
   const handleDelete = (id: number) => {
-    delMutation.mutate(id);
+    delMutation.mutate(id, {
+      onSuccess: (_data, variable) => {
+        console.log("삭제 성공");
+        console.log(variable);
+        queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
+          return oldposts?.filter((prev) => prev.id !== variable);
+        });
+      },
+      onError: () => {
+        console.log("삭제 실패");
+      },
+    });
   };
   console.log(post.data);
   return (
@@ -139,7 +108,9 @@ export default function QueryPostListPractice() {
                       type="button"
                       onClick={handleEditCancel}
                       className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
-                      disabled={mutation.isPending || delMutation.isPending}
+                      disabled={
+                        patchMutation.isPending || delMutation.isPending
+                      }
                     >
                       취소
                     </button>
@@ -148,7 +119,7 @@ export default function QueryPostListPractice() {
                       onClick={handleEditSave}
                       className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
                       disabled={
-                        mutation.isPending ||
+                        patchMutation.isPending ||
                         delMutation.isPending ||
                         editState.title.trim().length === 0
                       }
@@ -156,7 +127,7 @@ export default function QueryPostListPractice() {
                       저장
                     </button>
                   </div>
-                  {mutation.isError ? (
+                  {patchMutation.isError ? (
                     <p className="text-red-500">게시글 수정에 실패했습니다.</p>
                   ) : null}
                 </div>
@@ -169,7 +140,9 @@ export default function QueryPostListPractice() {
                         type="button"
                         onClick={() => handleEdit(prev.title, prev.id)}
                         className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
-                        disabled={mutation.isPending || delMutation.isPending}
+                        disabled={
+                          patchMutation.isPending || delMutation.isPending
+                        }
                       >
                         수정
                       </button>
@@ -177,7 +150,9 @@ export default function QueryPostListPractice() {
                         type="button"
                         onClick={() => handleDelete(prev.id)}
                         className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
-                        disabled={mutation.isPending || delMutation.isPending}
+                        disabled={
+                          patchMutation.isPending || delMutation.isPending
+                        }
                       >
                         삭제
                       </button>

@@ -2,33 +2,19 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Post } from "./post.type";
 import { fetchPostPost } from "./postApi";
+import { usePosts } from "./usePosts";
 
 export default function QueryPostCreatePractice() {
   const queryClient = useQueryClient();
+  const { postMutation } = usePosts();
   const [formState, setFormState] = useState({
     title: "",
     body: "",
   });
-  const mutation = useMutation({
-    mutationFn: async (item: Post) => fetchPostPost(item),
-    onSuccess: (_data, variables) => {
-      console.log("요청 성공");
-      setFormState({ title: "", body: "" });
-
-      queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-        if (!oldposts) return oldposts;
-
-        return [...oldposts, variables];
-      });
-      // queryClient.invalidateQueries({
-      //   queryKey: ["posts"],
-      // });
-    },
-    onError: () => {
-      console.log("요청 실패");
-    },
-    networkMode: "always",
-  });
+  // const mutation = useMutation({
+  //   mutationFn: async (item: Post) => fetchPostPost(item),
+  //   networkMode: "always",
+  // });
 
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,7 +26,24 @@ export default function QueryPostCreatePractice() {
       title: formState.title.trim(),
     };
 
-    mutation.mutate(item);
+    postMutation.mutate(item, {
+      onSuccess: (_data, variables) => {
+        console.log("요청 성공");
+        setFormState({ title: "", body: "" });
+
+        queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
+          if (!oldposts) return oldposts;
+
+          return [...oldposts, variables];
+        });
+        // queryClient.invalidateQueries({
+        //   queryKey: ["posts"],
+        // });
+      },
+      onError: () => {
+        console.log("요청 실패");
+      },
+    });
   };
   console.log(queryClient.getQueryData(["posts"]));
   return (
@@ -84,14 +87,14 @@ export default function QueryPostCreatePractice() {
         disabled={
           formState.title.trim().length === 0 ||
           formState.body.trim().length === 0 ||
-          mutation.isPending
+          postMutation.isPending
         }
       >
-        {mutation.isPending ? "등록중..." : "게시글 등록"}
+        {postMutation.isPending ? "등록중..." : "게시글 등록"}
       </button>
-      {mutation.isSuccess ? (
+      {postMutation.isSuccess ? (
         <p className="text-green-400">등록에 성공했습니다.</p>
-      ) : mutation.isError ? (
+      ) : postMutation.isError ? (
         <p className="text-red-500">등록에 실패했습니다.</p>
       ) : null}
     </form>
