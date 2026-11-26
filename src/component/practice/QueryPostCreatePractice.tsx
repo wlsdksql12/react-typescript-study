@@ -9,16 +9,20 @@ export default function QueryPostCreatePractice() {
     title: "",
     body: "",
   });
+  const posts = queryClient.getQueryData<Post[]>(["posts"]);
   const mutation = useMutation({
     mutationFn: async (item: Post) => fetchPostPost(item),
     onSuccess: (_data, variables) => {
       console.log("요청 성공");
       setFormState({ title: "", body: "" });
 
-      queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
-        if (!oldposts) return oldposts;
+      // queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
+      //   if (!oldposts) return oldposts;
 
-        return [...oldposts, variables];
+      //   return [...oldposts, variables];
+      // });
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
       });
     },
     onError: () => {
@@ -47,10 +51,8 @@ export default function QueryPostCreatePractice() {
     >
       <header className="flex justify-between items-center">
         <span className="font-semibold">useMutation 게시글 등록</span>
-        {queryClient.getQueryData(["posts"]) === undefined ? null : (
-          <span className="text-sm">
-            게시글 개수: {queryClient.getQueryData<Post[]>(["posts"])?.length}개
-          </span>
+        {posts === undefined ? null : (
+          <span className="text-sm">게시글 개수: {posts.length}개</span>
         )}
       </header>
       <hr />
