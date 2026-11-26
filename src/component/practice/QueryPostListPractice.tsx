@@ -1,6 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import type { Post } from "./post.type";
 import { usePosts } from "./usePosts";
 
 export default function QueryPostListPractice() {

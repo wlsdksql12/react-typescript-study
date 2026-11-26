@@ -27,6 +27,7 @@ export default function QueryPostCreatePractice() {
       },
     });
   };
+
   return (
     <form
       className="border box-border rounded-md p-4 w-full max-w-3xl"
