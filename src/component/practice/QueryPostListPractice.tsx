@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchPatchPost, fetchValidatedPosts } from "./postApi";
+import {
+  fetchDeletePost,
+  fetchPatchPost,
+  fetchValidatedPosts,
+} from "./postApi";
 import { useState } from "react";
 import type { Post } from "./post.type";
 
@@ -45,15 +49,13 @@ export default function QueryPostListPractice() {
       fetchPatchPost(data.id, data.title),
     onSuccess: (_data, variables) => {
       console.log("요청 성공");
-      console.log(variables);
-      console.log(editState);
       queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
         if (!oldposts) return oldposts;
         console.log(oldposts);
 
         return oldposts.map((prev) =>
-          prev.id === editState.id
-            ? { ...prev, title: editState.title.trim() }
+          prev.id === variables.id
+            ? { ...prev, title: variables.title.trim() }
             : prev,
         );
       });
@@ -62,6 +64,33 @@ export default function QueryPostListPractice() {
     },
     onError: () => {
       console.log("요청 실패");
+    },
+    networkMode: "always",
+  });
+
+  const delMutation = useMutation({
+    // mutationFn: async (id: number) => {
+    //   const response = await fetch(
+    //     `https://jsonplaceholder.typicode.com/posts/${id}`,
+    //     {
+    //       method: "DELETE",
+    //     },
+    //   );
+
+    //   if (!response.ok) {
+    //     throw new Error("HTTP 요청 실패");
+    //   }
+    // },
+    mutationFn: async (id: number) => fetchDeletePost(id),
+    onSuccess: (_data, variable) => {
+      console.log("삭제 성공");
+      console.log(variable);
+      queryClient.setQueryData<Post[]>(["posts"], (oldposts) => {
+        return oldposts?.filter((prev) => prev.id !== variable);
+      });
+    },
+    onError: () => {
+      console.log("삭제 실패");
     },
     networkMode: "always",
   });
@@ -86,6 +115,10 @@ export default function QueryPostListPractice() {
   const handleEditSave = () => {
     if (editState.id === null) return;
     mutation.mutate({ title: editState.title, id: editState.id });
+  };
+
+  const handleDelete = (id: number) => {
+    delMutation.mutate(id);
   };
 
   return (
@@ -128,7 +161,7 @@ export default function QueryPostListPractice() {
                       type="button"
                       onClick={handleEditCancel}
                       className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
-                      disabled={mutation.isPending}
+                      disabled={mutation.isPending || delMutation.isPending}
                     >
                       취소
                     </button>
@@ -138,6 +171,7 @@ export default function QueryPostListPractice() {
                       className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
                       disabled={
                         mutation.isPending ||
+                        delMutation.isPending ||
                         editState.title.trim().length === 0
                       }
                     >
@@ -152,17 +186,31 @@ export default function QueryPostListPractice() {
                 <>
                   <div className="flex justify-between items-center p-2">
                     <span className="font-semibold">{prev.title}</span>
-                    {/* <span className="text-xs">ID:{prev.id}</span> */}
-                    <button
-                      type="button"
-                      onClick={() => handleEdit(prev.title, prev.id)}
-                      className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
-                      disabled={mutation.isPending}
-                    >
-                      수정
-                    </button>
+                    <div className="flex gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(prev.title, prev.id)}
+                        className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
+                        disabled={mutation.isPending || delMutation.isPending}
+                      >
+                        수정
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(prev.id)}
+                        className="w-12 h-auto rounded-[15px] whitespace-nowrap border box-border p-1 enabled:hover:cursor-pointer"
+                        disabled={mutation.isPending || delMutation.isPending}
+                      >
+                        삭제
+                      </button>
+                    </div>
                   </div>
                   <p className="wrap-anywhere p-2">{prev.body}</p>
+                  {delMutation.isError && prev.id === delMutation.variables ? (
+                    <p className="text-red-500 p-2">
+                      게시글 삭제에 실패했습니다.
+                    </p>
+                  ) : null}
                 </>
               )}
             </div>
