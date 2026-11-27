@@ -26,7 +26,7 @@ export default function QueryPostPaginationPractice() {
       <header className=" mb-2">
         <span className="font-semibold">게시글 목록(페이지네이션)</span>
       </header>
-      {paginatedPosts.isPending && !paginatedPosts.isPlaceholderData ? (
+      {paginatedPosts.isPending ? (
         <p>게시글을 불러오는중 입니다.</p>
       ) : paginatedPosts.isError ? (
         <p>게시글을 불러오는데 실패했습니다.</p>
@@ -44,7 +44,7 @@ export default function QueryPostPaginationPractice() {
         ))
       )}
       {paginatedPosts.isPlaceholderData ? (
-        <p>다음 페이지 데이터를 불러오는 중입니다.</p>
+        <p>새 페이지 데이터를 불러오는 중입니다.</p>
       ) : null}
       <div className="flex justify-center items-center gap-1.5">
         <button
@@ -56,7 +56,11 @@ export default function QueryPostPaginationPractice() {
         <span>{state?.count} / 3</span>
         <button
           onClick={() => dispatch({ type: "increment" })}
-          disabled={state.count === 3}
+          disabled={
+            state.count === 3 ||
+            paginatedPosts.isPending ||
+            paginatedPosts.isPlaceholderData
+          }
         >
           다음
         </button>
