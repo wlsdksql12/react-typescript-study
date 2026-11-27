@@ -1,9 +1,9 @@
 import { useState } from "react";
 import type { Post } from "./post.type";
-import { usePosts } from "./usePosts";
+import useCreatePost from "./useCreatePost";
 
 export default function QueryPostCreatePractice() {
-  const { postMutation } = usePosts();
+  const { postMutation } = useCreatePost();
   const [formState, setFormState] = useState({
     title: "",
     body: "",

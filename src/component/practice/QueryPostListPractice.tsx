@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { usePosts } from "./usePosts";
+import usePostQuery from "./usePostQuery";
+import useUpdatePost from "./useUpdatePost";
+import useDeletePost from "./useDeletePost";
 
 export default function QueryPostListPractice() {
   const [editState, setEditState] = useState<{
@@ -9,7 +11,9 @@ export default function QueryPostListPractice() {
     title: "",
     id: null,
   });
-  const { post, patchMutation, delMutation } = usePosts();
+  const { post } = usePostQuery();
+  const { patchMutation } = useUpdatePost();
+  const { delMutation } = useDeletePost();
 
   const handleEdit = (title: string, id: number) => {
     patchMutation.reset();
