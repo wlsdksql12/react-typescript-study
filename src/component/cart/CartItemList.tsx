@@ -1,4 +1,4 @@
-import type { CartItemProps } from "../component/CartType";
+import type { CartItemProps } from "./CartType";
 
 interface CarItemListProps {
   item: CartItemProps;

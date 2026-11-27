@@ -2,11 +2,9 @@ interface PostEditFormProps {
   draftTitle: string;
   setDraftTitle: React.Dispatch<React.SetStateAction<string>>;
   editErrorMessage: string;
-  // setEditId: React.Dispatch<React.SetStateAction<number | null>>;
   setEditId: (value: number | null) => void;
   editLoading: boolean;
   handlePostPatch: () => Promise<void>;
-  delLoading: boolean;
 }
 
 export default function PostEditForm({
@@ -16,7 +14,6 @@ export default function PostEditForm({
   setEditId,
   editLoading,
   handlePostPatch,
-  delLoading,
 }: PostEditFormProps) {
   return (
     <>
@@ -35,14 +32,14 @@ export default function PostEditForm({
         <button
           type="button"
           onClick={() => setEditId(null)}
-          disabled={editLoading || delLoading}
+          disabled={editLoading}
         >
           취소
         </button>
         <button
           type="button"
           onClick={handlePostPatch}
-          disabled={draftTitle.trim() === "" || editLoading || delLoading}
+          disabled={draftTitle.trim() === "" || editLoading}
         >
           {editLoading ? "저장 중..." : "저장"}
         </button>

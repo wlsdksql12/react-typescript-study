@@ -30,31 +30,31 @@ function getFirstKeyword(data: unknown): string {
 }
 
 export default function TypeGuard() {
-  // const a: unknown = ["사과", "바나나", " "];
-  // const b: unknown = ["Recat", "TypeScript"];
-  // const c: unknown = ["사과", 10];
-  // const d: unknown = null;
-  // const e: unknown = [];
+  const a: unknown = ["사과", "바나나", " "];
+  const b: unknown = ["Recat", "TypeScript"];
+  const c: unknown = ["사과", 10];
+  const d: unknown = null;
+  const e: unknown = [];
 
-  // console.log(noralizeNames(a));
-  // console.log(noralizeNames(b));
-  // console.log(noralizeNames(c));
-  // console.log(noralizeNames(d));
-  // console.log(noralizeNames(e));
+  console.log(noralizeNames(a));
+  console.log(noralizeNames(b));
+  console.log(noralizeNames(c));
+  console.log(noralizeNames(d));
+  console.log(noralizeNames(e));
 
-  const a: unknown = [" ", " React ", "TypeScript"];
-  const b: unknown = ["", " ", "JavaScript"];
-  const c: unknown = [" ", ""];
-  const d: unknown = [];
-  const e: unknown = ["React", 10];
-  const f: unknown = null;
+  const f: unknown = [" ", " React ", "TypeScript"];
+  const g: unknown = ["", " ", "JavaScript"];
+  const h: unknown = [" ", ""];
+  const i: unknown = [];
+  const j: unknown = ["React", 10];
+  const k: unknown = null;
 
-  // console.log(getFirstKeyword(a));
-  // console.log(getFirstKeyword(b));
-  // console.log(getFirstKeyword(c));
-  // console.log(getFirstKeyword(d));
-  // console.log(getFirstKeyword(e));
-  // console.log(getFirstKeyword(f));
+  console.log(getFirstKeyword(f));
+  console.log(getFirstKeyword(g));
+  console.log(getFirstKeyword(h));
+  console.log(getFirstKeyword(i));
+  console.log(getFirstKeyword(j));
+  console.log(getFirstKeyword(k));
 }
 
 TypeGuard();

@@ -214,7 +214,6 @@ export default function PostManagerPractice({
                     draftTitle={draftTitle}
                     setDraftTitle={setDraftTitle}
                     handlePostPatch={handlePostPatch}
-                    delLoading={loading.delLoading}
                   />
                 )}
                 <div className="flex flex-col gap-2">

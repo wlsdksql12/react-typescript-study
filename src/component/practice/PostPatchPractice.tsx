@@ -140,14 +140,14 @@ export default function PostPatchPractice() {
                 />
               ) : (
                 <>
-                  {/* <PostEditForm
+                  <PostEditForm
                     draftTitle={draftTitle}
                     setDraftTitle={setDraftTitle}
                     editErrorMessage={editErrorMessage}
                     setEditId={setEditId}
                     editLoading={editLoading}
                     handlePostPatch={handlePostPatch}
-                  /> */}
+                  />
                   <div className="flex flex-col gap-1.5">
                     <span className="text-xs">ID:{prev.id}</span>
                     <span className="wrap-anywhere">{prev.body}</span>
