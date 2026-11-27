@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetGetPaginatedPost } from "./postApi";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { fetchGetPaginatedPost } from "./postApi";
 
 export default function usePaginatedPosts(page: number) {
   const paginatedPosts = useQuery({
@@ -9,10 +9,11 @@ export default function usePaginatedPosts(page: number) {
     refetchOnWindowFocus: false,
     retry: false,
     queryFn: async ({ signal }) => {
-      const result = await fetGetPaginatedPost(page, signal);
+      const result = await fetchGetPaginatedPost(page, signal);
 
       return result;
     },
+    placeholderData: keepPreviousData,
   });
 
   return {

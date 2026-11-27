@@ -26,7 +26,7 @@ export default function QueryPostPaginationPractice() {
       <header className=" mb-2">
         <span className="font-semibold">게시글 목록(페이지네이션)</span>
       </header>
-      {paginatedPosts.isPending ? (
+      {paginatedPosts.isPending && !paginatedPosts.isPlaceholderData ? (
         <p>게시글을 불러오는중 입니다.</p>
       ) : paginatedPosts.isError ? (
         <p>게시글을 불러오는데 실패했습니다.</p>
@@ -43,6 +43,9 @@ export default function QueryPostPaginationPractice() {
           </div>
         ))
       )}
+      {paginatedPosts.isPlaceholderData ? (
+        <p>다음 페이지 데이터를 불러오는 중입니다.</p>
+      ) : null}
       <div className="flex justify-center items-center gap-1.5">
         <button
           onClick={() => dispatch({ type: "decrement" })}

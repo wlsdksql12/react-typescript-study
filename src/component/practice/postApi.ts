@@ -18,7 +18,7 @@ export async function fetchGetPost(signal: AbortSignal): Promise<unknown> {
   return result;
 }
 
-export async function fetGetPaginatedPost(
+export async function fetchGetPaginatedPost(
   page: number,
   signal: AbortSignal,
 ): Promise<Post[]> {
