@@ -21,7 +21,10 @@ export default function QueryPostCreatePractice() {
     };
 
     postMutation.mutate(item, {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
+        console.log(data);
+        console.log(variables);
+
         setFormState({ title: "", body: "" });
         setNewPostId((prev) => prev + 1);
       },

@@ -36,25 +36,12 @@ export default function TypeGuard() {
   const d: unknown = null;
   const e: unknown = [];
 
-  console.log(noralizeNames(a));
-  console.log(noralizeNames(b));
-  console.log(noralizeNames(c));
-  console.log(noralizeNames(d));
-  console.log(noralizeNames(e));
-
   const f: unknown = [" ", " React ", "TypeScript"];
   const g: unknown = ["", " ", "JavaScript"];
   const h: unknown = [" ", ""];
   const i: unknown = [];
   const j: unknown = ["React", 10];
   const k: unknown = null;
-
-  console.log(getFirstKeyword(f));
-  console.log(getFirstKeyword(g));
-  console.log(getFirstKeyword(h));
-  console.log(getFirstKeyword(i));
-  console.log(getFirstKeyword(j));
-  console.log(getFirstKeyword(k));
 }
 
 TypeGuard();

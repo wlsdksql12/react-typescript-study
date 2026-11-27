@@ -1,5 +1,5 @@
-import type { Post } from "./post.type";
-import { isPostArray } from "./postGuards";
+import type { CreatePostInput, Post } from "./post.type";
+import { isPost, isPostArray } from "./postGuards";
 
 export async function fetchGetPost(signal: AbortSignal): Promise<unknown> {
   const response = await fetch(
@@ -30,7 +30,7 @@ export async function fetchValidatedPosts(
   return result;
 }
 
-export async function fetchPostPost(item: Post): Promise<void> {
+export async function fetchPostPost(item: CreatePostInput): Promise<Post> {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
     method: "POST",
     headers: {
@@ -42,6 +42,14 @@ export async function fetchPostPost(item: Post): Promise<void> {
   if (!response.ok) {
     throw new Error("POST HTTP 요청 실패");
   }
+
+  const result: unknown = await response.json();
+  console.log("result", result);
+  if (!isPost(result)) {
+    throw new Error("데이터 타입 검증 실패");
+  }
+
+  return result;
 }
 
 export async function fetchPatchPost(id: number, title: string): Promise<void> {

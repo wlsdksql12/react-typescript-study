@@ -6,7 +6,13 @@ export default function useCreatePost() {
   const queryClient = useQueryClient();
 
   const postMutation = useMutation({
-    mutationFn: async (item: Post) => fetchPostPost(item),
+    // mutationFn: async (item: Post) => fetchPostPost(item),
+    mutationFn: async (item: Post) =>
+      fetchPostPost({
+        userId: item.userId,
+        title: item.title,
+        body: item.body,
+      }),
     onSuccess: (_data, variables) => {
       console.log("요청 성공");
 
@@ -19,7 +25,8 @@ export default function useCreatePost() {
       //   queryKey: ["posts"],
       // });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error(error);
       console.log("요청 실패");
     },
     networkMode: "always",

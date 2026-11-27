@@ -10,4 +10,10 @@ export interface UpdateTitleData {
   title: string;
 }
 
+export interface CreatePostInput {
+  userId: number;
+  title: string;
+  body: string;
+}
+
 export type Status = "idle" | "loading" | "error" | "success";
