@@ -18,6 +18,30 @@ export async function fetchGetPost(signal: AbortSignal): Promise<unknown> {
   return result;
 }
 
+export async function fetGetPaginatedPost(
+  page: number,
+  signal: AbortSignal,
+): Promise<Post[]> {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=5`,
+    {
+      signal,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("HTTP 요청 실패");
+  }
+
+  const result: unknown = await response.json();
+
+  if (!isPostArray(result)) {
+    throw new Error("데이터 타입 검증 실패");
+  }
+
+  return result;
+}
+
 export async function fetchValidatedPosts(
   signal: AbortSignal,
 ): Promise<Post[]> {
